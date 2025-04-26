@@ -1,0 +1,447 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+		<h2>#{msgs.officesList} </h2> <br/> 
+		<div class="clear"></div>
+		<f:event listener="#{appartmentListController.filterData(2)}" type="preRenderView" />
+		<h:form rendered="#{roleController.isAllowed('ADMIN')}">
+			<h:commandLink value="#{msgs.addOffice}" action="#{officeCreator.add()}" styleClass="button green f-right" />
+		</h:form>
+		
+		<br/>
+		<div class="clear"></div>
+		<h:form id ="filter-form">	
+			 <p:growl escape="false"/>
+			<h:panelGrid columns="1" styleClass="f-left">
+				<h:outputText value="#{msgs.developer}" styleClass="label" />
+				
+				<p:selectCheckboxMenu  value="#{appartmentListController.filterDevelopers}" id="developer" style="width:250px;" styleClass="m-right"  
+					multiple="true" converter="companyConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{appartmentListController.developers}" var="entity" itemLabel="#{entity.title}" itemValue="#{entity}"/>
+					<p:ajax event="change" update="construction"  listener="#{appartmentListController.onCompanyChange}" />
+		    	</p:selectCheckboxMenu>
+		    </h:panelGrid>
+		    <h:panelGrid columns="2"  styleClass="f-left">
+				<h:outputText value="#{msgs.appartmentSpecNote}" styleClass="label" />
+		    	<h:outputText value="#{msgs.appartmentSpecNote}" styleClass="label" />
+		    	<p:selectCheckboxMenu  value="#{appartmentListController.filterSn}" id="sn" style="width:110px;" styleClass="m-right"  
+					multiple="true" converter="javax.faces.Boolean" filter="true" filterMatchMode="contains">
+					 <f:selectItem itemLabel="#{msgs.yes}" itemValue="true" />
+                     <f:selectItem itemLabel="#{msgs.no}" itemValue="false" /> 
+		    	</p:selectCheckboxMenu>		 
+		    	<p:inputText value="#{appartmentListController.filterSnText}"  styleClass="m-left"/>	
+		    	   	
+			</h:panelGrid>
+		    <div class="clear"></div>
+				
+			<h:panelGrid columns="3" styleClass="f-left">
+				<h:outputText value="#{msgs.company}" styleClass="label" />
+				<h:outputText value="#{msgs.construction}" styleClass="label" />
+				<h:outputText value="#{msgs.blockNumber}" styleClass="label" />
+				
+				<p:selectCheckboxMenu  value="#{appartmentListController.filterCompanies}" id="company" style="width:250px;" styleClass="m-right"  
+					multiple="true" converter="companyConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{appartmentListController.companies}" var="entity" itemLabel="#{entity.title}" itemValue="#{entity}"/>
+					<p:ajax event="change" update="construction"  listener="#{appartmentListController.onCompanyChange}" />
+		    	</p:selectCheckboxMenu>
+				<p:selectCheckboxMenu  value="#{appartmentListController.filterConstructions}"  
+						multiple="true" id="construction" style="width:250px;"  styleClass="m-right"
+						filter="true" filterMatchMode="contains" converter="constructionConverter">
+					<f:selectItems value="#{appartmentListController.constructions}" var="entity" itemLabel="#{entity.title}" itemValue="#{entity}"/>
+		    	</p:selectCheckboxMenu>
+		    	<p:selectCheckboxMenu  value="#{appartmentListController.filterBlocks}" multiple="true"   styleClass="m-right">
+		            <f:selectItems value="#{appartmentListController.blockList}"/>
+		        </p:selectCheckboxMenu>	
+		    </h:panelGrid>
+				
+			<h:panelGrid columns="2" styleClass="f-left">
+				<h:outputText value="#{msgs.entranceNumber}" styleClass="label" />
+				<h:outputText value="#{msgs.flat}" styleClass="label" />
+				
+				<p:selectCheckboxMenu  value="#{appartmentListController.filterEntrances}" converter="javax.faces.Integer" multiple="true"   styleClass="m-right">
+		            <f:selectItems value="#{appartmentListController.getIntegerList(1,10)}"/>
+		        </p:selectCheckboxMenu>			
+				<p:selectCheckboxMenu  value="#{appartmentListController.filterFlats}" converter="javax.faces.Integer" multiple="true"   styleClass="m-right">
+		            <f:selectItems value="#{appartmentListController.getIntegerList(-3,20)}"/>
+		        </p:selectCheckboxMenu>		    			
+			</h:panelGrid>
+			
+			
+			<div class="clear"/>
+			
+			<h:panelGrid columns="2"  styleClass="f-left">
+				<h:outputText value="#{msgs.clientType}" styleClass="label" />
+				<h:outputText value="#{msgs.clientFrom}" styleClass="label" />
+				<p:selectCheckboxMenu  value="#{appartmentListController.filterTypes}" id="clientType" style="width:200px;" styleClass="m-right"  
+					multiple="true" converter="enumConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{appartmentListController.clientTypes}" var="entity" itemLabel="#{enums[entity]}" itemValue="#{entity}"/>
+		    	</p:selectCheckboxMenu>
+		    	<p:selectCheckboxMenu  value="#{appartmentListController.filterFroms}" id="clientFrom" style="width:200px;" styleClass="m-right"  
+					multiple="true" converter="enumConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{appartmentListController.clientFroms}" var="entity" itemLabel="#{enums[entity]}" itemValue="#{entity}"/>
+		    	</p:selectCheckboxMenu>		    			    	
+			</h:panelGrid>
+			<h:panelGrid columns="2"  styleClass="f-left">
+				<h:outputText value="#{msgs.contractType}" styleClass="label" />
+				<h:outputText value="#{msgs.gotKeys}" styleClass="label" />
+				<p:selectCheckboxMenu  value="#{appartmentListController.filterContractTypes}" id="contractType" style="width:200px;" styleClass="m-right"  
+					multiple="true" converter="enumConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{appartmentListController.contractTypes}" var="entity" itemLabel="#{enums[entity]}" itemValue="#{entity}"/>
+		    	</p:selectCheckboxMenu>
+		    	<p:selectCheckboxMenu  value="#{appartmentListController.filterKeys}" id="keys" style="width:110px;" styleClass="m-right"  
+					multiple="true" converter="javax.faces.Boolean" filter="true" filterMatchMode="contains">
+					 <f:selectItem itemLabel="#{msgs.yes}" itemValue="true" />
+                     <f:selectItem itemLabel="#{msgs.no}" itemValue="false" /> 
+		    	</p:selectCheckboxMenu>		    	
+			</h:panelGrid>
+		
+			<h:panelGrid columns="4"  styleClass="f-left">
+				<h:outputText value="#{msgs.signed}" styleClass="label" />
+				<h:outputText value="#{msgs.extralow}" styleClass="label" />				
+				<h:outputText value="#{msgs.curator}" styleClass="label" />
+				<h:outputText value="#{msgs.curatorOrk}" styleClass="label" />
+				
+				<p:selectCheckboxMenu  value="#{appartmentListController.filterSigned}" id="signed" style="width:110px;" styleClass="m-right"  
+					multiple="true" converter="javax.faces.Boolean" filter="true" filterMatchMode="contains">
+					 <f:selectItem itemLabel="#{msgs.yes}" itemValue="true" />
+                     <f:selectItem itemLabel="#{msgs.no}" itemValue="false" /> 
+		    	</p:selectCheckboxMenu>
+		    	<p:selectCheckboxMenu  value="#{appartmentListController.filterExtralow}" style="width:110px;" styleClass="m-right"  
+					multiple="true" converter="javax.faces.Boolean" filter="true" filterMatchMode="contains">
+					 <f:selectItem itemLabel="#{msgs.yes}" itemValue="true" />
+                     <f:selectItem itemLabel="#{msgs.no}" itemValue="false" /> 
+		    	</p:selectCheckboxMenu>				
+								
+				<p:selectCheckboxMenu  value="#{appartmentListController.filterCurators}" id="curator" style="width:250px;" styleClass="m-right"  
+					multiple="true" converter="userConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{appartmentListController.curators}" var="entity" itemLabel="#{entity.fio}" itemValue="#{entity}"/>					
+		    	</p:selectCheckboxMenu>
+		    	
+		    	<p:selectCheckboxMenu  value="#{appartmentListController.filterCuratorOrks}" id="curatorOrk" style="width:250px;" styleClass="m-right"  
+					multiple="true" converter="userConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{appartmentListController.curatorOrks}" var="entity" itemLabel="#{entity.fio}" itemValue="#{entity}"/>					
+		    	</p:selectCheckboxMenu>
+	
+			</h:panelGrid>
+			
+			<h:panelGrid columns="1"  styleClass="f-left" >
+				<h:outputText value="#{msgs.responsiblePerson}" styleClass="label" />
+				<p:selectCheckboxMenu  value="#{appartmentListController.filterResponsiblePersons}" id="rp" style="width:250px;" styleClass="m-right"  
+					multiple="true" converter="rpConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{appartmentListController.rps}" var="entity" itemLabel="#{entity.fio}" itemValue="#{entity}"/>					
+		    	</p:selectCheckboxMenu>
+			</h:panelGrid>
+			
+			<div class="clear"/>
+		
+			
+			<h:panelGrid columns="2"  styleClass="f-left">
+			    <h:outputText value="#{msgs.appartmentNumber}" styleClass="label m-right " />
+			    <h:outputText value="#{msgs.clientFio}" styleClass="label m-right " />
+			   
+				<p:inputText value="#{appartmentListController.filterTitle}"  styleClass="m-left"/>	
+				<p:inputText value="#{appartmentListController.searchString}"  styleClass="m-right"/>
+				
+			</h:panelGrid>
+			<h:panelGrid columns="2"  styleClass="f-left">
+			    <h:outputText value="#{msgs.dateFrom}" styleClass="label m-left" />
+				<h:outputText value="#{msgs.dateTo}" styleClass="label m-left" />
+				
+				<p:calendar showOtherMonths="true" selectOtherMonths="true"  value="#{appartmentListController.filterDateFrom}"  showOn="button" locale="ru" styleClass="m-left"/>
+				<p:calendar showOtherMonths="true" selectOtherMonths="true"  value="#{appartmentListController.filterDateTo}"  showOn="button" locale="ru" styleClass="m-left"/>
+			</h:panelGrid>
+			<h:panelGrid columns="1"  styleClass="f-left" rendered="#{roleController.isAllowed('CONTROLLER,ORK')}">
+				<h:outputText value="#{msgs.garant}" styleClass="label" />
+				<p:selectCheckboxMenu  value="#{appartmentListController.filterGarants}" id="garant" style="width:250px;" styleClass="m-right"  
+					multiple="true" converter="garantConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{appartmentListController.garants}" var="entity" itemLabel="#{entity.fio}" itemValue="#{entity}"/>					
+		    	</p:selectCheckboxMenu>
+			</h:panelGrid>
+			<h:panelGrid columns="1"  styleClass="f-left">
+			    <h:outputText value="#{msgs.planType}" styleClass="label m-left" />
+				
+				<p:selectCheckboxMenu  value="#{appartmentListController.filterPtypes}" id="planType" style="width:200px;" styleClass="m-right"  
+					multiple="true" converter="enumConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{appartmentListController.ptypes}" var="entity" itemLabel="#{enums[entity]}" itemValue="#{entity}"/>
+		    	</p:selectCheckboxMenu>
+			</h:panelGrid>
+			<h:panelGrid columns="2"  styleClass="f-left">
+			   <h:outputText value="" styleClass="label" />
+				<h:outputText value="" styleClass="label" />
+				
+				<p:commandButton ajax="true" update="form" value="#{msgs.search}" actionListener="#{appartmentListController.filter(2)}" styleClass="button green f-right" />
+			    <p:commandButton ajax="true" update="form filter-form" value="#{msgs.clearFilter}" actionListener="#{appartmentListController.clearFilter(2)}" styleClass="button blue f-right" />
+			</h:panelGrid>
+		
+		</h:form>
+		<div class="clear"/>
+		<h:form id ="form">
+			<p:dataTable var="entity" value="#{appartmentListController.offices}"  paginator="true" rows="50" lazy="true" rowKey="#{entity.id}" rowIndexVar="index" tableStyleClass="display-table"
+	   			id="table" widgetVar="table" selectionMode="single" emptyMessage="#{msgs.noRecordsFound}" 
+	   			rowsPerPageTemplate="10,20,30,40,50,10000" paginatorPosition="bottom" pageLinks="10"
+	                   currentPageReportTemplate="Всего : #{appartmentListController.offices.rowCount} из #{appartmentListController.offices.totalCount}  &#160;&#160;| #{msgs.amountPerPage}"
+	               	   paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport} {RowsPerPageDropdown} {Exporters}"
+	                   selection="#{appartmentListController.appartment}"
+	                   first="#{appartmentListController.first}" >
+				<p:ajax event="page" listener="#{appartmentListController.onPageChange}"/>
+				<p:ajax event="rowDblselect" listener="#{clientController.onRowSelectAppartment}"  /> 
+				<f:facet name="{Exporters}">
+            		<h:commandLink id="excel" styleClass="m-left" rendered="#{!roleController.isAllowed('JUNIOR')}">
+					    <p:graphicImage library="img" name="excel.png"  />
+					   	<p:dataExporter type="xls" target="table" fileName="export" postProcessor="#{dataExportController.postProcessXLS}" />
+					</h:commandLink>
+					
+					<p:commandButton id="toggler" type="button" value="#{msgs.columns}" style="float:right" icon="ui-icon-calculator" />
+			        <p:columnToggler datasource="table" trigger="toggler" >
+			        	<p:ajax event="toggle" listener="#{userController.onToggle}" />
+					</p:columnToggler>
+					
+						
+				</f:facet>   
+				
+				<p:column headerText="№" visible="#{roleController.currentUser.fields.contains('№')}" >
+			        <h:outputText value="#{index+1}" />
+			    </p:column>
+			    
+			    <p:column headerText="Этаж" visible="#{roleController.currentUser.fields.contains('Этаж')}" sortBy="#{entity.flat}">
+			        <h:outputText value="#{entity.flat}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.construction}" visible="#{roleController.currentUser.fields.contains('Строительный объект')}" sortBy="#{entity.construction}">
+			        <h:outputText value="#{entity.construction.title}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.appartmentPreNumber}" visible="#{roleController.currentUser.fields.contains('Предварительный номер')}" sortBy="#{entity.title}">
+			        <h:outputText value="#{entity.title}" />
+			        <h:outputText value="(#{enums[entity.officeType]})" rendered="#{entity.officeType.ordinal()>0}" />
+			        <h:outputText rendered="#{entity.specNote.length()>0}" value="(#{entity.specNote})" style="color:red;" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.appartmentDocNumber}" visible="#{roleController.currentUser.fields.contains('Постоянный номер, согласно техпаспорту')}"  sortBy="#{entity.docNumber}">
+			        <h:outputText value="#{entity.docNumber}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.preTotalArea}" visible="#{roleController.currentUser.fields.contains('Общая площадь ориентировочно')}" sortBy="#{entity.totalArea}">
+			        <h:outputText value="#{entity.totalArea}">
+			        	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2"/>
+			        </h:outputText>
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.docTotalArea}" visible="#{roleController.currentUser.fields.contains('Общая площадь по техпаспорту')}" sortBy="#{entity.docTotalArea}">
+			        <h:outputText value="#{entity.docTotalArea}" >
+			        	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2"/>
+			        </h:outputText>
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.contactDate}" visible="#{roleController.currentUser.fields.contains('Дата договора')}" sortBy="#{entity.client.dateContract}">
+			        <h:outputText value="#{entity.client.dateContract}" >
+			        	<f:convertDateTime pattern="dd-MM-yyyy" />
+			        </h:outputText>
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.fio}" visible="#{roleController.currentUser.fields.contains('Ф.И.О.')}" sortBy="#{entity.client.fio}">
+			        <h:outputText value="#{entity.client.fio}" />
+			    </p:column>
+			    
+			      
+			    <p:column headerText="#{msgs.passportNumber}" visible="#{roleController.currentUser.fields.contains('Паспортные данные')}" >
+			        <h:outputText value="#{entity.client.passportNumber}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.passportAddress}" visible="#{roleController.currentUser.fields.contains('Адрес по паспорту')}">
+			        <h:outputText value="#{entity.client.passportAddress}" />
+			    </p:column>
+			    
+			    
+			    <p:column headerText="#{msgs.priceForSquare}"  visible="#{roleController.currentUser.fields.contains('Цена за 1 м.кв.')}" sortBy="#{entity.client.priceForSquare}">
+			        <h:outputText value="#{entity.client.priceForSquare}">
+			        	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2"/>
+			        </h:outputText>
+			        <h:outputText rendered="#{entity.client.extralow eq true}" value="(!)" style="color:red;"/>
+			    </p:column>
+			    <p:column headerText="#{msgs.contractSum}"  visible="#{roleController.currentUser.fields.contains('Сумма договора')}" sortBy="#{entity.client.totalSum}">
+			        <h:outputText value="#{entity.client.totalSum}">
+			        	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2"/>
+			        </h:outputText>
+			    </p:column>
+			    <p:column headerText="#{msgs.alreadyPayed}" visible="#{roleController.currentUser.fields.contains('Оплачено')}" sortBy="#{entity.client.alreadyPayed}">
+			        <h:outputText value="#{entity.client.alreadyPayed}">
+			        	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2"/>
+			        </h:outputText>
+			    </p:column>
+			    <p:column headerText="#{msgs.leftSum}" visible="#{roleController.currentUser.fields.contains('Остаток на оплату')}" sortBy="#{entity.client.totalSum-entity.client.alreadyPayed}">
+			        <h:outputText value="#{entity.client.totalSum-entity.client.alreadyPayed}">
+			        	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2"/>
+			        </h:outputText>
+			    </p:column>	
+			    
+			    <p:column headerText="#{msgs.leftSumDoc}"  visible="#{roleController.currentUser.fields.contains('Остаток после инвентеризации')}">
+			        <h:outputText rendered="#{entity.docTotalArea>0}" value="#{(entity.docTotalArea*entity.client.priceForSquare)-entity.client.alreadyPayed}" >
+			        	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2"  maxFractionDigits="2"/>
+			        </h:outputText>
+			    </p:column>		   
+			    		   
+			    <p:column headerText="#{msgs.contacts}" rendered="#{roleController.isAllowed('ADMIN')}"
+			    	visible="#{roleController.currentUser.fields.contains('Телефон')}" sortBy="#{entity.client.contacts}">
+			        <h:outputText value="#{entity.client.contacts}">
+			        	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2"/>
+			        </h:outputText>
+			    </p:column>
+			    <p:column rendered="#{!roleController.isAllowed('JUNIOR')}" headerText="#{msgs.note}" visible="#{roleController.currentUser.fields.contains('Примечание')}" sortBy="#{entity.client.note}" >
+			        <h:outputText value="#{entity.client.note}"/>			        	
+			    </p:column>
+			    <p:column headerText="#{msgs.curatorNote}" visible="#{roleController.currentUser.fields.contains('Примечание куратора')}" sortBy="#{entity.client.curatorNote}" >
+			        <h:outputText value="#{entity.client.curatorNote}"/>			        	
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.clientType}" visible="#{roleController.currentUser.fields.contains('Тип сделки')}" sortBy="#{entity.client.type}" >
+			        <h:outputText value="#{enums[entity.client.type]}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.clientFrom}" visible="#{roleController.currentUser.fields.contains('Тип клиента')}" sortBy="#{entity.client.clientFrom}" >
+			        <h:outputText value="#{enums[entity.client.clientFrom]}" />
+			        <h:outputText rendered="#{entity.client.clientFrom eq 'OTHERS'}" value="(#{entity.client.fromPerson.fio})" />
+			    </p:column>
+			    
+			    <p:column headerText="КП|Оф." visible="#{roleController.currentUser.fields.contains('КП|Оф.')}">
+			        <h:outputText value="#{msgs[entity.client.keys]} | #{msgs[entity.client.signed]}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.status}" visible="#{roleController.currentUser.fields.contains('Статус')}">
+			        <h:outputText value="#{enums[entity.client.status]}" />
+			    </p:column>
+			    <p:column headerText="#{msgs.curator}" visible="#{roleController.currentUser.fields.contains('Куратор ОП')}" sortBy="#{entity.client.curator.fio}">
+			        <h:outputText value="#{entity.client.curator.fio}"/>			        	
+			    </p:column>
+			    <p:column headerText="#{msgs.curatorOrk}"  visible="#{roleController.currentUser.fields.contains('Куратор ОРК')}">
+			        <h:outputText value="#{entity.client.curatorOrk.fio}"/>			        	
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.operation}" visible="#{roleController.currentUser.fields.contains('Действия')}" exportable="false" style="width:100px;">
+			    	<h:commandButton action="#{officeCreator.edit(entity)}" value="#{msgs.edit}" styleClass="btn-icon edit" title="#{msgs.edit}" rendered="#{roleController.isAllowed('ADMIN')}" />	    
+			    	<h:commandButton action="#{clientController.addClient(entity,'/view/appartment/list.xhtml')}" value="#{msgs.addClient}" styleClass="btn-icon modify" title="#{msgs.addClient}" 
+			    		rendered="#{roleController.isAllowed('SUBADMIN,ADMIN') 
+			    		or (((roleController.isAllowed('JUNIOR') or roleController.isAllowed('FILIAL')) 
+			    			and ((entity.client.status eq 'NEW'  and (entity.client.curator eq roleController.currentUser)) 
+			    				or entity.client eq null))) or (roleController.isAllowed('ORK') 
+			    			and ((entity.client.status eq 'NEW') 
+			    				or entity.client eq null))}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.garant}" rendered="#{roleController.isAllowed('CONTROLLER,ORK')}">
+			        <h:outputText value="#{entity.client.garant.fio}"/>			        	
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.clientFrom}" visible="false}"  >			       
+			        <h:outputText rendered="#{entity.client.clientFrom eq 'OTHERS'}" value="#{entity.client.fromPerson.fio}" />
+			    </p:column>
+			    <p:column headerText="#{msgs.clientFrom}-#{msgs.firma}" visible="false}"  >			       
+			        <h:outputText rendered="#{entity.client.clientFrom eq 'OTHERS'}" value="#{entity.client.fromPerson.firma}" />
+			    </p:column>
+			    <p:columnGroup type="footer">
+			        <p:column visible="#{roleController.currentUser.fields.contains('№')}" >
+				    </p:column>
+				    <p:column visible="#{roleController.currentUser.fields.contains('Этаж')}" >
+				    </p:column>
+				    <p:column  visible="#{roleController.currentUser.fields.contains('Строительный объект')}">
+				    </p:column>
+				    <p:column  visible="#{roleController.currentUser.fields.contains('Предварительный номер')}">
+				    </p:column>
+				    <p:column visible="#{roleController.currentUser.fields.contains('Постоянный номер, согласно техпаспорту')}" >
+				        <h:outputText value="#{entity.docNumber}" />
+				    </p:column>
+				   
+				    <p:column  visible="#{roleController.currentUser.fields.contains('Общая площадь ориентировочно')}" >
+				    	<f:facet name="footer">
+					        <h:outputText value="#{appartmentListController.totalArea}">
+					        	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2"/>
+					        </h:outputText>
+					    </f:facet>
+				    </p:column>
+				    <p:column  visible="#{roleController.currentUser.fields.contains('Общая площадь по техпаспорту')}" >
+				    	<f:facet name="footer">
+					        <h:outputText value="#{appartmentListController.totalAreaDoc}" >
+					        	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2"/>
+					        </h:outputText>
+					    </f:facet>
+				    </p:column>
+				    <p:column  visible="#{roleController.currentUser.fields.contains('Дата договора')}" >
+				    </p:column>
+				    <p:column  visible="#{roleController.currentUser.fields.contains('Ф.И.О.')}">
+				    </p:column>
+				    <p:column  visible="#{roleController.currentUser.fields.contains('Паспортные данные')}" >			       
+			    	</p:column>			    
+				    <p:column visible="#{roleController.currentUser.fields.contains('Адрес по паспорту')}">				       
+				    </p:column>
+				    <p:column  visible="#{roleController.currentUser.fields.contains('Цена за 1 м.кв.')}">
+				    </p:column>
+				    <p:column   visible="#{roleController.currentUser.fields.contains('Сумма договора')}">
+				    	<f:facet name="footer">
+					        <h:outputText value="#{appartmentListController.contractSum}">
+					        	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2"/>
+					        </h:outputText>
+					    </f:facet>
+				    </p:column>
+				    <p:column  visible="#{roleController.currentUser.fields.contains('Оплачено')}" >
+					    <f:facet name="footer">
+					        <h:outputText value="#{appartmentListController.payedSum}">
+					        	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2"/>
+					        </h:outputText>
+					    </f:facet>
+				    </p:column>
+				    <p:column  visible="#{roleController.currentUser.fields.contains('Остаток на оплату')}">
+				    	<f:facet name="footer">
+					        <h:outputText value="#{appartmentListController.lefSum}">
+					        	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2"/>
+					        </h:outputText>
+					    </f:facet>
+				    </p:column>	
+				    <p:column   visible="#{roleController.currentUser.fields.contains('Остаток после инвентеризации')}">
+				    	<f:facet name="footer">
+					        <h:outputText value="#{appartmentListController.leftSumDoc}">
+					        	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" maxFractionDigits="2"/>
+					        </h:outputText>
+					    </f:facet>
+				    </p:column>		   
+				    <p:column  visible="#{roleController.currentUser.fields.contains('Телефон')}" rendered="#{roleController.isAllowed('ADMIN,ORK')}">
+				    </p:column>
+				    <p:column  visible="#{roleController.currentUser.fields.contains('Примечание')}" >
+				    </p:column>
+				    <p:column  visible="#{roleController.currentUser.fields.contains('Примечание куратора')}"  >
+				    </p:column>
+				    <p:column  visible="#{roleController.currentUser.fields.contains('Тип сделки')}"  >
+				    </p:column>
+				    <p:column  visible="#{roleController.currentUser.fields.contains('Тип клиента')}"  >
+				    </p:column>
+				    <p:column  visible="#{roleController.currentUser.fields.contains('КП|Оф.')}"  >
+				    </p:column>
+				    <p:column visible="#{roleController.currentUser.fields.contains('Статус')}">
+				    </p:column>
+				    <p:column  visible="#{roleController.currentUser.fields.contains('Куратор ОП')}">
+				    </p:column>
+				    <p:column  visible="#{roleController.currentUser.fields.contains('Куратор ОРК')}">
+				    </p:column>
+				    <p:column  visible="#{roleController.currentUser.fields.contains('Действия')}">
+				    </p:column>
+		                
+		        
+		        </p:columnGroup>
+			    
+			</p:dataTable>
+		</h:form>
+		<p:blockUI block="form:table" trigger="form:table" >
+			#{msgs.loading}<br />
+		    <p:graphicImage library="img" name="ajaxloadingbar.gif"/>
+		</p:blockUI>	
+		
+
+		<div class="clear"></div>			
+				
+	</ui:define>	
+	
+</ui:composition>

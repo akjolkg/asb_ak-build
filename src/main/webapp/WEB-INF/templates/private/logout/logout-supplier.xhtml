@@ -1,0 +1,16 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+	<ul>
+    	<li><h:outputLink value="#{addressController.getSOBSAddress()}/settings"><span class="profile-icon profile-my-profile"/>#{sessionScope['org.infosystema.projects.etender.current_user_fio']}</h:outputLink></li>
+        <li><h:outputLink value="#{addressController.getSOBSAddress()}/settings"><span class="profile-icon profile-add-user"/>#{msgs.addUser}</h:outputLink></li>
+        <li><h:outputLink value="#{addressController.getSOBSAddress()}/settings"><span class="profile-icon profile-password"/>#{msgs.changePassword}</h:outputLink></li>
+  	</ul>
+    <hr/>
+    <ul>
+    	<li><h:outputLink value="#{addressController.getSOBSAddress()}/logout" onclick="window.close(); return false;"><span class="profile-icon profile-logout"/>#{msgs.logout}</h:outputLink></li>
+    </ul>
+	
+</ui:composition>

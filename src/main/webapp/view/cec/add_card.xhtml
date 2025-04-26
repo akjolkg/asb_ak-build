@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+		<h2>#{msgs.addVoter} </h2> <br/><br/>	        
+		<h:form id="add-card-form" prependId="false">
+			 <h:panelGroup id="messages">
+				<p:growl id="growl" globalOnly="true" />				
+			</h:panelGroup>
+		    <h:panelGrid styleClass="form-table">
+		    	<h:panelGroup>
+			    	<h:panelGroup styleClass="f-left m-right" id="pinGroup">
+				    	<h:outputText value="#{msgs.pin}" styleClass="form-table-label disp-blc"/>
+				    	<p:inputText id="pin" value="#{permenantcardCreator.inn}" size="12" required="true" requiredMessage="Необходимо заполнить данное поле!" validator="pinValidator" validatorMessage="ПИН неверный или уже зарегистрирован!!!">
+				    		<p:ajax event="blur" update="pinGroup birthdate" process="@this" listener="#{permenantcardCreator.checkInn()}" />
+				    	</p:inputText>
+				    	<p:message for="pin" />
+			    	</h:panelGroup>
+			    	<h:panelGroup styleClass="f-left m-right">
+				    	<h:outputText  value="#{msgs.surname}" styleClass="form-table-label disp-blc"/>
+				    	<p:inputText id="surnames" value="#{permenantcardCreator.lastName}" required="true" requiredMessage="Необходимо заполнить данное поле!"/>
+				    	<p:message for="surnames"/>
+				   	</h:panelGroup>
+				   	<h:panelGroup styleClass="f-left m-right">
+				    	<h:outputText value="#{msgs.firstname}" styleClass="form-table-label disp-blc"/>
+				    	<p:inputText id="firstname"  value="#{permenantcardCreator.firstName}" required="true" requiredMessage="Необходимо заполнить данное поле!"/>
+				    	<p:message for="firstname"/>
+			    	</h:panelGroup>
+				    <h:panelGroup styleClass="f-left m-right">
+				    	<h:outputText value="#{msgs.patronymic}" styleClass="form-table-label disp-blc"/>
+				    	<p:inputText id="patronymic" value="#{permenantcardCreator.middleName}" required="true" requiredMessage="Необходимо заполнить данное поле!"/>
+				    	<p:message for="patronymic"/>
+				    </h:panelGroup>
+				    <h:panelGroup styleClass="f-left" id="birthdate">
+				    	<h:outputText value="#{msgs.birthdate}" styleClass="form-table-label disp-blc"/>
+				    	<p:calendar id="birthdate2" value="#{permenantcardCreator.birthDate}" styleClass="datepicker" maxdate="#{permenantcardCreator.maxDate()}" required="true" requiredMessage="Необходимо заполнить данное поле!"/>
+				    	<p:message for="birthdate2"/>
+				    </h:panelGroup>
+				</h:panelGroup>
+				<h:panelGroup>
+				    <h:panelGroup styleClass="f-left m-right">
+				    	<h:outputText value="#{msgs.region}" styleClass="form-table-label disp-blc"/>
+				    	<h:inputText id="region" value="#{permenantcardCreator.region}" required="true" requiredMessage="Необходимо заполнить данное поле!"/>
+				    	<p:message for="region"/>
+				    </h:panelGroup>
+				    <h:panelGroup styleClass="f-left m-right">
+				    	<h:outputText value="#{msgs.locality}" styleClass="form-table-label disp-blc"/>
+				    	<p:inputText id="locality" value="#{permenantcardCreator.locality}" required="true" requiredMessage="Необходимо заполнить данное поле!"/>
+				    	<p:message for="locality"/>
+				    </h:panelGroup>
+				    <h:panelGroup styleClass="f-left m-right">
+				    	<h:outputText value="#{msgs.street}" styleClass="form-table-label disp-blc"/>
+				    	<p:inputText id="street" value="#{permenantcardCreator.street}" size="30" required="true" requiredMessage="Необходимо заполнить данное поле!"/>
+				    	<p:message for="street"/>
+				    </h:panelGroup>
+				    <h:panelGroup styleClass="f-left m-right">
+				    	<h:outputText value="#{msgs.building}" styleClass="form-table-label disp-blc"/>
+				    	<p:inputText id="building" value="#{permenantcardCreator.building}" size="5" required="true" requiredMessage="Необходимо заполнить данное поле!"/>
+				    	<p:message for="building"/>
+				    </h:panelGroup>
+				    <h:panelGroup styleClass="f-left">
+				    	<h:outputText value="#{msgs.apartment}" styleClass="form-table-label disp-blc"/>
+				    	<p:inputText id="appartment" value="#{permenantcardCreator.apartment}" size="5" required="true" requiredMessage="Необходимо заполнить данное поле!"/>
+				    	<p:message for="appartment" />
+				    </h:panelGroup>
+				 </h:panelGroup>		    	
+		    </h:panelGrid>	
+		    
+		   <ui:include src="/view/select/uik.xhtml" />
+		    
+		    <div class="m-top">
+		    	<p:commandButton id="cancelButton" value="#{msgs.cancel}" action="#{permenantcardCreator.cancel()}" immediate="true" styleClass="button red"/>
+		    	<p:commandButton id="saveButton" value="#{msgs.save}" action="#{permenantcardCreator.doAdd()}" styleClass="button light-blue m-left" update="add-card-form"/>
+		    </div>
+		    <p:blockUI block=":entirePage" trigger="cancelButton" >
+		        #{msgs.loading}<br />
+		        <p:graphicImage library="img" name="ajaxloadingbar.gif"/>
+		    </p:blockUI>
+		    
+		</h:form>
+		
+			
+		<div class="clear"></div>	
+				
+	</ui:define>	
+</ui:composition>

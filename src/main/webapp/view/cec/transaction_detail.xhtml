@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	
+ 	<ui:define name="content">
+		<h2>#{msgs.transactionDetail} </h2> <br/><br/>		
+		<p:growl globalOnly="true" />	
+		
+		<ui:include src="/view/cec/transaction_data.xhtml">
+			<ui:param name="log" value="#{transactionController.transactionLog}" />
+		</ui:include>	
+		<br/>
+		<h:form>
+			 <a style="width: 100px;" class="button m-left m-top" onclick="history.go(-1)">#{msgs.back}</a>
+		</h:form>	
+
+		<div class="clear"></div>		
+				
+	</ui:define>	
+</ui:composition>

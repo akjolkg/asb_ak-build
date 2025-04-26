@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+		<h2>#{msgs.paymentList} </h2> <br/> 
+		
+		<div class="clear"></div>
+		
+		<h:form rendered="#{roleController.isAllowed('KASSA,FIN_DIRECTOR,SUB_FIN_DIRECTOR,KASSA_FILIAL')}">
+			<h:commandLink value="#{msgs.addPayment}" action="#{paymentController.addPayment('/view/payment/list.xhtml')}" styleClass="button green f-right" />
+		</h:form>
+		<div class="clear"></div>
+		<h:form id ="filter-form">		
+			<h:panelGrid columns="3" styleClass="f-left">
+				<h:outputText value="#{msgs.developer}" styleClass="label" />
+				<h:outputText value="#{msgs.amountFrom}" styleClass="label" />
+				<h:outputText value="#{msgs.amountTo}" styleClass="label" />
+				
+				<p:selectCheckboxMenu  value="#{paymentListController.filterDevelopers}" id="developer" style="width:250px;" styleClass="m-right"  
+					multiple="true" converter="companyConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{paymentListController.developers}" var="entity" itemLabel="#{entity.title}" itemValue="#{entity}"/>
+					<p:ajax event="change" update="construction"  listener="#{paymentListController.onCompanyChange}" />
+		    	</p:selectCheckboxMenu>
+		    	<p:inputNumber decimalPlaces="2" value="#{paymentListController.amountFrom}"  autocomplete="off" styleClass="m-right"/>
+		    	<p:inputNumber decimalPlaces="2" value="#{paymentListController.amountTo}"  autocomplete="off"/>
+		    </h:panelGrid>
+		   
+		    <div class="clear"></div>
+			
+			<h:panelGrid columns="3" styleClass="f-left">
+				<h:outputText value="#{msgs.company}" styleClass="label" />
+				<h:outputText value="#{msgs.construction}" styleClass="label" />
+				<h:outputText value="#{msgs.blockNumber}" styleClass="label" />
+				
+				<p:selectCheckboxMenu  value="#{paymentListController.filterCompanies}" id="company" style="width:250px;" styleClass="m-right"  
+					multiple="true" converter="companyConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{paymentListController.companies}" var="entity" itemLabel="#{entity.title}" itemValue="#{entity}"/>
+					<p:ajax event="change" update="construction"  listener="#{paymentListController.onCompanyChange}" />
+		    	</p:selectCheckboxMenu>
+				<p:selectCheckboxMenu  value="#{paymentListController.filterConstructions}"  
+						multiple="true" id="construction" style="width:250px;"  styleClass="m-right"
+						filter="true" filterMatchMode="contains" converter="constructionConverter">
+					<f:selectItems value="#{paymentListController.constructions}" var="entity" itemLabel="#{entity.title}" itemValue="#{entity}"/>
+		    	</p:selectCheckboxMenu>
+		    	<p:selectCheckboxMenu  value="#{paymentListController.filterBlocks}" multiple="true"   styleClass="m-right">
+		            <f:selectItems value="#{paymentListController.blockList}"/>
+		        </p:selectCheckboxMenu>
+		    </h:panelGrid>
+				
+			<h:panelGrid columns="3" styleClass="f-left">
+				<h:outputText value="#{msgs.entranceNumber}" styleClass="label" />
+				<h:outputText value="#{msgs.flat}" styleClass="label" />
+				<h:outputText value="#{msgs.roomQuantity}" styleClass="label" />
+				
+				<p:selectCheckboxMenu  value="#{paymentListController.filterEntrances}" converter="javax.faces.Integer" multiple="true"   styleClass="m-right">
+		            <f:selectItems value="#{paymentListController.getIntegerList(1,10)}"/>
+		        </p:selectCheckboxMenu>					
+				<p:selectCheckboxMenu  value="#{paymentListController.filterFlats}" converter="javax.faces.Integer" multiple="true"   styleClass="m-right">
+		            <f:selectItems value="#{paymentListController.getIntegerList(0,20)}"/>
+		        </p:selectCheckboxMenu>
+		    	<p:selectCheckboxMenu  value="#{paymentListController.filterRoomQuantities}" converter="javax.faces.Integer" multiple="true"   styleClass="m-right">
+		            <f:selectItems value="#{paymentListController.getIntegerList(1,10)}"/>
+		        </p:selectCheckboxMenu>		
+			</h:panelGrid>
+			
+			
+			<div class="clear"/>
+			
+			<h:panelGrid columns="3"  styleClass="f-left">
+				<h:outputText value="#{msgs.clientType}" styleClass="label" />
+				<h:outputText value="#{msgs.clientFrom}" styleClass="label" />
+				<h:outputText value="#{msgs.gotKeys}" styleClass="label" />
+
+				<p:selectCheckboxMenu  value="#{paymentListController.filterTypes}" id="clientType" style="width:200px;" styleClass="m-right"  
+					multiple="true" converter="enumConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{paymentListController.clientTypes}" var="entity" itemLabel="#{enums[entity]}" itemValue="#{entity}"/>
+		    	</p:selectCheckboxMenu>
+		    	<p:selectCheckboxMenu  value="#{paymentListController.filterFroms}" id="clientFrom" style="width:200px;" styleClass="m-right"  
+					multiple="true" converter="enumConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{paymentListController.clientFroms}" var="entity" itemLabel="#{enums[entity]}" itemValue="#{entity}"/>
+		    	</p:selectCheckboxMenu>
+		    	<p:selectCheckboxMenu  value="#{paymentListController.filterKeys}" id="keys" style="width:110px;" styleClass="m-right"  
+					multiple="true" converter="javax.faces.Boolean" filter="true" filterMatchMode="contains">
+					 <f:selectItem itemLabel="#{msgs.yes}" itemValue="true" />
+                     <f:selectItem itemLabel="#{msgs.no}" itemValue="false" /> 
+		    	</p:selectCheckboxMenu>		    	
+			</h:panelGrid>
+		
+			<h:panelGrid columns="4"  styleClass="f-left">
+				<h:outputText value="#{msgs.signed}" styleClass="label" />
+				<h:outputText value="#{msgs.extralow}" styleClass="label" />
+				<h:outputText value="#{msgs.curator}" styleClass="label" />				
+				<h:outputText value="#{msgs.curatorOrk}" styleClass="label" />				
+				
+				<p:selectCheckboxMenu  value="#{paymentListController.filterSigned}" id="signed" style="width:110px;" styleClass="m-right"  
+					multiple="true" converter="javax.faces.Boolean" filter="true" filterMatchMode="contains">
+					 <f:selectItem itemLabel="#{msgs.yes}" itemValue="true" />
+                     <f:selectItem itemLabel="#{msgs.no}" itemValue="false" /> 
+		    	</p:selectCheckboxMenu>		
+		    	<p:selectCheckboxMenu  value="#{paymentListController.filterExtralow}" style="width:110px;" styleClass="m-right"  
+					multiple="true" converter="javax.faces.Boolean" filter="true" filterMatchMode="contains">
+					 <f:selectItem itemLabel="#{msgs.yes}" itemValue="true" />
+                     <f:selectItem itemLabel="#{msgs.no}" itemValue="false" /> 
+		    	</p:selectCheckboxMenu>				
+				<p:selectCheckboxMenu  value="#{paymentListController.filterCurators}" id="curator" style="width:250px;" styleClass="m-right"  
+					multiple="true" converter="userConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{paymentListController.curators}" var="entity" itemLabel="#{entity.fio}" itemValue="#{entity}"/>					
+		    	</p:selectCheckboxMenu>
+		    	
+		    	<p:selectCheckboxMenu  value="#{paymentListController.filterCuratorOrks}" id="curatorOrk" style="width:250px;" styleClass="m-right"  
+					multiple="true" converter="userConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{paymentListController.curatorOrks}" var="entity" itemLabel="#{entity.fio}" itemValue="#{entity}"/>					
+		    	</p:selectCheckboxMenu>
+	
+			</h:panelGrid>
+			
+			<div class="clear"/>
+		
+			
+			<h:panelGrid columns="2"  styleClass="f-left">
+			    <h:outputText value="#{msgs.appartmentNumber}" styleClass="label m-right " />
+			    <h:outputText value="#{msgs.clientFio}" styleClass="label m-right " />
+			   
+				<p:inputText value="#{paymentListController.filterTitle}"  styleClass="m-left"/>	
+				<p:inputText value="#{paymentListController.searchString}"  styleClass="m-right"/>
+				
+			</h:panelGrid>
+	
+			<h:panelGrid columns="3"  styleClass="f-left">
+			    <h:outputText value="#{msgs.dateFrom}" styleClass="label m-left" />
+				<h:outputText value="#{msgs.dateTo}" styleClass="label m-left" />
+				<h:outputText value="#{msgs.paymentType}" styleClass="label m-left" />
+				
+				<p:calendar showOtherMonths="true" selectOtherMonths="true"  value="#{paymentListController.filterDateFrom}"  showOn="button" locale="ru" styleClass="m-left"/>
+				<p:calendar showOtherMonths="true" selectOtherMonths="true"  value="#{paymentListController.filterDateTo}"  showOn="button" locale="ru" styleClass="m-left"/>
+				<p:selectCheckboxMenu  value="#{paymentListController.filterPaymentTypes}" id="ptypes" style="width:250px;" styleClass="m-right"  
+					multiple="true" converter="javax.faces.Boolean" filter="true" filterMatchMode="contains">
+					 <f:selectItem itemLabel="#{msgs.firstPayment}" itemValue="true" />
+                     <f:selectItem itemLabel="#{msgs.paymentBySchedule}" itemValue="false" /> 
+		    	</p:selectCheckboxMenu>
+			</h:panelGrid> 
+			<h:panelGrid columns="1"  styleClass="f-left">
+			    <h:outputText value="#{msgs.appartmentType}" styleClass="label m-left" />
+				<p:selectCheckboxMenu  value="#{paymentListController.filterAppartmentTypes}" id="aType" style="width:250px;" styleClass="m-right"  
+					multiple="true" converter="enumConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{paymentListController.appartmentTypes}" var="entity" itemLabel="#{enums[entity]}" itemValue="#{entity}"/>					
+		    	</p:selectCheckboxMenu>
+			</h:panelGrid>
+			<h:panelGrid columns="1"  styleClass="f-left" rendered="#{roleController.isAllowed('CONTROLLER,ORK')}">
+				<h:outputText value="#{msgs.garant}" styleClass="label" />
+				<p:selectCheckboxMenu  value="#{paymentListController.filterGarants}" id="garant" style="width:250px;" styleClass="m-right"  
+					multiple="true" converter="garantConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{paymentListController.garants}" var="entity" itemLabel="#{entity.fio}" itemValue="#{entity}"/>					
+		    	</p:selectCheckboxMenu>
+			</h:panelGrid>
+			
+			<h:panelGrid columns="1"  styleClass="f-left" rendered="#{roleController.isAllowed('FIN_DIRECTOR,SUB_FIN_DIRECTOR,KASSA')}">
+				<h:outputText value="Кассир" styleClass="label" />
+				<p:selectCheckboxMenu  value="#{paymentListController.filterKassirs}" id="kassir" style="width:250px;" styleClass="m-right"  
+					multiple="true" converter="userConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{paymentListController.kassirs}" var="entity" itemLabel="#{entity.fio}" itemValue="#{entity}"/>					
+		    	</p:selectCheckboxMenu>
+			</h:panelGrid>
+			
+			<h:panelGrid columns="1"  styleClass="f-left">
+				<h:outputText value="#{msgs.paymentType2}" styleClass="label" />
+				<p:selectCheckboxMenu  value="#{paymentListController.filterPaymentEnumTypes}" id="paymentTypeType" style="width:200px;" styleClass="m-right"  
+					multiple="true" converter="enumConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{paymentListController.paymentTypes}" var="entity" itemLabel="#{enums[entity]}" itemValue="#{entity}"/>
+		    	</p:selectCheckboxMenu>
+			</h:panelGrid>
+			
+			<h:panelGrid columns="2"  styleClass="f-left">
+			   <h:outputText value="" styleClass="label" />
+				<h:outputText value="" styleClass="label" />
+				
+				<p:commandButton ajax="true" update="form" value="#{msgs.search}" actionListener="#{paymentListController.filter}" styleClass="button green f-right" />
+			    <p:commandButton ajax="true" update="form filter-form" value="#{msgs.clearFilter}" actionListener="#{paymentListController.clearFilter}" styleClass="button blue f-right" />
+			</h:panelGrid>
+		
+		</h:form>
+		
+		<div class="clear"></div>
+		
+		<h:form id ="form">
+			<p:dataTable var="entity" value="#{paymentListController.model}" paginator="true" rows="50" lazy="true" rowKey="#{entity.id}" rowIndexVar="index" tableStyleClass="display-table"
+	   			id="table" selectionMode="single" emptyMessage="#{msgs.noRecordsFound}" 
+	   			rowsPerPageTemplate="10,20,30,40,50,100000" paginatorPosition="bottom" pageLinks="10"
+	                   currentPageReportTemplate="Всего : #{paymentListController.model.rowCount} из #{paymentListController.model.totalCount}  &#160;&#160;| #{msgs.amountPerPage}"
+	               	   paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport} {RowsPerPageDropdown} {Exporters}"
+	                   selection="#{paymentListController.payment}"
+	                   first="#{paymentListController.first}" >
+				<p:ajax event="page" listener="#{paymentListController.onPageChange}"/>
+				<p:ajax event="rowDblselect" listener="#{clientController.onRowSelectPayment}"  /> 
+				<f:facet name="{Exporters}">
+            		<h:commandLink id="excel" styleClass="m-left" rendered="#{!roleController.isAllowed('JUNIOR')}">
+					    <p:graphicImage library="img" name="excel.png"  />
+					   	<p:dataExporter type="xls" target="table" fileName="export" postProcessor="#{dataExportController.postProcessXLS}" />
+					</h:commandLink>
+				</f:facet>     
+			    
+			    <p:column headerText="№">
+			        <h:outputText value="#{index+1}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.developer}" visible="false">
+			        <h:outputText value="#{entity.client.appartment.construction.developer.title}" />
+			    </p:column>
+			    <p:column headerText="#{msgs.company}" visible="false">
+			        <h:outputText value="#{entity.client.appartment.construction.company.title}" />
+			    </p:column>
+			    <p:column headerText="#{msgs.appartmentType}" visible="false">
+			        <h:outputText value="#{enums[entity.client.appartment.type]}" />
+			    </p:column>
+			    
+			    
+			    <p:column headerText="#{msgs.object}" >
+			        <h:outputText value="#{entity.client.appartment.construction.title} : #{entity.client.appartment.title}" />
+			    </p:column>
+			    
+			    
+			    <p:column headerText="#{msgs.fio} #{msgs.client}" sortBy="#{entity.client.fio}">
+			        <h:outputText value="#{entity.client.fio}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.contractSum}" visible="false" sortBy="#{entity.client.totalSum}">
+			        <h:outputText value="#{entity.client.totalSum}" >
+			        	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2"/>
+			        </h:outputText>
+			    </p:column>
+			    			    
+			    <p:column headerText="#{msgs.datePayment}" sortBy="#{entity.datePayment}">
+			        <h:outputText value="#{entity.datePayment}" >
+			        	<f:convertDateTime pattern="dd-MM-yyyy HH-mm" />
+			        </h:outputText>
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.pkoNumber}" sortBy="#{entity.checkNumber}">
+			        <h:outputText value="#{entity.checkNumber}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.paymentType}" sortBy="#{entity.firstPayment}">
+			        <h:outputText rendered="#{entity.firstPayment eq true}" value="#{msgs.firstPayment}" />
+			        <h:outputText rendered="#{entity.firstPayment eq false}" value="#{msgs.paymentBySchedule}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.amountToPay}" sortBy="#{entity.paymentAmount}">
+			        <h:outputText value="#{entity.paymentAmount}" >
+			        	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+			        </h:outputText>
+			        <h:panelGroup rendered="#{entity.paymentAmount le 0 and entity.reserveAmount gt 0}">
+				        <h:outputText  value="(Ожидает потдверждения Зав. Кассы !!!) " style="color:red;"/>
+				        <br/>
+				        <h:outputText  value="#{entity.reserveAmount}" style="color:red;">
+				        	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+				        </h:outputText>
+			        </h:panelGroup>
+			        
+			    </p:column>
+			    
+			     <p:column headerText="#{msgs.leftSum}" visible="false" sortBy="#{entity.client.notPayedYet}">
+			        <h:outputText value="#{entity.client.notPayedYet}" >
+			        	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2"/>
+			        </h:outputText>
+			    </p:column>
+			    <p:column headerText="#{msgs.leftSumDoc}" visible="false">
+			        <h:outputText rendered="#{entity.client.appartment.docTotalArea>0}" value="#{(entity.client.appartment.docTotalArea*entity.client.priceForSquare)-entity.client.alreadyPayed}" >
+			        	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2"  maxFractionDigits="2"/>
+			        </h:outputText>
+			    </p:column>
+			    
+			    
+			    <p:column rendered="#{!roleController.isAllowed('JUNIOR')}" headerText="#{msgs.note}" sortBy="#{entity.client.note}">
+			        <h:outputText value="#{entity.note}" />
+			    </p:column>
+			    
+			    <p:column rendered="#{roleController.isAllowed('FIN_DIRECTOR,SUB_FIN_DIRECTOR,KASSA,KASSA_ADMIN')}" headerText="Кассир" sortBy="#{entity.user.fio}">
+			        <h:outputText value="#{entity.user.fio}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.curator}" >
+			        <h:outputText value="#{entity.client.curator.fio}"/>			        	
+			    </p:column>
+			    <p:column headerText="#{msgs.curatorOrk}" visible="false" >
+			        <h:outputText value="#{entity.client.curatorOrk.fio}"/>			        	
+			    </p:column>
+			    <p:column headerText="ЧЕК" rendered="#{roleController.isAllowed('KASSA_ADMIN')}">
+			        <h:outputText rendered="#{entity.check}" value="Одобрен" style="color:green;"/>			        	
+			    </p:column>
+			     <p:column headerText="#{msgs.paymentType2}" >
+			        <h:outputText value="#{enums[entity.paymentType]}"/>			        	
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.operation}" exportable="false">
+			    	<p:commandButton rendered="#{roleController.isAllowed('KASSA_ADMIN') and entity.paymentAmount le 0 and entity.reserveAmount gt 0}" id="allow" ajax="true" icon="fa fa-check" title="Одобрить" 
+			    		class="btn-journal" 
+			    		update="table"
+			    		actionListener="#{paymentController.checkPayment(entity)}" >
+			    		<p:confirm header="Подтверждение" escape="false" 
+			    			message="Вы действительно хотите одобрить платеж? 
+			    			    &lt;br/&gt; #{msgs.fio}: #{entity.client.fio}
+			    				&lt;br/&gt; #{msgs.clientType}: #{enums[entity.client.type]}
+			    				&lt;br/&gt; #{msgs.paymentType}: #{enums[entity.paymentType]}
+			    				&lt;br/&gt; #{msgs.amountToPay}: #{entity.reserveAmount}" 
+			    			icon="fa fa-question" />
+			    	</p:commandButton>
+			    	<p:commandButton disabled="#{entity.client.appartment.construction.company.id eq 1 and !(roleController.isAllowed('FIN_DIRECTOR'))}" rendered="#{roleController.isAllowed('KASSA,FIN_DIRECTOR,KASSA_FILIAL')}" id="generate" ajax="true" icon="fa fa-print" title="Просмотр" class="btn-journal" actionListener="#{paymentJasperController.generatePaymentPrint(entity)}" />
+			    	<p:commandButton rendered="#{roleController.isAllowed('FIN_DIRECTOR')}" id="delete" ajax="false" icon="fa fa-remove" title="#{msgs.delete}" class="btn-journal" action="#{paymentController.delete(entity)}" />
+			    	<p:commandButton rendered="#{roleController.isAllowed('FIN_DIRECTOR')}" id="switch"
+			    		
+			    		 ajax="true" update="table" icon="fa fa-suitcase" title="Поменять тип платежа" class="btn-journal" action="#{paymentController.switchPT(entity)}" >
+			    		 <p:confirm header="Вы действительно хотите поменять тип платежа?" message="Вы действительно хотите поменять тип платежа?" icon="fa fa-unlink" />
+			    	</p:commandButton>
+			    		 			    	
+			    			    	
+			    </p:column>
+			    <p:column headerText="#{msgs.garant}" rendered="#{roleController.isAllowed('CONTROLLER,ORK')}" >
+			        <h:outputText value="#{entity.client.garant.fio}"/>			        	
+			    </p:column>
+			    
+			    
+			    <p:columnGroup type="footer">
+		                <p:column colspan="6" style="text-align:right" footerText="#{msgs.total} :"  />
+		                <p:column colspan="5"> 
+		                	<f:facet name="footer">
+			                	<h:outputText value="#{paymentListController.total}" styleClass="f-left">
+						        	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2"/>
+						        </h:outputText>
+			                </f:facet>
+		                </p:column>
+		        
+		        </p:columnGroup>
+			    
+			</p:dataTable>
+			<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+		        <p:commandButton value="ДА" type="button" styleClass="ui-confirmdialog-yes" icon="fa fa-check" />
+		        <p:commandButton value="НЕТ" type="button" styleClass="ui-confirmdialog-no" icon="fa fa-times" />
+		    </p:confirmDialog>   
+		</h:form>
+		<p:blockUI block="form:table" trigger="form:table" >
+			#{msgs.loading}<br />
+		    <p:graphicImage library="img" name="ajaxloadingbar.gif"/>
+		</p:blockUI>	
+
+		<div class="clear"></div>			
+				
+	</ui:define>	
+	
+</ui:composition>

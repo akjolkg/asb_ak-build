@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"> 		
+ 		
+	<h:panelGrid styleClass="form-table" columns="2">
+		<h:panelGroup id="tik" styleClass="f-left">
+			<h:outputText value="#{msgs.tik}" styleClass="form-table-label disp-blc"/>
+				<p:selectOneMenu id="tik-select" value="#{uikSelector.tik}" requiredMessage="#{error.thisFieldIsRequired}" effect="none" converter="tikConverter"
+				        		styleClass="w-1-1">
+			        	<f:selectItems value="#{uikSelector.tiks}" var="tik" itemLabel="#{tik.name}" itemValue="#{tik}"/>
+		        </p:selectOneMenu>
+		        <h:message for="tik-select" id="tik-message" styleClass="error"/>
+			</h:panelGroup>
+	</h:panelGrid>
+	
+</ui:composition>

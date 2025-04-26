@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<persistence version="2.1"
+   xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="
+        http://xmlns.jcp.org/xml/ns/persistence
+        http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+   <persistence-unit name="primary">
+   	  <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+      <jta-data-source>java:jboss/datasources/asbDS</jta-data-source>
+      <!-- entities -->
+      <class>org.asb.model.Garant</class>
+      <class>org.asb.model.Construction</class>
+      <class>org.asb.model.User</class>
+      <class>org.asb.model.Appartment</class>
+      <class>org.asb.model.Attachment</class>
+      <class>org.asb.model.Client</class>
+      
+      <class>org.asb.model.Company</class>
+      <class>org.asb.model.GeneralInfo</class>
+      <class>org.asb.model.Payment</class>
+      <class>org.asb.model.Schedule</class>
+      <class>org.asb.model.ClientDocument</class>
+      <class>org.asb.model.Denounce</class>
+      <class>org.asb.model.DeletedReserve</class>
+      <class>org.asb.model.Log</class>
+      <class>org.asb.model.ResponsiblePerson</class>
+      <class>org.asb.model.ScheduleTemplate</class>
+      <class>org.asb.model.SubSchedule</class>
+      <class>org.asb.model.CommentLog</class>      
+      <class>org.asb.model.ContractTemplate</class>      
+      
+      <exclude-unlisted-classes>true</exclude-unlisted-classes>
+      <shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
+	  <validation-mode>AUTO</validation-mode>
+      
+      <properties>
+         <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
+		 <property name="hibernate.hbm2ddl.auto" value="update"/>
+		 <property name="hibernate.connection.useUnicode" value="true"/>
+		 <property name="hibernate.connection.characterEncoding" value="UTF-8"/>
+		 <property name="hibernate.connection.charSet" value="UTF-8"/>
+		 <property name="hibernate.connection.isolation" value="8"/>
+		 <property name="hibernate.show_sql" value="false" />
+		 <property name="hibernate.max_fetch_depth" value="3"/>
+			
+		 <property name="hibernate.transaction.manager_lookup_class" value="org.hibernate.transaction.JBossTransactionManagerLookup"/>
+		 <property name="hibernate.cache.use_second_level_cache" value="true"/>
+		 <property name="hibernate.cache.use_query_cache" value="true"/>
+		 <property name="hibernate.cache.use_minimal_puts" value="true"/>
+      </properties>
+   </persistence-unit>
+</persistence>

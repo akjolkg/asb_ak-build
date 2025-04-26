@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:panelGrid columns="2" styleClass="form-table w-1-3"
+		columnClasses="form-table-odd-col">
+		
+		<h:outputText value="#{msgs.numberTransaction}" styleClass="form-table-label" />
+		<h:outputText value="#{log.position}" />
+
+		<h:outputText value="#{msgs.date}" styleClass="form-table-label" />
+		<h:outputText value="#{log.dateCreated}">
+			<f:convertDateTime type="both" timeStyle="medium" dateStyle="medium" />
+		</h:outputText>
+
+		<h:outputText value="#{msgs.eventUser}" styleClass="form-table-label" />
+		<h:outputText value="#{log.user.username}" />
+		
+		<h:outputText value="#{msgs.eventUserFullName}" styleClass="form-table-label" />
+		<h:outputText value="#{log.user.fullname}" />
+
+		<h:outputText value="#{msgs.transactionType}" styleClass="form-table-label" />
+		<h:outputText value="#{enums[log.type.toString()]}" />
+		
+		<h:outputText value="#{msgs.type}" styleClass="form-table-label" rendered="#{log.type=='DELETE_FORM'}"/>
+		<h:outputText value="#{enums[log.voter.types.toString()]}" rendered="#{log.type=='DELETE_FORM'}"/>
+		
+		<h:outputText value="#{msgs.description}" styleClass="form-table-label" rendered="#{log.type=='DELETE_FORM'}"/>
+		<h:outputText value="#{log.voter.deleteDescription}" rendered="#{log.type=='DELETE_FORM'}"/>
+		
+
+		<h:outputText value="#{msgs.tik}" styleClass="form-table-label" />
+		<h:outputText value="#{log.tik.name}" />
+
+		<h:outputText value="#{msgs.uik}" styleClass="form-table-label" />
+		<h:outputText value="#{log.uik.name}" />
+
+		<h:outputText value="#{msgs.pin}" styleClass="form-table-label" />
+		<h:outputText value="#{log.permanentcard.pin}" />
+
+		<h:outputText value="#{msgs.firstname}" styleClass="form-table-label" />
+		<h:outputText value="#{log.permanentcard.name}" />
+
+		<h:outputText value="#{msgs.surname}" styleClass="form-table-label" />
+		<h:outputText value="#{log.permanentcard.surname}" />
+
+		<h:outputText value="#{msgs.patronymic}" styleClass="form-table-label" />
+		<h:outputText value="#{log.permanentcard.patronymic}" />
+
+		<h:outputText value="#{msgs.birthdate}" styleClass="form-table-label" />
+		<h:outputText value="#{log.permanentcard.birthdate}" />
+		
+
+	</h:panelGrid>
+</ui:composition>

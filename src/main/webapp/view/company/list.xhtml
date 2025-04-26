@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+		<h2>#{msgs.companyList} </h2> <br/> 
+		<div class="clear"></div>
+		<h:form rendered="#{roleController.isAllowed('ADMIN')}">
+			<h:commandLink value="#{msgs.addCompany}" action="#{companyCreator.add()}" styleClass="button green f-right" />
+		</h:form>
+		<br/>
+		<div class="clear"></div>
+		<h:form id ="form">
+			<p:dataTable var="entity" value="#{companyListController.model}" paginator="true" rows="50" lazy="true" rowKey="#{entity.id}" rowIndexVar="index" tableStyleClass="display-table"
+	   			id="table" selectionMode="single" emptyMessage="#{msgs.noRecordsFound}" 
+	   			rowsPerPageTemplate="10,20,30,40,50" paginatorPosition="bottom" pageLinks="10"
+	   			currentPageReportTemplate="Всего : #{companyListController.model.rowCount} из #{companyListController.model.totalCount}  &#160;&#160;| #{msgs.amountPerPage}"
+	            paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport} {RowsPerPageDropdown}"
+	            selection="#{companyListController.company}"
+	            first="#{companyListController.first}" >
+				<p:ajax event="page" listener="#{companyListController.onPageChange}"/>  
+			    
+			    <p:column headerText="№">
+			        <h:outputText value="#{index+1}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.inn}">
+			        <h:outputText value="#{entity.inn}" />
+			    </p:column>
+			    <p:column headerText="#{msgs.name}">
+			        <h:outputText value="#{entity.title}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.legalAddress}">
+			        <h:outputText value="#{entity.address}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.accountNumber}">
+			        <h:outputText value="#{entity.accountNumber}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.phone}">
+			        <h:outputText value="#{entity.phone}" />
+			    </p:column>
+			    
+			    
+				<p:column headerText="#{msgs.responsiblePerson}">
+			        <h:outputText value="#{entity.responsiblePerson}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.currency}">
+			        <h:outputText value="#{entity.currency}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.operation}" rendered="#{roleController.isAllowed('ADMIN')}">
+			    	<h:commandButton action="#{companyCreator.edit(entity)}" value="#{msgs.edit}" styleClass="btn-icon edit" title="#{msgs.edit}" />
+			    	
+			    </p:column>
+			</p:dataTable>
+		</h:form>
+		<p:blockUI block="form:table" trigger="form:table" >
+			#{msgs.loading}<br />
+		    <p:graphicImage library="img" name="ajaxloadingbar.gif"/>
+		</p:blockUI>	
+
+		<div class="clear"></div>			
+				
+	</ui:define>	
+	
+</ui:composition>

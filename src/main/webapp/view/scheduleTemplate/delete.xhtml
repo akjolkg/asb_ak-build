@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+		<h2>#{msgs.delete} </h2> <br/> 
+		<br/>
+		<div class="clear"></div>
+		<h2>#{msgs.scheduleTemplateCard} </h2> <br/>
+		<h:form id="add-card-form" prependId="false">
+			<h:panelGroup id="messages">
+				<p:growl globalOnly="true" />
+			</h:panelGroup>
+		   	
+			<h:panelGrid styleClass="form-table f-left m-top m-left" columns="2"  style="width:400px;">
+				<h:outputText value="#{msgs.fio}" styleClass="form-table-label disp-blc"/>
+				<h:outputText value="#{scheduleTemplateController.scheduleTemplate.client.fio}" />				
+			
+				<h:outputText value="#{msgs.object}" styleClass="form-table-label disp-blc"/>
+		    	<h:outputText value="#{scheduleTemplateController.scheduleTemplate.client.appartment.construction.title} : #{scheduleTemplateController.scheduleTemplate.client.appartment.title}" />
+		    	
+			   <h:outputText value="#{msgs.note}" styleClass="form-table-label disp-blc"/>
+				<h:outputText value="#{scheduleTemplateController.scheduleTemplate.note}" />		
+	
+			</h:panelGrid>
+		</h:form>
+		
+		<div class="clear"></div>
+		<br/>
+		
+		<h:form id ="main-form">
+			<h:panelGroup id="messages">
+				<p:growl globalOnly="true" />
+			</h:panelGroup>
+			<h:outputText value="#{msgs.areYouSureToDeletescheduleTemplate}" styleClass="form-table-label disp-blc" style="color:red;"/>
+			<div class="clear"></div>
+			<br/>
+			
+			
+			<h:commandButton value="#{msgs.delete}" action="#{scheduleTemplateController.delete()}" styleClass="button red"/>
+			<h:commandButton value="#{msgs.cancel}" action="#{scheduleTemplateController.cancel()}" immediate="true" styleClass="button light-blue m-left"/>
+			
+		
+		
+		
+		</h:form>
+		
+			</ui:define>	
+	
+</ui:composition>

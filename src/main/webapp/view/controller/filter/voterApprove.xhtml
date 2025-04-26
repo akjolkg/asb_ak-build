@@ -1,0 +1,87 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+	<h:form id="filterForm">			
+		   	<h:panelGrid columns="1" style="float:left;">
+		   		<h:outputLabel value="#{msgs.operator} :" style="width:240px;display:inline-block"/>
+				
+				<p:autoComplete size="27" id="operator" dropdown="true" var="c"
+							itemValue="#{c}" itemLabel="#{c.fio}" 
+							value="#{voterListApproveController.filterOperator}" 
+							converter="userConverter"  
+							completeMethod="#{voterListApproveController.findOperator}" >
+							<p:column>
+				                <h:outputText value="#{c.pin}" />
+				            </p:column>
+				 
+				            <p:column>
+				                <h:outputText value="#{c.fio}" />
+				            </p:column>
+							<p:ajax process="filterForm" update=":form" listener="#{voterListApproveController.filterData()}"  event="itemSelect" />
+						</p:autoComplete>					   	
+		   	</h:panelGrid>
+		   	
+		   	<h:panelGrid columns="3" style="float:left;">
+		   		<h:outputLabel value="#{msgs.agitator} :" style="width:240px;display:inline-block"/>
+				<h:outputLabel value="#{msgs.uik} :" style="width:250px;display:inline-block"/>
+				<h:outputLabel value="#{msgs.address} :" style="width:290;display:inline-block"/>
+		   		
+				
+				<p:autoComplete size="27" id="agitator" dropdown="true" var="c"
+							itemValue="#{c}" itemLabel="#{c.fio}" 
+							value="#{voterListApproveController.filterAgitator}" 
+							converter="agitatorConverter"  
+							completeMethod="#{voterCreator.findAgitator}" >
+							<p:column>
+				                <h:outputText value="#{c.pin}" />
+				            </p:column>
+				 
+				            <p:column>
+				                <h:outputText value="#{c.fio}" />
+				            </p:column>
+						<p:ajax process="filterForm" update=":form" listener="#{voterListApproveController.filterData()}"  event="itemSelect" />
+						</p:autoComplete>
+				<p:autoComplete size="27" id="uik" dropdown="true" var="c"
+							itemValue="#{c}" itemLabel="#{c.name}" 
+							value="#{voterListApproveController.filterUik}" 
+							converter="uikConverter"  
+							completeMethod="#{voterListApproveController.findUik}" >
+							<p:column>
+				                <h:outputText value="#{c.number}" />
+				            </p:column>
+				 
+				            <p:column>
+				                <h:outputText value="#{c.name}" />
+				            </p:column>
+						<p:ajax process="filterForm" update=":form" listener="#{voterListApproveController.filterData()}"  event="itemSelect" />
+						</p:autoComplete>			
+				<h:inputText value="#{voterListApproveController.searchAddress}" style="width:290px;"/>				
+		   	</h:panelGrid>
+		   	
+		   	<h:panelGrid columns="5" style="float:left;">
+		   		<h:outputLabel value="#{msgs.surname} :" style="width:280px;display:inline-block"/>
+		   		<h:outputLabel value="#{msgs.firstname} :" style="width:280px;display:inline-block"/>
+		   		<h:outputLabel value="#{msgs.patronymic} :" style="width:280px;display:inline-block"/>
+				<h:outputLabel value="" />
+				<h:outputLabel value="" />		
+				
+				<h:inputText value="#{voterListApproveController.surname}" style="width:270px;"/>
+				<h:inputText value="#{voterListApproveController.firstname}" style="width:270px;"/>
+				<h:inputText value="#{voterListApproveController.patronymic}" style="width:270px;"/>
+			   	<p:commandButton style="margin-left:20px;" value="#{msgs.applyFilter}" action="#{voterListApproveController.filterData()}" update=":form"></p:commandButton>
+			   	<p:commandButton value="#{msgs.clearFilter}" style="width:200px; background-color:rgb(249, 179, 179);"  action="#{voterListApproveController.removeState()}" update=":form filterForm"></p:commandButton>
+		
+		   	
+		   	
+		   	</h:panelGrid>
+		   	
+		   	
+		   	
+		   
+		   				
+	</h:form>
+	<br/>
+</ui:composition>

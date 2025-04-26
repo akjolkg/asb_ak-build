@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+		<h2>#{msgs.logList} </h2> <br/> 
+		
+		<div class="clear"></div>
+		
+		<h:form id ="filter-form">		
+	
+					
+			<h:panelGrid columns="2"  styleClass="f-left">
+				<h:outputText value="#{msgs.logType}" styleClass="label" />
+				<h:outputText value="#{msgs.objectType}" styleClass="label" />
+				
+				<p:selectCheckboxMenu  value="#{logListController.filterLogTypes}" id="clientType" style="width:200px;" styleClass="m-right"  
+					multiple="true" converter="enumConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{logListController.logTypes}" var="entity" itemLabel="#{enums[entity]}" itemValue="#{entity}"/>
+		    	</p:selectCheckboxMenu>
+		    	<p:selectCheckboxMenu  value="#{logListController.filterObjectTypes}" id="clientFrom" style="width:200px;" styleClass="m-right"  
+					multiple="true" converter="enumConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{logListController.objectTypes}" var="entity" itemLabel="#{enums[entity]}" itemValue="#{entity}"/>
+		    	</p:selectCheckboxMenu>
+		    		
+			</h:panelGrid>
+		
+			<h:panelGrid columns="1"  styleClass="f-left">
+				<h:outputText value="#{msgs.user}" styleClass="label" />				
+				
+				<p:selectCheckboxMenu  value="#{logListController.filterCurators}" id="curator" style="width:250px;" styleClass="m-right"  
+					multiple="true" converter="userConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{logListController.curators}" var="entity" itemLabel="#{entity.fio}" itemValue="#{entity}"/>					
+		    	</p:selectCheckboxMenu>
+	
+			</h:panelGrid>
+			
+			<div class="clear"/>
+		
+			
+			<h:panelGrid columns="1"  styleClass="f-left">
+			    <h:outputText value="#{msgs.searchString}" styleClass="label m-right " />
+			    <p:inputText value="#{logListController.searchString}"  styleClass="m-right"/>
+				
+			</h:panelGrid>
+	
+			<h:panelGrid columns="2"  styleClass="f-left">
+			    <h:outputText value="#{msgs.dateFrom}" styleClass="label m-left" />
+				<h:outputText value="#{msgs.dateTo}" styleClass="label m-left" />
+				
+				<p:calendar showOtherMonths="true" selectOtherMonths="true"  value="#{logListController.filterDateFrom}"  showOn="button" locale="ru" styleClass="m-left"/>
+				<p:calendar showOtherMonths="true" selectOtherMonths="true"  value="#{logListController.filterDateTo}"  showOn="button" locale="ru" styleClass="m-left"/>
+			</h:panelGrid>
+			
+			<h:panelGrid columns="2"  styleClass="f-left">
+			   <h:outputText value="" styleClass="label" />
+				<h:outputText value="" styleClass="label" />
+				
+				<p:commandButton ajax="true" update="form" value="#{msgs.search}" actionListener="#{logListController.filter}" styleClass="button green f-right" />
+			    <p:commandButton ajax="true" update="form filter-form" value="#{msgs.clearFilter}" actionListener="#{logListController.clearFilter}" styleClass="button blue f-right" />
+			</h:panelGrid>
+		
+		</h:form>
+		
+		<div class="clear"></div>
+		
+		<h:form id ="form">
+			<p:dataTable var="entity" value="#{logListController.model}" paginator="true" rows="50" lazy="true" rowKey="#{entity.id}" rowIndexVar="index" tableStyleClass="display-table"
+	   			id="table" selectionMode="single" emptyMessage="#{msgs.noRecordsFound}" 
+	   			rowsPerPageTemplate="10,20,30,40,50,100000" paginatorPosition="bottom" pageLinks="10"
+	                   currentPageReportTemplate="Всего : #{logListController.model.rowCount} из #{logListController.model.totalCount}  &#160;&#160;| #{msgs.amountPerPage}"
+	               	   paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport} {RowsPerPageDropdown} {Exporters}"
+	                   selection="#{logListController.log}"
+	                   first="#{logListController.first}" >
+				<p:ajax event="page" listener="#{logListController.onPageChange}"/>
+				<f:facet name="{Exporters}">
+            		<h:commandLink id="excel" styleClass="m-left">
+					    <p:graphicImage library="img" name="excel.png"  />
+					   	<p:dataExporter type="xls" target="table" fileName="export" postProcessor="#{dataExportController.postProcessXLS}" />
+					</h:commandLink>
+				</f:facet>     
+			    
+			    <p:column headerText="№">
+			        <h:outputText value="#{index+1}" />
+			    </p:column>
+			    <p:column headerText="#{msgs.user}">
+			        <h:outputText value="#{entity.user.fio}" />
+			    </p:column>
+			    <p:column headerText="#{msgs.logType}">
+			        <h:outputText value="#{enums[entity.type]}" />
+			    </p:column>
+			    <p:column headerText="#{msgs.objectType}">
+			        <h:outputText value="#{enums[entity.objectType]}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.description}">
+			        <h:outputText value="#{entity.description}" escape="false" />
+			    </p:column>
+			    <p:column headerText="#{msgs.date}">
+			        <h:outputText value="#{entity.dateCreated}" >
+			        	<f:convertDateTime pattern="dd-MM-yyyy HH:mm:ss" />
+			        </h:outputText>
+			    </p:column>
+			</p:dataTable>
+		</h:form>
+		<p:blockUI block="form:table" trigger="form:table" >
+			#{msgs.loading}<br />
+		    <p:graphicImage library="img" name="ajaxloadingbar.gif"/>
+		</p:blockUI>	
+
+		<div class="clear"></div>			
+				
+	</ui:define>	
+	
+</ui:composition>

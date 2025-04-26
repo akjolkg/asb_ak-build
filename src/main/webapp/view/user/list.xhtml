@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+		<h2>#{msgs.users} </h2> <br/> 
+		<div class="clear"></div>
+		<h:form rendered="#{roleController.isAllowed('ADMIN')}">
+			<h:commandLink value="#{msgs.addUser}" action="#{userCreator.add()}" styleClass="button green f-right" />
+		</h:form>
+		<br/>
+		<div class="clear"></div>
+		<h:form id="filter-form" >
+			<h:panelGrid columns="1"  styleClass="f-left">
+			    <h:outputText value="#{msgs.searchString}" styleClass="label m-right " />
+			   	<p:inputText value="#{userListController.searchString}"  styleClass="m-left"/>				
+			</h:panelGrid>
+			<h:panelGrid columns="2"  styleClass="f-left">
+			   <h:outputText value="" styleClass="label" />
+				<h:outputText value="" styleClass="label" />
+				
+				<p:commandButton ajax="true" update="form" value="#{msgs.search}" actionListener="#{userListController.filter}" styleClass="button green f-right" />
+			    <p:commandButton ajax="true" update="form filter-form" value="#{msgs.clearFilter}" actionListener="#{userListController.clearFilter}" styleClass="button blue f-right" />
+			</h:panelGrid>
+			
+			
+		</h:form>
+		
+		
+		
+		
+		
+		<div class="clear"></div>
+		<h:form id ="form">
+			<p:dataTable var="entity" value="#{userListController.model}" paginator="true" rows="50" lazy="true" rowKey="#{entity.id}" rowIndexVar="index" tableStyleClass="display-table"
+	   			id="table" selectionMode="single" emptyMessage="#{msgs.noRecordsFound}" 
+	   			rowsPerPageTemplate="10,20,30,40,50" paginatorPosition="bottom" pageLinks="10"
+	   			currentPageReportTemplate="Всего : #{userListController.model.rowCount} из #{userListController.model.totalCount}  &#160;&#160;| #{msgs.amountPerPage}"
+	            paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport} {RowsPerPageDropdown}"
+	            selection="#{userListController.user}"
+	            first="#{userListController.first}" >
+				<p:ajax event="page" listener="#{userListController.onPageChange}"/>  
+			    
+			    <p:column headerText="№">
+			        <h:outputText value="#{index+1}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.pin}" sortBy="#{entity.pin}">
+			        <h:outputText value="#{entity.pin}" />
+			    </p:column>
+			    <p:column headerText="#{msgs.fio}" sortBy="#{entity.fio}">
+			        <h:outputText value="#{entity.fio}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.role}" sortBy="#{entity.role}">
+			        <h:outputText value="#{enums[entity.role]}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.username}" rendered="#{roleController.isAllowed('ADMIN')}" sortBy="#{entity.username}">
+			        <h:outputText value="#{entity.username}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.password}" rendered="#{roleController.isAllowed('ADMIN')}" >
+			        <h:outputText value="#{entity.password}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.contacts}" sortBy="#{entity.contacts}">
+			        <h:outputText value="#{entity.contacts}" />
+			    </p:column>
+			    
+				<p:column headerText="#{msgs.date}" sortBy="#{entity.dateCreated}">
+			        <h:outputText value="#{entity.dateCreated}" >
+			          <f:convertDateTime type="date" pattern="dd-MM-yyyy HH:mm" timeZone="GMT+6"/>
+	             	</h:outputText>
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.status}" sortBy="#{entity.status}">
+			        <h:outputText value="#{enums[entity.status]}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.operation}" rendered="#{roleController.isAllowed('ADMIN')}">
+			    	<h:commandButton action="#{userCreator.edit(entity)}" value="#{msgs.edit}" styleClass="btn-icon edit" title="#{msgs.edit}" />
+			    	<p:commandButton action="#{userCreator.block(entity)}" update="@form" icon="fa fa-lock" title="#{msgs.lock}" rendered="#{entity.status.toString() eq 'ACTIVE'}" />
+			        <p:commandButton action="#{userCreator.unblock(entity)}" update="@form" icon="fa fa-unlock" title="#{msgs.unlock}" rendered="#{entity.status.toString() eq 'INACTIVE'}" />
+			    </p:column>
+			</p:dataTable>
+		</h:form>
+		<p:blockUI block="form:table" trigger="form:table" >
+			#{msgs.loading}<br />
+		    <p:graphicImage library="img" name="ajaxloadingbar.gif"/>
+		</p:blockUI>	
+
+		<div class="clear"></div>			
+				
+	</ui:define>	
+	
+</ui:composition>

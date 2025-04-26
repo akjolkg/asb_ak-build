@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+		<h2>#{msgs.changeUik} </h2> <br/><br/>	
+		<p:growl globalOnly="true" />		
+			    
+		<h:form id="form" prependId="false">
+		    <h:panelGrid styleClass="form-table">
+		    	<h:panelGroup> 
+		    		<h:panelGroup styleClass="f-left m-right form-table-odd-col">
+				    	<h:outputText value="#{msgs.region}" styleClass="form-table-label disp-blc"/>				    	
+				    	<h:outputText value="#{temporalcardController.permanentcard.region}" />
+				    </h:panelGroup>
+				    <h:panelGroup styleClass="f-left">				    	
+				    	<h:outputText value="#{msgs.editTo}" styleClass="form-table-label disp-blc"/>				    	
+				    	<h:inputText value="#{temporalcardController.region}" />
+				    </h:panelGroup>
+			    </h:panelGroup>
+			    
+			    <h:panelGroup>	
+			    	<h:panelGroup styleClass="f-left m-right form-table-odd-col">			    	
+				    	<h:outputText value="#{msgs.locality}" styleClass="form-table-label disp-blc"/>			    	
+				    	<h:outputText value="#{temporalcardController.permanentcard.locality}" />
+				    </h:panelGroup>
+				    <h:panelGroup styleClass="f-left">	
+				    	<h:outputText value="#{msgs.editTo}" styleClass="form-table-label disp-blc"/>			    	
+				    	<h:inputText value="#{temporalcardController.locality}" />
+				    </h:panelGroup>
+			    </h:panelGroup>
+			    <h:panelGroup>	
+			    	<h:panelGroup styleClass="f-left m-right form-table-odd-col">
+				    	<h:outputText value="#{msgs.street}" styleClass="form-table-label disp-blc"/>			    	
+				    	<h:outputText value="#{temporalcardController.permanentcard.street}" />
+				    </h:panelGroup>
+				    <h:panelGroup styleClass="f-left">	
+				    	<h:outputText value="#{msgs.editTo}" styleClass="form-table-label disp-blc"/>			    	
+				    	<h:inputText value="#{temporalcardController.street}" />
+				    </h:panelGroup>
+			    </h:panelGroup>	
+			    <h:panelGroup>
+			    	<h:panelGroup styleClass="f-left m-right form-table-odd-col">
+				    	<h:outputText value="#{msgs.building}" styleClass="form-table-label disp-blc"/>			    	
+				    	<h:outputText value="#{temporalcardController.permanentcard.building}" />
+				    </h:panelGroup>
+				    <h:panelGroup styleClass="f-left">	
+				    	<h:outputText value="#{msgs.editTo}" styleClass="form-table-label disp-blc"/>			    	
+				    	<h:inputText value="#{temporalcardController.building}" />
+				    </h:panelGroup>
+			    </h:panelGroup>	
+			    <h:panelGroup>
+			   		<h:panelGroup styleClass="f-left m-right form-table-odd-col">
+				    	<h:outputText value="#{msgs.apartment}" styleClass="form-table-label disp-blc"/>			    	
+				    	<h:outputText value="#{temporalcardController.permanentcard.apartment}" />
+				    </h:panelGroup>
+				    <h:panelGroup styleClass="f-left">
+				    	<h:outputText value="#{msgs.editTo}" styleClass="form-table-label disp-blc"/>			    	
+				    	<h:inputText value="#{temporalcardController.apartment}" />
+				    </h:panelGroup>
+			    </h:panelGroup>
+			    <h:panelGroup>
+			    	<h:panelGroup styleClass="f-left m-right form-table-odd-col">
+				    	<h:outputText value="#{msgs.period}" styleClass="form-table-label disp-blc"/>			    	
+				    </h:panelGroup>
+			   		<h:panelGroup styleClass="f-left m-right form-table-odd-col">
+				    	<h:outputText value="#{msgs.from}" styleClass="form-table-label disp-blc"/>			    	
+				    	<p:calendar value="#{temporalcardController.from}" locale="ru" styleClass="datepicker" disabled="true"/>
+				    </h:panelGroup>
+				    <h:panelGroup styleClass="f-left">
+				    	<h:outputText value="#{msgs.to}" styleClass="form-table-label disp-blc"/>			    	
+				    	<p:calendar value="#{temporalcardController.to}" locale="ru" styleClass="datepicker" disabled="true" />
+				    </h:panelGroup>
+			    </h:panelGroup>
+		    </h:panelGrid>
+		    
+		    <ui:include src="/view/select/uik.xhtml" />
+		    
+		    <h:panelGrid columns="2" styleClass="m-top">
+		    	<p:commandButton id="cancelButton" value="#{msgs.cancel}" action="#{temporalcardController.cancel()}" immediate="true" styleClass="button red"/>
+		    	<p:commandButton id="saveButton" onclick="PrimeFaces.monitorDownload(start, stop);" ajax="false" value="#{msgs.save}" action="#{temporalcardController.doChange()}" styleClass="button light-blue m-left"/>
+		    </h:panelGrid>
+		     <p:blockUI block=":entirePage" trigger="saveButton cancelButton" >
+		        #{msgs.loading}<br />
+		        <p:graphicImage library="img" name="ajaxloadingbar.gif"/>
+		    </p:blockUI> 
+			<p:dialog modal="true" widgetVar="statusDialog" header="#{msgs.loading}" draggable="false" closable="false" resizable="false">
+			     <p:graphicImage library="img" name="ajaxloadingbar.gif"/>
+			</p:dialog>
+		</h:form>
+				
+		 <script type="text/javascript">
+				function start() {
+				    PF('statusDialog').show();
+				}
+				 
+				function stop() {
+				    PF('statusDialog').hide();
+				}
+			</script>    
+		<div class="clear"></div>			
+				
+	</ui:define>	
+	<ui:define name="add-js">
+        <h:outputScript library="js" name="calendar.js"/>
+    </ui:define>
+</ui:composition>

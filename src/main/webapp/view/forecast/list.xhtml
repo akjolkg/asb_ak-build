@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+		<h2>#{msgs.forecasting} </h2> <br/> 
+		<div class="clear"></div>
+		<h:form id ="form">
+			<p:dataTable var="entity" value="#{constructionListController.model}" paginator="true" rows="50" lazy="true" rowKey="#{entity.id}" rowIndexVar="index" tableStyleClass="display-table"
+	   			id="table" selectionMode="single" emptyMessage="#{msgs.noRecordsFound}" 
+	   			rowsPerPageTemplate="10,20,30,40,50" paginatorPosition="bottom" pageLinks="10"
+	                   currentPageReportTemplate="Всего : #{constructionListController.model.rowCount} из #{constructionListController.model.totalCount}  &#160;&#160;| #{msgs.amountPerPage}"
+	               	   paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport} {RowsPerPageDropdown} {Exporters}"
+	                   selection="#{constructionListController.construction}"
+	                   first="#{constructionListController.first}" >
+				<p:ajax event="page" listener="#{constructionListController.onPageChange}"/> 
+				<f:facet name="{Exporters}">
+            		<h:commandLink id="excel" styleClass="m-left">
+					    <p:graphicImage library="img" name="excel.png"  />
+					   	<p:dataExporter type="xls" target="table" fileName="export" postProcessor="#{dataExportController.postProcessXLS}" />
+					</h:commandLink>	
+				</f:facet>   
+			 
+			    
+			    <p:column headerText="№">
+			        <h:outputText value="#{index+1}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.company}" sortBy="#{entity.company.title}">
+			        <h:outputText value="#{entity.company.title}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.developer}" sortBy="#{entity.developer.title}">
+			        <h:outputText value="#{entity.developer.title}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.name}" sortBy="#{entity.title}">
+			        <h:outputText value="#{entity.title}" />
+			    </p:column>
+			    
+				<p:column headerText="#{msgs.rehubDate}" sortBy="#{entity.plannedDate}">
+			        <h:outputText value="#{entity.plannedDate}" >
+			        	<f:convertDateTime pattern="dd-MM-yyyy" />
+			        </h:outputText>
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.exploitationDate}" sortBy="#{entity.realDate}">
+			        <h:outputText value="#{entity.realDate}" >
+			        	<f:convertDateTime pattern="dd-MM-yyyy" />
+			        </h:outputText>
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.installmentDate}" sortBy="#{entity.installmentDate}">
+			        <h:outputText value="#{entity.installmentDate}" >
+			        	<f:convertDateTime pattern="dd-MM-yyyy" />
+			        </h:outputText>
+			    </p:column>
+			    <p:column headerText="#{msgs.salesStartDate}" sortBy="#{entity.salesStartDate}">
+			        <h:outputText value="#{entity.salesStartDate}" >
+			        	<f:convertDateTime pattern="dd-MM-yyyy" />
+			        </h:outputText>
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.notSaleArea}" sortBy="#{entity.notSaleArea}">
+			        <h:outputText value="#{entity.notSaleArea}">
+			        	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2"/>
+			        </h:outputText>
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.operation}" rendered="#{roleController.isAllowed('ADMIN')}" exportable="false">
+			    	<h:commandButton action="#{constructionCreator.edit(entity)}" value="#{msgs.edit}" styleClass="btn-icon edit" title="#{msgs.edit}" />	    
+			    </p:column>
+			</p:dataTable>
+		</h:form>
+		<p:blockUI block="form:table" trigger="form:table" >
+			#{msgs.loading}<br />
+		    <p:graphicImage library="img" name="ajaxloadingbar.gif"/>
+		</p:blockUI>	
+
+		<div class="clear"></div>			
+				
+	</ui:define>	
+	
+</ui:composition>

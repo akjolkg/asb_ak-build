@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/WEB-INF/templates/layouts/private.xhtml">
+	<ui:define name="content">
+		<h2>#{msgs.contractTemplateList}</h2>
+		<br />
+		<div class="clear"></div>
+		<h:form rendered="#{roleController.isAllowed('ADMIN')}">
+			<h:commandLink value="#{msgs.addContractTemplate}"
+				action="#{contractTemplateCreator.add()}"
+				styleClass="button green f-right" />
+		</h:form>
+		<br />
+		<div class="clear"></div>
+		<h:form id="filter-form">
+			<p:growl escape="false" />
+			<h:panelGrid columns="3" styleClass="f-left">
+
+				<h:outputText value="#{msgs.construction}"
+					styleClass="form-table-label disp-blc" />
+				<h:outputText value="#{msgs.contractType}"
+					styleClass="form-table-label disp-blc" />
+				<h:outputText value="#{msgs.searchString}"
+					styleClass="form-table-label disp-blc" />
+				<p:selectCheckboxMenu
+					value="#{contractTemplateListController.filterConstructions}"
+					multiple="true" id="construction" style="width:250px;"
+					styleClass="m-right" filter="true" filterMatchMode="contains"
+					converter="constructionConverter">
+					<f:selectItems
+						value="#{contractTemplateListController.constructions}"
+						var="entity" itemLabel="#{entity.title}" itemValue="#{entity}" />
+				</p:selectCheckboxMenu>
+				<p:selectCheckboxMenu
+					value="#{contractTemplateListController.filterContractTemplates}"
+					multiple="true" id="type" style="width:250px;" styleClass="m-right"
+					filter="true" filterMatchMode="contains" converter="enumConverter">
+					<f:selectItems
+						value="#{contractTemplateListController.allContractTemplateTypes}"
+						var="entity" itemLabel="#{enums[entity]}" itemValue="#{entity}" />
+				</p:selectCheckboxMenu>
+				<h:inputText
+					value="#{contractTemplateListController.searchString}"
+					id="searchString" styleClass="m-right" />
+			</h:panelGrid>
+			<h:panelGrid columns="2"  styleClass="f-left">
+			   <h:outputText value="" styleClass="label" />
+				<h:outputText value="" styleClass="label" />
+				
+				<p:commandButton ajax="true" update="form" value="#{msgs.search}" actionListener="#{contractTemplateListController.filterData()}" styleClass="button green f-right m-left" />
+			    <p:commandButton ajax="true" update="form filter-form" value="#{msgs.clearFilter}" actionListener="#{contractTemplateListController.clearFilter()}" styleClass="button blue f-right" />
+			</h:panelGrid>
+		</h:form>
+
+
+		<div class="clear"></div>
+		<h:form id="form">
+			<p:dataTable var="entity"
+				value="#{contractTemplateListController.model}" paginator="true"
+				rows="50" lazy="true" rowKey="#{entity.id}" rowIndexVar="index"
+				tableStyleClass="display-table" id="table" selectionMode="single"
+				emptyMessage="#{msgs.noRecordsFound}"
+				rowsPerPageTemplate="10,20,30,40,50" paginatorPosition="bottom"
+				pageLinks="10"
+				currentPageReportTemplate="Всего : #{contractTemplateListController.model.rowCount} из #{contractTemplateListController.model.totalCount}  &#160;&#160;| #{msgs.amountPerPage}"
+				paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport} {RowsPerPageDropdown}"
+				selection="#{contractTemplateListController.contractTemplate}"
+				first="#{contractTemplateListController.first}">
+				<p:ajax event="page"
+					listener="#{contractTemplateListController.onPageChange}" />
+
+				<p:column headerText="№">
+					<h:outputText value="#{index+1}" />
+				</p:column>
+
+				<p:column headerText="#{msgs.construction}">
+					<h:outputText value="#{entity.construction.title}" />
+				</p:column>
+				<p:column headerText="#{msgs.contractType}">
+					<h:outputText value="#{enums[entity.type]}" />
+				</p:column>
+
+				<p:column headerText="#{msgs.file}">
+					<h:outputText value="#{entity.attachment.fileName}" />
+				</p:column>
+
+				<p:column headerText="#{msgs.dateModified}">
+					<h:outputText value="#{entity.date}">
+						<f:convertDateTime pattern="dd-MM-yyyy" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="#{msgs.download}">
+					<p:commandButton value="#{msgs.download}" ajax="false"
+						onclick="PrimeFaces.monitorDownload(start, stop);"
+						icon="ui-icon-arrowthick-1-s">
+						<p:fileDownload
+							value="#{downloadController.downloadFile(entity.attachment)}" />
+					</p:commandButton>
+				</p:column>
+
+				<p:column headerText="#{msgs.operation}"
+					rendered="#{roleController.isAllowed('ADMIN')}">
+					<h:commandButton action="#{contractTemplateCreator.edit(entity)}"
+						value="#{msgs.edit}" styleClass="btn-icon edit"
+						title="#{msgs.edit}" />
+
+				</p:column>
+			</p:dataTable>
+		</h:form>
+		<p:blockUI block="form:table" trigger="form:table">
+			#{msgs.loading}<br />
+			<p:graphicImage library="img" name="ajaxloadingbar.gif" />
+		</p:blockUI>
+
+		<div class="clear"></div>
+	</ui:define>
+
+</ui:composition>

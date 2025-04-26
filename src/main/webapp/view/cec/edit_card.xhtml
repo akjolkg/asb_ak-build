@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	
+ 	<ui:define name="content">
+		<h2>#{msgs.changeData} </h2> <br/><br/>	
+		<p:growl globalOnly="true" />		
+		    
+		<h:form id="form" prependId="false" >
+		    <h:panelGrid styleClass="form-table" rendered="#{permenantcardController.fromNF==false}">		    	
+	    		
+			     <h:panelGroup>
+			    	<h:panelGroup styleClass="f-left form-table-odd-col m-right">
+				    	<h:outputText value="#{msgs.pin}" styleClass="form-table-label disp-blc"/>
+				    	<h:outputText value="#{permenantcardController.permanentcard.pin}" />
+				    </h:panelGroup>				  
+			    </h:panelGroup>
+			    <h:panelGroup>
+			    	<h:panelGroup styleClass="f-left form-table-odd-col m-right">
+				    	<h:outputText value="#{msgs.surname}" styleClass="form-table-label disp-blc"/>
+				    	<h:outputText value="#{permenantcardController.permanentcard.surname}" />
+				    </h:panelGroup>
+				    <h:panelGroup styleClass="f-left"  rendered="#{permenantcardController.superAdmin==true}">
+				    	<h:outputText value="#{msgs.editTo}" styleClass="form-table-label disp-blc"/>
+				    	<h:inputText value="#{permenantcardController.lastName}" />
+				    </h:panelGroup>
+			    </h:panelGroup>
+			    
+			    <h:panelGroup>
+	    			<h:panelGroup styleClass="f-left m-right form-table-odd-col">
+				    	<h:outputText value="#{msgs.firstname}" styleClass="form-table-label disp-blc"/>				    	
+				    	<h:outputText value="#{permenantcardController.permanentcard.name}" />
+			    	</h:panelGroup>
+			    	<h:panelGroup styleClass="f-left"  rendered="#{permenantcardController.superAdmin==true}">
+				    	<h:outputText value="#{msgs.editTo}" styleClass="form-table-label disp-blc"/>				    	
+				    	<h:inputText value="#{permenantcardController.firstName}" />
+			    	</h:panelGroup>
+			    </h:panelGroup>
+			    
+			    <h:panelGroup>	
+			    	<h:panelGroup styleClass="f-left form-table-odd-col m-right">
+			    		<h:outputText value="#{msgs.patronymic}" styleClass="form-table-label disp-blc"/>				    	
+			    		<h:outputText value="#{permenantcardController.permanentcard.patronymic}" />
+			    	</h:panelGroup>
+			    	<h:panelGroup styleClass="f-left"  rendered="#{permenantcardController.superAdmin==true}">				    	
+				    	<h:outputText value="#{msgs.editTo}" styleClass="form-table-label disp-blc"/>					    	
+			    		<h:inputText value="#{permenantcardController.middleName}" />
+			    	</h:panelGroup>
+			   	</h:panelGroup>
+			 
+				<h:panelGroup> 	
+					<h:panelGroup styleClass="f-left m-right form-table-odd-col">
+			    		<h:outputText value="#{msgs.birthdate}" styleClass="form-table-label disp-blc"/>				    	
+			    		<h:outputText value="#{permenantcardController.permanentcard.birthdate}" />
+			    	</h:panelGroup>
+			    	<h:panelGroup styleClass="f-left"  rendered="#{permenantcardController.superAdmin==true}">				    	
+			    		<h:outputText value="#{msgs.editTo}" styleClass="form-table-label disp-blc"/>				    	
+			    		<p:calendar value="#{permenantcardController.birthDate}" styleClass="datepicker"/>
+			    	</h:panelGroup>
+			    </h:panelGroup>
+			</h:panelGrid>
+			
+		    <h:panelGrid styleClass="form-table" rendered="#{permenantcardController.fromNF==false}">
+		    	<h:panelGroup> 
+		    		<h:panelGroup styleClass="f-left m-right form-table-odd-col">
+				    	<h:outputText value="#{msgs.region}" styleClass="form-table-label disp-blc"/>				    	
+				    	<h:outputText value="#{permenantcardController.permanentcard.region}" />
+				    </h:panelGroup>
+				    <h:panelGroup styleClass="f-left">				    	
+				    	<h:outputText value="#{msgs.editTo}" styleClass="form-table-label disp-blc"/>				    	
+				    	<h:inputText value="#{permenantcardController.region}" />
+				    </h:panelGroup>
+			    </h:panelGroup>
+			    
+			    <h:panelGroup>	
+			    	<h:panelGroup styleClass="f-left m-right form-table-odd-col">			    	
+				    	<h:outputText value="#{msgs.locality}" styleClass="form-table-label disp-blc"/>			    	
+				    	<h:outputText value="#{permenantcardController.permanentcard.locality}" />
+				    </h:panelGroup>
+				    <h:panelGroup styleClass="f-left">	
+				    	<h:outputText value="#{msgs.editTo}" styleClass="form-table-label disp-blc"/>			    	
+				    	<h:inputText value="#{permenantcardController.locality}" />
+				    </h:panelGroup>
+			    </h:panelGroup>
+			    <h:panelGroup>	
+			    	<h:panelGroup styleClass="f-left m-right form-table-odd-col">
+				    	<h:outputText value="#{msgs.street}" styleClass="form-table-label disp-blc"/>			    	
+				    	<h:outputText value="#{permenantcardController.permanentcard.street}" />
+				    </h:panelGroup>
+				    <h:panelGroup styleClass="f-left">	
+				    	<h:outputText value="#{msgs.editTo}" styleClass="form-table-label disp-blc"/>			    	
+				    	<h:inputText value="#{permenantcardController.street}" />
+				    </h:panelGroup>
+			    </h:panelGroup>	
+			    <h:panelGroup>
+			    	<h:panelGroup styleClass="f-left m-right form-table-odd-col">
+				    	<h:outputText value="#{msgs.building}" styleClass="form-table-label disp-blc"/>			    	
+				    	<h:outputText value="#{permenantcardController.permanentcard.building}" />
+				    </h:panelGroup>
+				    <h:panelGroup styleClass="f-left">	
+				    	<h:outputText value="#{msgs.editTo}" styleClass="form-table-label disp-blc"/>			    	
+				    	<h:inputText value="#{permenantcardController.building}" />
+				    </h:panelGroup>
+			    </h:panelGroup>	
+			    <h:panelGroup>
+			   		<h:panelGroup styleClass="f-left m-right form-table-odd-col">
+				    	<h:outputText value="#{msgs.apartment}" styleClass="form-table-label disp-blc"/>			    	
+				    	<h:outputText value="#{permenantcardController.permanentcard.apartment}" />
+				    </h:panelGroup>
+				    <h:panelGroup styleClass="f-left">
+				    	<h:outputText value="#{msgs.editTo}" styleClass="form-table-label disp-blc"/>			    	
+				    	<h:inputText value="#{permenantcardController.apartment}" />
+				    </h:panelGroup>
+			    </h:panelGroup>
+			    
+			     <h:panelGroup>	
+			    	<h:panelGroup styleClass="f-left m-right form-table-odd-col">
+				    	<h:outputText value="#{msgs.biomStreet}" styleClass="form-table-label disp-blc"/>			    	
+				    	<h:outputText value="#{permenantcardController.permanentcard.biomStreet}" />
+				    </h:panelGroup>
+			    </h:panelGroup>	
+			    
+			    <h:panelGroup>
+			    	<h:panelGroup styleClass="f-left m-right form-table-odd-col">
+				    	<h:outputText value="#{msgs.biomBuilding}" styleClass="form-table-label disp-blc"/>			    	
+				    	<h:outputText value="#{permenantcardController.permanentcard.biomBuilding}" />
+				    </h:panelGroup>
+			    </h:panelGroup>	
+			    
+			    <h:panelGroup>
+			   		<h:panelGroup styleClass="f-left m-right form-table-odd-col">
+				    	<h:outputText value="#{msgs.biomAppartment}" styleClass="form-table-label disp-blc"/>			    	
+				    	<h:outputText value="#{permenantcardController.permanentcard.biomAppartment}" />
+				    </h:panelGroup>
+			    </h:panelGroup>
+			    
+			    
+			    
+		    </h:panelGrid>	
+		    
+		    <h:panelGrid styleClass="form-table" rendered="#{permenantcardController.fromNF==true}" style="width:300px;float:left;">		    	
+	    		
+			    <h:panelGroup>
+			    	<h:panelGroup styleClass="f-left form-table-odd-col m-right">
+				    	<h:outputText value="#{msgs.pin}" styleClass="form-table-label disp-blc"/>
+				    	<h:outputText value="#{permenantcardController.permanentcard.pin}" />
+				    </h:panelGroup>				  
+			    </h:panelGroup>
+	    		
+			    
+			    <h:panelGroup>
+			    	<h:panelGroup styleClass="f-left form-table-odd-col m-right">
+				    	<h:outputText value="#{msgs.surname}" styleClass="form-table-label disp-blc"/>
+				    	<h:outputText value="#{permenantcardController.permanentcard.surname}" />
+				    </h:panelGroup>
+			    </h:panelGroup>
+			    <h:panelGroup>
+	    			<h:panelGroup styleClass="f-left m-right form-table-odd-col">
+				    	<h:outputText value="#{msgs.firstname}" styleClass="form-table-label disp-blc"/>				    	
+				    	<h:outputText value="#{permenantcardController.permanentcard.name}" />
+			    	</h:panelGroup>
+			    </h:panelGroup>
+			    
+			    <h:panelGroup>	
+			    	<h:panelGroup styleClass="f-left form-table-odd-col m-right">
+			    		<h:outputText value="#{msgs.patronymic}" styleClass="form-table-label disp-blc"/>				    	
+			    		<h:outputText value="#{permenantcardController.permanentcard.patronymic}" />
+			    	</h:panelGroup>
+			   	</h:panelGroup>
+			 
+				<h:panelGroup> 	
+					<h:panelGroup styleClass="f-left m-right form-table-odd-col">
+			    		<h:outputText value="#{msgs.birthdate}" styleClass="form-table-label disp-blc"/>				    	
+			    		<h:outputText value="#{permenantcardController.permanentcard.birthdate}" />
+			    	</h:panelGroup>
+			    </h:panelGroup>
+			    			
+		    	<h:panelGroup> 
+		    		<h:panelGroup styleClass="f-left m-right form-table-odd-col">
+				    	<h:outputText value="#{msgs.region}" styleClass="form-table-label disp-blc"/>				    	
+				    	<h:outputText value="#{permenantcardController.permanentcard.region}" />
+				    </h:panelGroup>
+			    </h:panelGroup>
+			    
+			    <h:panelGroup>	
+			    	<h:panelGroup styleClass="f-left m-right form-table-odd-col">			    	
+				    	<h:outputText value="#{msgs.locality}" styleClass="form-table-label disp-blc"/>			    	
+				    	<h:outputText value="#{permenantcardController.permanentcard.locality}, #{permenantcardController.permanentcard.area}, #{permenantcardController.permanentcard.subArea}" />
+				    </h:panelGroup>
+			    </h:panelGroup>
+			    
+			    <h:panelGroup>	
+			    	<h:panelGroup styleClass="f-left m-right form-table-odd-col">
+				    	<h:outputText value="#{msgs.street}" styleClass="form-table-label disp-blc"/>			    	
+				    	<h:outputText value="#{permenantcardController.permanentcard.street}" />
+				    </h:panelGroup>
+			    </h:panelGroup>	
+			    
+			    <h:panelGroup>
+			    	<h:panelGroup styleClass="f-left m-right form-table-odd-col">
+				    	<h:outputText value="#{msgs.building}" styleClass="form-table-label disp-blc"/>			    	
+				    	<h:outputText value="#{permenantcardController.permanentcard.building}" />
+				    </h:panelGroup>
+			    </h:panelGroup>	
+			    
+			    <h:panelGroup>
+			   		<h:panelGroup styleClass="f-left m-right form-table-odd-col">
+				    	<h:outputText value="#{msgs.apartment}" styleClass="form-table-label disp-blc"/>			    	
+				    	<h:outputText value="#{permenantcardController.permanentcard.apartment}" />
+				    </h:panelGroup>
+			    </h:panelGroup>
+			    
+			    
+			    <h:panelGroup>	
+			    	<h:panelGroup styleClass="f-left m-right form-table-odd-col">
+				    	<h:outputText value="#{msgs.biomStreet}" styleClass="form-table-label disp-blc"/>			    	
+				    	<h:outputText value="#{permenantcardController.permanentcard.biomStreet}" />
+				    </h:panelGroup>
+			    </h:panelGroup>	
+			    
+			    <h:panelGroup>
+			    	<h:panelGroup styleClass="f-left m-right form-table-odd-col">
+				    	<h:outputText value="#{msgs.biomBuilding}" styleClass="form-table-label disp-blc"/>			    	
+				    	<h:outputText value="#{permenantcardController.permanentcard.biomBuilding}" />
+				    </h:panelGroup>
+			    </h:panelGroup>	
+			    
+			    <h:panelGroup>
+			   		<h:panelGroup styleClass="f-left m-right form-table-odd-col">
+				    	<h:outputText value="#{msgs.biomAppartment}" styleClass="form-table-label disp-blc"/>			    	
+				    	<h:outputText value="#{permenantcardController.permanentcard.biomAppartment}" />
+				    </h:panelGroup>
+			    </h:panelGroup>
+			    
+			    
+		    </h:panelGrid>	
+	
+			<h:panelGrid rendered="#{permenantcardController.fromNF==true}" style="width:750px;">
+			
+				
+				<h:outputText value="#{msgs.suggestedUik}" styleClass="form-table-label disp-blc"/>		
+				<br/>
+				<br/>
+				<p:panelGrid style="width:100%" styleClass="form-table tik-table">
+				<p:row>
+					<p:column style="width: 460px;">
+						<h:outputLabel value="#{msgs.street}" styleClass="form-table-label disp-blc"/>
+						<h:inputText value="#{permenantcardController.streetSearch}" styleClass="w-1-1" />
+					</p:column>
+					<p:column style="width: 220px;">
+						<h:outputLabel value="#{msgs.building}" styleClass="form-table-label disp-blc"/>
+						<h:inputText value="#{permenantcardController.buildingSearch}" styleClass="w-1-1" />
+					</p:column>					
+					<p:column>
+						<p:commandButton id="searchButton" styleClass="blue m-top f-right" style="color:#00acee;" value="#{msgs.search}" action="#{permenantcardController.searchTemplates}" update="suggestedPeople" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>	
+				<p:dataTable id="suggestedPeople" value="#{permenantcardController.peopleList}" var="person" emptyMessage="#{msgs.noRecordsFound}" >
+					<p:column headerText="#{msgs.pin}">
+				    	<h:outputText value="#{person.permanentcard.pin}" />		 		        	
+					</p:column>
+					<p:column headerText="#{msgs.fullname}">
+				    	<h:outputText value="#{person.permanentcard.surname}" />&#160;		
+				    	<h:outputText value="#{person.permanentcard.name}" />&#160;	 
+				    	<h:outputText value="#{person.permanentcard.patronymic}" />	&#160;		 		        	
+					</p:column>
+					<p:column headerText="#{msgs.address}">
+				    	<h:outputText rendered="#{person.street==null}"
+							value="#{person.permanentcard.locality} : #{person.permanentcard.street} : #{person.permanentcard.building} : #{person.permanentcard.apartment}" />
+						<h:outputText rendered="#{person.street!=null}"
+							value="#{person.locality} : #{person.street} : #{person.building} : #{person.apartment}" />		        	
+					</p:column>
+					<p:column headerText="#{msgs.tik}">
+				    	<h:outputText value="#{person.uik.tik.name}"/>				        	
+					</p:column>
+					<p:column headerText="#{msgs.uik}">
+				    	<h:outputText value="#{person.uik.name}"/>				        	
+					</p:column>
+				
+				
+				</p:dataTable>
+				<br/>				
+			
+			</h:panelGrid>
+			
+			<h:panelGrid rendered="#{permenantcardController.fromNF==true}" style="width:750px;">
+				
+				<br/>
+				<h:outputText value="#{msgs.maybeDublicates}" styleClass="form-table-label disp-blc"/>				
+				
+				<p:dataTable value="#{permenantcardController.dublicateList}" var="dublicate" emptyMessage="#{msgs.noRecordsFound}" >
+					<p:column headerText="#{msgs.pin}">
+				    	<h:outputText value="#{dublicate.permanentcard.pin}" />		 		        	
+					</p:column>
+					<p:column headerText="#{msgs.fullname}">
+						<h:outputText value="#{dublicate.permanentcard.surname}" />&#160;			 
+				    	<h:outputText value="#{dublicate.permanentcard.name}" />&#160;
+				    	<h:outputText value="#{dublicate.permanentcard.patronymic}" />	&#160;		 		        	
+					</p:column>
+					<p:column headerText="#{msgs.birthdate}">
+				    	<h:outputText value="#{person.permanentcard.birthdate}" />		 		        	
+					</p:column>
+					<p:column headerText="#{msgs.address}">
+				    	<h:outputText rendered="#{dublicate.street==null}"
+							value="#{dublicate.permanentcard.locality} : #{dublicate.permanentcard.street} : #{dublicate.permanentcard.building} : #{dublicate.permanentcard.apartment}" />
+						<h:outputText rendered="#{dublicate.street!=null}"
+							value="#{dublicate.locality} : #{dublicate.street} : #{dublicate.building} : #{dublicate.apartment}" />		        	
+					</p:column>
+					<p:column headerText="#{msgs.tik}">
+				    	<h:outputText value="#{dublicate.uik.tik.name}"/>				        	
+					</p:column>
+					<p:column headerText="#{msgs.uik}">
+				    	<h:outputText value="#{dublicate.uik.name}"/>				        	
+					</p:column>
+				
+				
+				</p:dataTable>
+				<br/>				
+			
+			</h:panelGrid>
+		
+			 
+		    <h:panelGrid columns="1">
+		    	<h:panelGroup rendered="#{permenantcardController.fromNF==false}">
+		    		<h:outputText value="#{permenantcardController.permanentcard.uik.tik.name}" />
+			    	<h:outputText value="#{permenantcardController.permanentcard.uik.name}" />
+			    	<h:outputText value="#{msgs.editTo}" />
+		    	</h:panelGroup>
+		    	<ui:include src="/view/select/uik-form3.xhtml" />
+		    </h:panelGrid>
+		    
+		    <h:panelGrid columns="2" styleClass="m-top">
+		    	<p:commandButton  id="cancelButton" value="#{msgs.cancel}" action="#{permenantcardController.cancel()}" immediate="true" styleClass="button red"/>
+		    	<p:commandButton  onclick="PrimeFaces.monitorDownload(start, stop);" ajax="false" id="saveButton" value="#{msgs.save}" action="#{permenantcardController.doChange()}" styleClass="button light-blue m-left"/>
+		    </h:panelGrid>
+		     <p:blockUI block=":entirePage" trigger="saveButton cancelButton" >
+		        #{msgs.loading}<br />
+		        <p:graphicImage library="img" name="ajaxloadingbar.gif"/>
+		    </p:blockUI> 
+		    <p:dialog modal="true" widgetVar="statusDialog" header="#{msgs.loading}" draggable="false" closable="false" resizable="false">
+			     <p:graphicImage library="img" name="ajaxloadingbar.gif"/>
+			</p:dialog>
+		</h:form>
+		<script type="text/javascript">
+			function start() {
+			    PF('statusDialog').show();
+			}
+			 
+			function stop() {
+			    PF('statusDialog').hide();
+			}
+		</script>    	
+		<div class="clear"></div>			
+		
+	</ui:define>	
+</ui:composition>

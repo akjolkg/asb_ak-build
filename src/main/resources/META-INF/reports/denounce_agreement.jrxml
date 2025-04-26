@@ -1,0 +1,446 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="contract_template" pageWidth="612" pageHeight="792" whenNoDataType="AllSectionsNoDetail" columnWidth="592" leftMargin="0" rightMargin="20" topMargin="0" bottomMargin="20" uuid="53900af5-bd24-4eb4-b561-f8a8187c0831">
+	<property name="ireport.zoom" value="1.7715610000000015"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="New Dataset 1" uuid="21a20b60-31aa-43d3-a737-2f38a4739cb2">
+		<parameter name="id" class="java.lang.Integer"/>
+		<queryString>
+			<![CDATA[select 1 num,	'системой энергопитания напряжением 220 вольт;' as names, '' feild3
+union
+select 2 num,	'UTP кабель для интернета (проводится до каждого этажа подъездов);' as names, '' feild3
+union
+select 3 num,	'домофон;' as names, '' feild3
+union
+select 4 num,	'электросчетчик;' as names, '' feild3
+union
+select 5 num,	'системой холодного водоснабжения;' as names, '' feild3
+union
+select 6 num,	'системой горячего водоснабжения;' as names, '' feild3
+union
+select 7 num,	'счетчиками холодной, горячей воды;' as names, '' feild3
+union
+select 8 num,	'системой канализации;' as names, '' feild3
+union
+select 9 num,	'системой отопления;' as names, '' feild3
+union
+select 10 num,	'системой газоснабжения;' as names, '' feild3
+union
+select 11 num,	'газовым счетчиком;' as names, '' feild3
+union
+select 12 num,	'гидроизоляцией санузлов;' as names, '' feild3
+union
+select 13 num,	'электропроводкой в соответствии с проектной документацией' as names, '' feild3
+union
+select 14 num,	'системой вытяжной вентиляции в ванной комнате, туалете и кухне;' as names, '' feild3
+union
+select 15 num,	'наружными окнами, согласно проекту;' as names, '' feild3
+union
+select 16 num,	'отштукатуренными стенами;' as names, '' feild3
+union
+select 17 num,	'стяжкой пола (возможно с открытыми участками под трубопроводы);' as names, '' feild3
+union
+select 18 num,	'подводкой труб (ванная, туалет, кухня);' as names, '' feild3
+union
+select 19 num,	'радиаторы отопления;' as names, '' feild3
+union
+select 20 num,	'входная дверь.' as names, '' feild3
+
+
+order by num asc]]>
+		</queryString>
+		<field name="num" class="java.lang.Integer"/>
+		<field name="names" class="java.lang.String"/>
+		<field name="feild3" class="java.lang.String"/>
+	</subDataset>
+	<parameter name="client_id" class="java.lang.Integer"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/opt/jasper/asb/"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+	com.title AS company,
+	com.title AS company_fn,
+	c.contract_number contract_number,
+	c.date_contract AS date_contract,
+	TO_CHAR(c.date_contract, 'DD.MM.YYYY') AS date_contract_formatted,
+	TO_CHAR(now(), 'DD.MM.YYYY') AS today,
+	c.fio as fio,
+	cc.planned_address AS obj_address,
+	ap.title AS ap_number,
+	ap.flat flat,
+	ap.type,
+	com.procuration procuration,
+	com.responsiblepersonis,
+	ap.room_quantity room_quantity,
+	ap.total_area total_area,
+	c.price_for_square price_for_square,
+	amount_as_string(c.price_for_square::numeric,com.currency,com.sub_currency) AS price_for_square_text,
+	amount_as_string(c.total_sum::numeric,
+	com.currency,com.sub_currency) AS total_sum_text,
+	c.total_sum total_sum,
+	c.passport_address  passport_address,
+	c.fact_address fact_address,
+	c.contacts contacts,
+	marital_status,
+	c.spouse_fio as spouse,
+	case when marital_status then '&#09; Я, <b>'||c.spouse_fio||'</b> супруг/а <b>'||c.fio||'</b>  ознакомлен/а с текстом настоящего соглашения и согласен/на на его подписание моей/им супругой/м.'
+	else '&#09; Я, <b>'||c.fio||'</b> настоящим заявляю, что в официальном браке не состою.' end as marital_text,
+	c.whatsapp_number, com.bik,com.inn,com.phone,
+c.passport_number,
+com.okpo,
+com.address,
+com.post_address,
+com.bank_name,
+com.account_number,
+
+
+	'field 1' as feild1,
+	'field 2' as feild2
+from
+	client c
+	inner join appartment ap on ap.id=c.appartment_id
+	inner join construction cc on cc.id=ap.construction
+	inner join company com on com.id=cc.company_id
+
+where c.id=$P{client_id}]]>
+	</queryString>
+	<field name="company" class="java.lang.String"/>
+	<field name="company_fn" class="java.lang.String"/>
+	<field name="contract_number" class="java.lang.String"/>
+	<field name="date_contract" class="java.sql.Timestamp"/>
+	<field name="date_contract_formatted" class="java.lang.String"/>
+	<field name="today" class="java.lang.String"/>
+	<field name="fio" class="java.lang.String"/>
+	<field name="obj_address" class="java.lang.String"/>
+	<field name="ap_number" class="java.lang.String"/>
+	<field name="flat" class="java.lang.Integer"/>
+	<field name="type" class="java.lang.Integer"/>
+	<field name="procuration" class="java.lang.String"/>
+	<field name="responsiblepersonis" class="java.lang.String"/>
+	<field name="room_quantity" class="java.lang.Integer"/>
+	<field name="total_area" class="java.math.BigDecimal"/>
+	<field name="price_for_square" class="java.math.BigDecimal"/>
+	<field name="price_for_square_text" class="java.lang.String"/>
+	<field name="total_sum_text" class="java.lang.String"/>
+	<field name="total_sum" class="java.math.BigDecimal"/>
+	<field name="passport_address" class="java.lang.String"/>
+	<field name="fact_address" class="java.lang.String"/>
+	<field name="contacts" class="java.lang.String"/>
+	<field name="marital_status" class="java.lang.Boolean"/>
+	<field name="spouse" class="java.lang.String"/>
+	<field name="marital_text" class="java.lang.String"/>
+	<field name="whatsapp_number" class="java.lang.String"/>
+	<field name="bik" class="java.lang.String"/>
+	<field name="inn" class="java.lang.String"/>
+	<field name="phone" class="java.lang.String"/>
+	<field name="passport_number" class="java.lang.String"/>
+	<field name="okpo" class="java.lang.String"/>
+	<field name="address" class="java.lang.String"/>
+	<field name="post_address" class="java.lang.String"/>
+	<field name="bank_name" class="java.lang.String"/>
+	<field name="account_number" class="java.lang.String"/>
+	<field name="feild1" class="java.lang.String"/>
+	<field name="feild2" class="java.lang.String"/>
+	<variable name="count" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$F{feild1}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="82" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="1ad6dad6-a9e4-4d63-bddf-8212a95599ec" x="191" y="15" width="243" height="14"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+					<paragraph lineSpacing="Double"/>
+				</textElement>
+				<text><![CDATA[СОГЛАШЕНИЕ ]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="24efde49-f548-45bc-a5a2-d7e384e17adc" stretchType="RelativeToTallestObject" x="81" y="29" width="511" height="30"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Top" markup="html">
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["о расторжении Предварительного договора №"+$F{contract_number}+" от "+$F{date_contract_formatted}+" г."]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="023263b4-8c7f-4037-a9da-2b7e0fbf235b" x="64" y="66" width="131" height="16"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+					<paragraph lineSpacing="Double"/>
+				</textElement>
+				<text><![CDATA[г. Бишкек ]]></text>
+			</staticText>
+			<textField pattern="dd MMMMM yyyy г.">
+				<reportElement uuid="f6f84968-e6f7-4da8-a176-3ce66fdea1ec" x="462" y="65" width="128" height="17"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{today}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="70" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="36d05239-708d-4410-8711-3889d527abc8" stretchType="RelativeToTallestObject" x="64" y="13" width="526" height="55"/>
+				<box leftPadding="0" rightPadding="0"/>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="DejaVu Sans" size="11"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["&#09;<b>"+$F{company_fn}+"</b> в лице представителя "+$F{responsiblepersonis}+", действующего на основании "+$F{procuration}+ ", далее по тексту «Сторона-1», с одной стороны, и <br/>"+"&#09;<b>"+$F{fio}+"</b> , далее по тексту «Сторона-2», с другой стороны, заключили настоящее соглашение о нижеследующем: "]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="21">
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="75ece24d-8b75-4568-919a-e9a6c9e8d5d2" stretchType="RelativeToTallestObject" x="22" y="5" width="42" height="14"/>
+				<box leftPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Right" markup="html">
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["1."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="6f1f4895-0b46-43bc-b9af-c20dd03dc044" stretchType="RelativeToTallestObject" x="64" y="5" width="526" height="14"/>
+				<box leftPadding="0" rightPadding="0"/>
+				<textElement markup="html">
+					<font fontName="DejaVu Sans" size="11"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["В связи с заявлением Стороны-2 от :"+$F{today}+" г. «О расторжении Предварительного договора» решили расторгнуть Предварительный договор купли-продажи "+
+(($F{type} == 0) ? "квартиры" : ($F{type} == 1)? "помещения" : "подземного машиноместа")+
+" №"+$F{contract_number}+" от "+$F{date_contract_formatted}+" г."]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="15">
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="467b5024-709f-4f4b-9fcc-c51e5d3fadf5" stretchType="RelativeToTallestObject" x="22" y="0" width="42" height="14"/>
+				<box leftPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Right" markup="html">
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["2."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="c901cc21-bbda-4519-be8e-2d181a2f8a6d" stretchType="RelativeToTallestObject" x="64" y="1" width="526" height="14"/>
+				<box leftPadding="0" rightPadding="0"/>
+				<textElement markup="html">
+					<font fontName="DejaVu Sans" size="11"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" Настоящее соглашение вступает в силу с момента его подписания сторонами."]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="16">
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="af4eaf0f-a7e9-4c4b-9503-8fcff7c9862f" stretchType="RelativeToTallestObject" x="22" y="0" width="42" height="14"/>
+				<box leftPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Right" markup="html">
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["3."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="2fb5c118-6448-4c49-993f-fd7888ddfa3d" stretchType="RelativeToTallestObject" x="64" y="2" width="526" height="14"/>
+				<box leftPadding="0" rightPadding="0"/>
+				<textElement markup="html">
+					<font fontName="DejaVu Sans" size="11"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Сторона-2 получит денежные средства, оплаченные им ранее, согласно вышеуказанного Предварительного Договора после продажи недвижимости, являющейся предметом расторгаемого Предварительного Договора, третьему лицу, о чем будет свидетельствовать подписанный Стороной-2 расходный кассовый ордер."]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="16">
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="a31caafb-e153-4fbb-9bf5-bbf11656f957" stretchType="RelativeToTallestObject" x="22" y="0" width="42" height="14"/>
+				<box leftPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Right" markup="html">
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["4."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="c2b048b4-faaf-4b4a-8641-aad5e3cf09a5" stretchType="RelativeToTallestObject" x="64" y="2" width="526" height="14"/>
+				<box leftPadding="0" rightPadding="0"/>
+				<textElement markup="html">
+					<font fontName="DejaVu Sans" size="11"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Сторона-2, кроме норм, указанные в п. 3 настоящего Соглашения, не имеет каких-либо моральных и/или материальных претензий к Стороне-1."]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="17">
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="9caf7d8b-ed2a-45b6-b3af-b1f218b0a30f" stretchType="RelativeToTallestObject" x="22" y="0" width="42" height="14"/>
+				<box leftPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Right" markup="html">
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["5."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="cfff09c2-907b-449d-ad58-793e963fd364" stretchType="RelativeToTallestObject" x="64" y="1" width="526" height="14"/>
+				<box leftPadding="0" rightPadding="0"/>
+				<textElement markup="html">
+					<font fontName="DejaVu Sans" size="11"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" Настоящее соглашение составлено в двух экземплярах, по одному для каждой стороны."]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="16">
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="3faaebad-dc2b-4a34-aced-004243747105" stretchType="RelativeToTallestObject" x="22" y="0" width="42" height="14"/>
+				<box leftPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Right" markup="html">
+					<font fontName="DejaVu Sans" size="11" isBold="true"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["6."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="796c32b9-72fe-440d-8b6e-a3693eda8be4" stretchType="RelativeToTallestObject" x="64" y="0" width="526" height="14"/>
+				<box leftPadding="0" rightPadding="0"/>
+				<textElement markup="html">
+					<font fontName="DejaVu Sans" size="11"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" Реквизиты и подписи сторон:"]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="28">
+			<subreport runToBottom="true">
+				<reportElement uuid="ed432154-e248-4270-a907-205b7b891245" x="39" y="0" width="542" height="22"/>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="client_id">
+					<subreportParameterExpression><![CDATA[$P{client_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "rekvisit_extra.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band/>
+		<band/>
+		<band/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="531" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="021462d3-a8d1-4c07-9e71-119110e5a936" x="152" y="280" width="70" height="20"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[(Дата)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="109f7960-e5eb-41df-981d-cad9e628b722" x="202" y="60" width="169" height="35"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ЗАЯВЛЕНИЕ]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="072e3015-083d-483d-8ab4-29b5995a2bf5" x="55" y="280" width="263" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="23594630-1a5a-4238-baab-82038f7beba9" x="55" y="198" width="488" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="694cfd30-2748-4248-96b7-def22d17e014" x="55" y="241" width="263" height="1"/>
+			</line>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="0f1894b0-a2db-4e4f-94ca-19fed62d8402" stretchType="RelativeToTallestObject" x="50" y="108" width="540" height="48"/>
+				<box leftPadding="0" rightPadding="0"/>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="DejaVu Sans" size="12"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{marital_text}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="656568ac-1bff-43d5-bb5a-2846ac217e92" x="152" y="241" width="70" height="20"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[(Подпись)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="0df77053-5c6a-4f37-a80e-7375012f1fbe" x="155" y="199" width="67" height="20"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[(Ф.И.О.)]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

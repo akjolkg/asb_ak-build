@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	
+ 	<ui:define name="content">
+		<h2>#{msgs.voterInformation} </h2> <br/><br/>
+		<p:growl globalOnly="true" />	
+		<h:panelGroup style="float:left; width:570px;">
+			<ui:include src="/view/cec/voter_data.xhtml">
+				<ui:param name="person" value="#{uikController.person}" />
+			</ui:include>	
+			<br/>
+			<h:form rendered="#{(sessionScope['org.infosystema.projects.votingsystem.current_user_block'] eq true) or (!uikController.person.permanentcard.hasBiometrika==true)  }" >
+				<h:commandLink styleClass="button blue" value="#{msgs.back}" action="#{uikController.back()}" />
+			</h:form>
+			<h:form rendered="#{(sessionScope['org.infosystema.projects.votingsystem.current_user_block'] eq false) and (uikController.person.permanentcard.hasBiometrika==true) }">
+				<h:commandLink styleClass="button light-blue" value="#{msgs.changeData}" rendered="#{sessionScope['org.current.selected.type']==2 and sessionScope['org.infosystema.projects.votingsystem.current_user_uik']==null}"  action="#{permenantcardController.change(uikController.person.permanentcard)}" /> 
+				<h:outputText value="&#160;" />
+				<h:commandLink styleClass="button light-blue" value="#{msgs.changeUik}" action="#{temporalcardController.change(uikController.person.permanentcard)}" rendered="#{uikController.person.uik.id!=11112 and sessionScope['org.current.selected.type']==1}" />
+				<h:outputText value="&#160;" />
+				<h:commandLink styleClass="button red" value="#{msgs.delete}" action="#{deletecardController.delete(uikController.person)}" rendered="#{(uikController.person.uik.id!=11112) and ((sessionScope['org.infosystema.projects.votingsystem.current_user_tik']==null) or (sessionScope['org.infosystema.projects.votingsystem.current_user_tik'])==uikController.person.uik.tik)}" />
+				<br/><br/>
+				<h:commandLink styleClass="button blue" style="width:555px;" value="#{msgs.back}" action="#{uikController.back()}" /> 
+			
+			</h:form>
+		</h:panelGroup>
+		<h:panelGroup style="float:left; width:28%;">
+		<h2>Адрес по паспорту </h2> <br/>	    
+		#{permenantcardController.getFioAndAddressFromPassport(uikController.person.permanentcard.pin)}
+		<p:dataTable var="regData" value="#{permenantcardController.regDatas}" paginator="false" rows="10" 
+   			id="table2" emptyMessage="#{msgs.noRecordsFound}">
+			<p:column headerText="#{msgs.surname} #{msgs.firstname} #{msgs.patronymic}">
+		        <h:outputText value="#{regData.lastName} #{regData.firstName} #{regData.middleName} " />
+		    </p:column>
+			<p:column headerText="#{msgs.address}">
+		        <h:outputText value="#{regData.address}" />
+		    </p:column>		    
+		</p:dataTable>
+		
+		</h:panelGroup>
+		
+		
+		<div class="clear"></div>
+		
+		<h:form>
+		
+		
+				
+			<br/><br/>
+			<h2>#{msgs.transactionList} </h2> <br/>	    
+			<h:outputText value="#{transactionController.searchTransactionByPin(uikController.person.permanentcard.pin)}" />
+			<p:dataTable var="transaction" value="#{transactionController.model}" paginator="true" rows="10" lazy="true" rowKey="#{transaction.id}" rowIndexVar="index" tableStyleClass="display-table"
+   			id="table" selectionMode="single" emptyMessage="#{msgs.noRecordsFound}" 
+   			rowsPerPageTemplate="10,20,30,40,50" paginatorPosition="bottom" pageLinks="10"
+                   currentPageReportTemplate="Количество транзакций на страницу" 
+                   paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport} {RowsPerPageDropdown}"
+                   selection="#{transactionController.transactionLog}"
+                   first="#{transactionController.first}" >
+			<p:ajax event="rowSelect" listener="#{transactionController.view}" />
+			 <p:ajax event="page" listener="#{transactionController.onPageChange}"/>  
+		    <p:column headerText="#{msgs.date}">
+		        <h:outputText value="#{transaction.dateCreated}">
+		        	<f:convertDateTime type="date" pattern="dd-MM-yyyy HH-mm" timeZone="GMT+6"/>
+				</h:outputText>
+		    </p:column>
+		     <p:column headerText="#{msgs.pin}">
+		        <h:outputText value="#{transaction.permanentcard.pin}" />
+		    </p:column>
+		    <p:column headerText="#{msgs.surname}">
+		        <h:outputText value="#{transaction.permanentcard.surname}" />
+		    </p:column>
+			<p:column headerText="#{msgs.firstname}">
+		        <h:outputText value="#{transaction.permanentcard.name}" />
+		    </p:column>
+		    <p:column headerText="#{msgs.patronymic}">
+		        <h:outputText value="#{transaction.permanentcard.patronymic}" />
+		    </p:column>
+		    
+		     <p:column headerText="#{msgs.uik}">
+		        <h:outputText value="#{transaction.uik.name}" />
+		    </p:column>
+		    
+		     <p:column headerText="#{msgs.tik}">
+		        <h:outputText value="#{transaction.tik.name}" />
+		    </p:column>
+		    <p:column headerText="#{msgs.transactionType}">
+		        <h:outputText value="#{enums[transaction.type]}" />
+		    </p:column>
+		    
+		</p:dataTable>
+		
+		</h:form>
+			
+
+		<div class="clear"></div>		
+				
+	</ui:define>	
+</ui:composition>

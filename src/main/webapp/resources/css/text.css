@@ -1,0 +1,132 @@
+@font-face {
+    font-family: 'PT Sans';    
+    src: url('../javax.faces.resource/PTSans-Regular.eot.xhtml?ln=fonts');
+    src: url('../javax.faces.resource/PTSans-Regular.eot?#iefix.xhtml?ln=fonts') format('embedded-opentype'),
+         url('../javax.faces.resource/PTSans-Regular.woff.xhtml?ln=fonts') format('woff'),
+         url('../javax.faces.resource/PTSans-Regular.ttf.xhtml?ln=fonts') format('truetype'),
+         url('../javax.faces.resource/PTSans-Regular.svg#PTSansRegular.xhtml?ln=fonts') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'PT Sans';    
+    src: url('../javax.faces.resource/PTSans-Italic.eot.xhtml?ln=fonts');
+    src: url('../javax.faces.resource/PTSans-Italic.eot?#iefix.xhtml?ln=fonts') format('embedded-opentype'),
+         url('../javax.faces.resource/PTSans-Italic.woff.xhtml?ln=fonts') format('woff'),
+         url('../javax.faces.resource/PTSans-Italic.ttf.xhtml?ln=fonts') format('truetype'),
+         url('../javax.faces.resource/PTSans-Italic.svg#PTSansItalic.xhtml?ln=fonts') format('svg');
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'PT Sans';    
+    src: url('../javax.faces.resource/PTSans-Bold.eot.xhtml?ln=fonts');
+    src: url('../javax.faces.resource/PTSans-Bold.eot?#iefix.xhtml?ln=fonts') format('embedded-opentype'),
+         url('../javax.faces.resource/PTSans-Bold.woff.xhtml?ln=fonts') format('woff'),
+         url('../javax.faces.resource/PTSans-Bold.ttf.xhtml?ln=fonts') format('truetype'),
+         url('../javax.faces.resource/PTSans-Bold.svg#PTSansBold.xhtml?ln=fonts') format('svg');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'PT Sans';    
+    src: url('../javax.faces.resource/PTSans-BoldItalic.eot.xhtml?ln=fonts');
+    src: url('../javax.faces.resource/PTSans-BoldItalic.eot?#iefix.xhtml?ln=fonts') format('embedded-opentype'),
+         url('../javax.faces.resource/PTSans-BoldItalic.woff.xhtml?ln=fonts') format('woff'),
+         url('../javax.faces.resource/PTSans-BoldItalic.ttf.xhtml?ln=fonts') format('truetype'),
+         url('../javax.faces.resource/PTSans-BoldItalic.svg#PTSansBoldItalic.xhtml?ln=fonts') format('svg');
+    font-weight: bold;
+    font-style: italic;
+}
+
+/* -------------------------------------- */
+
+@font-face {
+    font-family: 'PT Sans Caption';
+    src: url('../javax.faces.resource/PTSans-Caption.eot.xhtml?ln=fonts');
+    src: url('../javax.faces.resource/PTSans-Caption.eot?#iefix.xhtml?ln=fonts') format('embedded-opentype'),
+    url('../javax.faces.resource/PTSans-Caption.woff.xhtml?ln=fonts') format('woff'),
+    url('../javax.faces.resource/PTSans-Caption.ttf.xhtml?ln=fonts') format('truetype'),
+    url('../javax.faces.resource/PTSans-Caption.svg#PTSansCaption.xhtml?ln=fonts') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'PT Sans Caption';
+    src: url('../javax.faces.resource/PTSans-CaptionBold.eot.xhtml?ln=fonts');
+    src: url('../javax.faces.resource/PTSans-CaptionBold.eot?#iefix.xhtml?ln=fonts') format('embedded-opentype'),
+    url('../javax.faces.resource/PTSans-CaptionBold.woff.xhtml?ln=fonts') format('woff'),
+    url('../javax.faces.resource/PTSans-CaptionBold.ttf.xhtml?ln=fonts') format('truetype'),
+    url('../javax.faces.resource/PTSans-CaptionBold.svg#PTSansCaptionBold.xhtml?ln=fonts') format('svg');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'PT Sans Narrow';
+    src: url('../javax.faces.resource/PTSans-Narrow.eot.xhtml?ln=fonts');
+    src: url('../javax.faces.resource/PTSans-Narrow.eot?#iefix.xhtml?ln=fonts') format('embedded-opentype'),
+    url('../javax.faces.resource/PTSans-Narrow.woff.xhtml?ln=fonts') format('woff'),
+    url('../javax.faces.resource/PTSans-Narrow.ttf.xhtml?ln=fonts') format('truetype'),
+    url('../javax.faces.resource/PTSans-Narrow.svg#PTSansNarrow.xhtml?ln=fonts') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'PT Sans Narrow';
+    src: url('../javax.faces.resource/PTSans-NarrowBold.eot.xhtml?ln=fonts');
+    src: url('../javax.faces.resource/PTSans-NarrowBold.eot?#iefix.xhtml?ln=fonts') format('embedded-opentype'),
+    url('../javax.faces.resource/PTSans-NarrowBold.woff.xhtml?ln=fonts') format('woff'),
+    url('../javax.faces.resource/PTSans-NarrowBold.ttf.xhtml?ln=fonts') format('truetype'),
+    url('../javax.faces.resource/PTSans-NarrowBold.svg#PTSansNarrowBold.xhtml?ln=fonts') format('svg');
+    font-weight: bold;
+    font-style: normal;
+}
+
+
+body {
+	color: #626060;
+	background: #fff;
+	font: 13px/1.5 'PT Sans', Arial, 'Liberation Sans', FreeSans, sans-serif;
+	width: 100%;
+	height: 100%;
+}
+
+pre,
+code {	font-family: 'DejaVu Sans Mono', Menlo, Consolas, monospace; }
+
+/* `Headings
+----------------------------------------------------------------------------------------------------*/
+
+h1 { font-size: 19px; }
+h2 { font-size: 17px; }
+h3 { font-size: 15px; }
+h4 { font-size: 14px; }
+h5 { font-size: 13px; }
+h6 { font-size: 12px; }
+
+h1, h2, h3, h4, h5, h6{	font-weight: normal; }
+
+/* `Spacing
+----------------------------------------------------------------------------------------------------*/
+
+ol { list-style: decimal; }
+ul { list-style: disc; }
+li {
+    list-style: none inside;
+}
+
+a { color: inherit; }
+
+
+.title {
+	font: 17px/1.5 'PT Sans Caption', Arial, 'Liberation Sans', FreeSans, sans-serif;
+    color: #485566;
+}
+
+.bold { font-weight: bold; }

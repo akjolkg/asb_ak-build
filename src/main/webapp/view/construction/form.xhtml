@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+ 		
+		<h2>#{msgs.addConstruction} </h2> <br/><br/>	        
+		<h:form id="add-card-form" prependId="false">
+			<h:panelGroup id="messages">
+				<p:growl globalOnly="true" />
+			</h:panelGroup>
+		    <h:panelGrid styleClass="form-table" columns="3">
+		    	<h:outputText value="#{msgs.company}" styleClass="form-table-label disp-blc"/>
+		    	<p:selectOneMenu  value="#{constructionCreator.construction.company}" id="company" style="width:600px;" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}" converter="companyConverter">
+					<f:selectItem  itemLabel="#{msgs.selectValue}" noSelectionOption="true"/>
+					<f:selectItems value="#{constructionListController.companies}" var="company" itemLabel="#{company.title}" itemValue="#{company}"/>
+		    	</p:selectOneMenu>
+				<p:message for="company" />
+				
+				<h:outputText value="#{msgs.developer}" styleClass="form-table-label disp-blc"/>
+		    	<p:selectOneMenu  value="#{constructionCreator.construction.developer}" id="developer" style="width:600px;" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}" converter="companyConverter">
+					<f:selectItem  itemLabel="#{msgs.selectValue}" noSelectionOption="true"/>
+					<f:selectItems value="#{constructionListController.companies}" var="company" itemLabel="#{company.title}" itemValue="#{company}"/>
+		    	</p:selectOneMenu>
+				<p:message for="developer" />
+				
+				<h:outputText value="#{msgs.name}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{constructionCreator.construction.title}" id="name"  style="width:300px;"  required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="name" />
+				
+				<h:outputText value="#{msgs.shortName}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{constructionCreator.construction.shortName}"  style="width:300px;"  id="shortName" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="shortName" />
+				
+				<h:outputText value="#{msgs.city}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{constructionCreator.construction.city}"  style="width:300px;"  id="city" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="city" />
+				
+				<h:outputText value="#{msgs.contractNumberLast}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{constructionCreator.construction.position}"  style="width:300px;"  id="contractNumberLast" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="contractNumberLast" />
+				
+				
+				
+				<h:outputText value="#{msgs.idCode}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{constructionCreator.construction.code}" id="code"  style="width:300px;" />
+				<p:message for="code" />
+				
+				<h:outputText value="#{msgs.legalDocuments}" styleClass="form-table-label disp-blc"/>
+				<h:inputTextarea value="#{constructionCreator.construction.legalDocuments}" id="legalDocuments"  style="width:300px;" />
+				<p:message for="legalDocuments" />
+				
+				<h:outputText value="#{msgs.plannedAddress}" styleClass="form-table-label disp-blc"/>
+				<h:inputTextarea value="#{constructionCreator.construction.plannedAddress}" id="address"  style="width:300px;"  required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="address" />
+				
+				<h:outputText value="#{msgs.legalAddress}" styleClass="form-table-label disp-blc"/>
+				<h:inputTextarea value="#{constructionCreator.construction.legalAddress}" id="legalAddress"  style="width:300px;" />
+				<p:message for="legalAddress" />
+				    
+			    <h:outputText value="#{msgs.rehubDate}" styleClass="form-table-label disp-blc"/>
+			    <p:calendar showOtherMonths="true" selectOtherMonths="true" id="rehubDate" value="#{constructionCreator.construction.plannedDate}"  showOn="button" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}" locale="ru" pattern="dd.MM.yyyy"/>
+				<p:message for="rehubDate" />
+				
+				<h:outputText value="#{msgs.exploitationDate}" styleClass="form-table-label disp-blc"/>
+			    <p:calendar showOtherMonths="true" selectOtherMonths="true" id="exploitationDate" value="#{constructionCreator.construction.realDate}"  showOn="button" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}" locale="ru" pattern="dd.MM.yyyy"/>
+				<p:message for="exploitationDate" />
+				
+				<h:outputText value="#{msgs.installmentDate}" styleClass="form-table-label disp-blc"/>
+			    <p:calendar showOtherMonths="true" selectOtherMonths="true" id="installmentDate" value="#{constructionCreator.construction.installmentDate}"  showOn="button" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}" locale="ru" pattern="dd.MM.yyyy"/>
+				<p:message for="installmentDate" />
+				
+				<h:outputText value="#{msgs.minApPrice}" styleClass="form-table-label disp-blc"/>
+				<h:panelGrid columns="4">
+					<p:inputNumber decimalPlaces="2" value="#{constructionCreator.construction.minApPrice}" id="apPrice" style="width:100px;"  required="true"
+						requiredMessage="#{msgs.thisFieldIsRequired}"/>
+					<p:message for="apPrice" />
+					<h:outputText value="#{msgs.minApPrice2}" styleClass="form-table-label disp-blc"/>
+					<p:inputNumber decimalPlaces="2" value="#{constructionCreator.construction.minApPrice2}" id="apPrice2" style="width:100px;"  required="true"
+						requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				</h:panelGrid>
+				<p:message for="apPrice2" />
+				
+				<h:outputText value="#{msgs.minOfPrice}" styleClass="form-table-label disp-blc"/>
+				<h:panelGrid columns="4">
+					<p:inputNumber decimalPlaces="2" value="#{constructionCreator.construction.minOfPrice}" id="ofPrice" style="width:100px;"  required="true"
+						requiredMessage="#{msgs.thisFieldIsRequired}"/>
+					<p:message for="ofPrice" />
+					<h:outputText value="#{msgs.minOfPrice2}" styleClass="form-table-label disp-blc"/>
+					<p:inputNumber decimalPlaces="2" value="#{constructionCreator.construction.minOfPrice2}" id="ofPrice2" style="width:100px;"  required="true"
+						requiredMessage="#{msgs.thisFieldIsRequired}"/>					
+				</h:panelGrid>
+				<p:message for="ofPrice2" />
+				
+				<h:outputText value="#{msgs.minOfPrice} 2-й этаж и выше" styleClass="form-table-label disp-blc"/>
+				<h:panelGrid columns="4">
+					<p:inputNumber decimalPlaces="2" value="#{constructionCreator.construction.minOfPriced}" id="ofPriced" style="width:100px;"  required="true"
+						requiredMessage="#{msgs.thisFieldIsRequired}"/>
+					<p:message for="ofPriced" />
+					<h:outputText value="#{msgs.minOfPrice2} 2-й этаж и выше" styleClass="form-table-label disp-blc"/>
+					<p:inputNumber decimalPlaces="2" value="#{constructionCreator.construction.minOfPriced2}" id="ofPriced2" style="width:100px;"  required="true"
+						requiredMessage="#{msgs.thisFieldIsRequired}"/>					
+				</h:panelGrid>
+				<p:message for="ofPriced2" />
+				
+				<h:outputText value="#{msgs.minPaPrice}" styleClass="form-table-label disp-blc"/>
+				<h:panelGrid columns="4">
+					<p:inputNumber decimalPlaces="2" value="#{constructionCreator.construction.minPaPrice}" id="paPrice" style="width:100px;"  required="true"
+						requiredMessage="#{msgs.thisFieldIsRequired}"/>
+					<p:message for="paPrice" />
+					<h:outputText value="#{msgs.minPaPrice2}" styleClass="form-table-label disp-blc"/>
+					<p:inputNumber decimalPlaces="2" value="#{constructionCreator.construction.minPaPrice2}" id="paPrice2" style="width:100px;"  required="true"
+						requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				</h:panelGrid>
+				<p:message for="paPrice2" />
+				
+				<h:outputText value="#{msgs.minBaPrice}" styleClass="form-table-label disp-blc"/>
+				<h:panelGrid columns="4">
+					<p:inputNumber decimalPlaces="2" value="#{constructionCreator.construction.minBaPrice}" id="baPrice" style="width:100px;"  required="true"
+						requiredMessage="#{msgs.thisFieldIsRequired}"/>
+					<p:message for="baPrice" />
+					<h:outputText value="#{msgs.minBaPrice2}" styleClass="form-table-label disp-blc"/>
+					<p:inputNumber decimalPlaces="2" value="#{constructionCreator.construction.minBaPrice2}" id="baPrice2" style="width:100px;"  required="true"
+						requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				</h:panelGrid>
+				<p:message for="baPrice2" />
+				
+				
+				
+				<h:outputText value="#{msgs.foreman}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{constructionCreator.construction.foreman}" style="width:300px;"  id="foreman" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="foreman" />
+				
+				<h:outputText value="#{msgs.foreman} #{msgs.toStyle}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{constructionCreator.construction.toForeman}" style="width:300px;"  id="toForeman" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="toForeman" />
+				
+				<h:outputText value="#{msgs.note}" styleClass="form-table-label disp-blc"/>
+				<h:inputTextarea value="#{constructionCreator.construction.note}" id="note"  style="width:300px;"  required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="note" />
+				
+				
+				<h:outputText value="#{msgs.equipment}" styleClass="form-table-label disp-blc"/>
+		    	<p:pickList id="pickList" value="#{constructionCreator.fields}" var="field" itemLabel="#{field}" 
+		    		
+		    		required="true" requiredMessage="#{msgs.thisFieldIsRequired}" 
+		    		itemValue="#{field}" style="height:500px;" >
+		    		<f:facet name="sourceCaption">#{msgs.notExist}</f:facet>
+       				<f:facet name="targetCaption">#{msgs.exist}</f:facet>
+        		</p:pickList>
+		    	<p:message for="pickList" />
+		  
+		    
+				
+				
+					    	
+		    </h:panelGrid>	
+		    <h:panelGrid styleClass="form-table" columns="3">
+		    	<h:outputText value="#{msgs.toBlock}" styleClass="form-table-label disp-blc"/>
+				<p:selectBooleanCheckbox value="#{constructionCreator.block}" id="block" >
+		            <p:ajax update="grid_block_text" />
+		        </p:selectBooleanCheckbox>
+				<p:message for="block" />
+			</h:panelGrid>
+			<h:panelGrid styleClass="form-table" id="grid_block_text" columns="3">
+		    	<h:outputText value="#{msgs.blockText}" styleClass="form-table-label disp-blc" rendered="#{constructionCreator.block}"/>
+				<h:inputText value="#{constructionCreator.construction.blockText}" style="width:300px;"  id="blockText" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"  rendered="#{constructionCreator.block}"/>
+				<p:message for="blockText"/>
+			</h:panelGrid>
+		   
+		    <div class="m-top">
+		    	<h:commandButton value="#{msgs.save}" action="#{constructionCreator.doSave()}" styleClass="button light-blue"/>
+		    	<h:commandButton value="#{msgs.cancel}" action="#{constructionCreator.cancel()}" immediate="true" styleClass="button red m-left"/>
+		   	</div>
+		    
+		</h:form>
+			
+		<div class="clear"></div>	
+				
+	</ui:define>	
+</ui:composition>

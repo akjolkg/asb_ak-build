@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+		<h2>#{msgs.clientList} </h2> <br/> 
+		<br/>
+		
+		
+		<div class="clear"></div>
+		<h:form id ="filter-form">		
+			<h:panelGrid columns="1"  styleClass="f-left">
+			    <h:outputText value="#{msgs.clientloyality}" styleClass="label m-left" />
+				
+				<p:selectCheckboxMenu  value="#{clientListController.filterLoyalitites}" id="loyality" style="width:200px;" styleClass="m-right"  
+					multiple="true" converter="enumConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{clientListController.loyalities}" var="entity" itemLabel="#{enums[entity]}" itemValue="#{entity}"/>
+		    	</p:selectCheckboxMenu>
+			</h:panelGrid>
+			<h:panelGrid columns="1" styleClass="f-left">
+				<h:outputText value="#{msgs.developer}" styleClass="label" />
+				
+				<p:selectCheckboxMenu  value="#{clientListController.filterDevelopers}" id="developer" style="width:250px;" styleClass="m-right"  
+					multiple="true" converter="companyConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{clientListController.developers}" var="entity" itemLabel="#{entity.title}" itemValue="#{entity}"/>
+					<p:ajax event="change" update="construction"  listener="#{clientListController.onCompanyChange}" />
+		    	</p:selectCheckboxMenu>
+		    </h:panelGrid>
+		    <h:panelGrid columns="1" styleClass="f-left">
+				<h:outputText value="#{msgs.appartmentType}" styleClass="label" />
+				<p:selectCheckboxMenu  value="#{clientListController.filterAppartmentTypes}" style="width:250px;" styleClass="m-right"  
+					multiple="true" converter="enumConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{clientListController.appartmentTypes}" var="entity" itemLabel="#{enums[entity]}" itemValue="#{entity}"/>					
+		    	</p:selectCheckboxMenu>
+			</h:panelGrid>	
+		    <h:panelGrid columns="2"  styleClass="f-left">
+				<h:outputText value="#{msgs.appartmentSpecNote}" styleClass="label" />
+		    	<h:outputText value="#{msgs.appartmentSpecNote}" styleClass="label" />
+		    	<p:selectCheckboxMenu  value="#{clientListController.filterSn}" id="sn" style="width:110px;" styleClass="m-right"  
+					multiple="true" converter="javax.faces.Boolean" filter="true" filterMatchMode="contains">
+					 <f:selectItem itemLabel="#{msgs.yes}" itemValue="true" />
+                     <f:selectItem itemLabel="#{msgs.no}" itemValue="false" /> 
+		    	</p:selectCheckboxMenu>		 
+		    	<p:inputText value="#{clientListController.filterSnText}"  styleClass="m-left"/>	
+		    	   	
+			</h:panelGrid>
+		    <div class="clear"></div>
+			
+			<h:panelGrid columns="3" styleClass="f-left">
+				<h:outputText value="#{msgs.company}" styleClass="label" />
+				<h:outputText value="#{msgs.construction}" styleClass="label" />
+				<h:outputText value="#{msgs.blockNumber}" styleClass="label" />
+				
+				<p:selectCheckboxMenu  value="#{clientListController.filterCompanies}" id="company" style="width:250px;" styleClass="m-right"  
+					multiple="true" converter="companyConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{clientListController.companies}" var="entity" itemLabel="#{entity.title}" itemValue="#{entity}"/>
+					<p:ajax event="change" update="construction"  listener="#{clientListController.onCompanyChange}" />
+		    	</p:selectCheckboxMenu>
+				<p:selectCheckboxMenu  value="#{clientListController.filterConstructions}"  
+						multiple="true" id="construction" style="width:250px;"  styleClass="m-right"
+						filter="true" filterMatchMode="contains" converter="constructionConverter">
+					<f:selectItems value="#{clientListController.constructions}" var="entity" itemLabel="#{entity.title}" itemValue="#{entity}"/>
+		    	</p:selectCheckboxMenu>
+		    	<p:selectCheckboxMenu  value="#{clientListController.filterBlocks}" multiple="true"   styleClass="m-right">
+		            <f:selectItems value="#{clientListController.blockList}"/>
+		        </p:selectCheckboxMenu>	
+		    </h:panelGrid>
+				
+			<h:panelGrid columns="3" styleClass="f-left">
+				<h:outputText value="#{msgs.entranceNumber}" styleClass="label" />
+				<h:outputText value="#{msgs.flat}" styleClass="label" />
+				<h:outputText value="#{msgs.roomQuantity}" styleClass="label" />
+				
+				<p:selectCheckboxMenu  value="#{clientListController.filterEntrances}" converter="javax.faces.Integer" multiple="true"   styleClass="m-right">
+		            <f:selectItems value="#{clientListController.getIntegerList(1,10)}"/>
+		        </p:selectCheckboxMenu>			
+				<p:selectCheckboxMenu  value="#{clientListController.filterFlats}" converter="javax.faces.Integer" multiple="true"   styleClass="m-right">
+		            <f:selectItems value="#{clientListController.getIntegerList(-3,20)}"/>
+		        </p:selectCheckboxMenu>
+		    	<p:selectCheckboxMenu  value="#{clientListController.filterRoomQuantities}" converter="javax.faces.Integer" multiple="true"   styleClass="m-right">
+		            <f:selectItems value="#{clientListController.getIntegerList(1,10)}"/>
+		        </p:selectCheckboxMenu>		
+			</h:panelGrid>
+			
+			
+			<div class="clear"/>
+			
+			<h:panelGrid columns="2"  styleClass="f-left">
+				<h:outputText value="#{msgs.clientType}" styleClass="label" />
+				<h:outputText value="#{msgs.clientFrom}" styleClass="label" />	
+				<p:selectCheckboxMenu  value="#{clientListController.filterTypes}" id="clientType" style="width:200px;" styleClass="m-right"  
+					multiple="true" converter="enumConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{clientListController.clientTypes}" var="entity" itemLabel="#{enums[entity]}" itemValue="#{entity}"/>
+		    	</p:selectCheckboxMenu>
+		    	<p:selectCheckboxMenu  value="#{clientListController.filterFroms}" id="clientFrom" style="width:200px;" styleClass="m-right"  
+					multiple="true" converter="enumConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{clientListController.clientFroms}" var="entity" itemLabel="#{enums[entity]}" itemValue="#{entity}"/>
+		    	</p:selectCheckboxMenu>	    	
+			</h:panelGrid>
+			
+			<h:panelGrid columns="2"  styleClass="f-left">
+				<h:outputText value="#{msgs.contractType}" styleClass="label" />
+				<h:outputText value="#{msgs.gotKeys}" styleClass="label" />
+				<p:selectCheckboxMenu  value="#{clientListController.filterContractTypes}" id="contractType" style="width:200px;" styleClass="m-right"  
+					multiple="true" converter="enumConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{clientListController.contractTypes}" var="entity" itemLabel="#{enums[entity]}" itemValue="#{entity}"/>
+		    	</p:selectCheckboxMenu>
+		    	<p:selectCheckboxMenu  value="#{clientListController.filterKeys}" id="keys" style="width:110px;" styleClass="m-right"  
+					multiple="true" converter="javax.faces.Boolean" filter="true" filterMatchMode="contains">
+					 <f:selectItem itemLabel="#{msgs.yes}" itemValue="true" />
+                     <f:selectItem itemLabel="#{msgs.no}" itemValue="false" /> 
+		    	</p:selectCheckboxMenu>		    	
+			</h:panelGrid>
+			
+			
+		
+			<h:panelGrid columns="4"  styleClass="f-left">
+				<h:outputText value="#{msgs.signed}" styleClass="label" />
+				<h:outputText value="#{msgs.extralow}" styleClass="label" />
+				<h:outputText value="#{msgs.curator}" styleClass="label" />				
+				<h:outputText value="#{msgs.curatorOrk}" styleClass="label" />				
+				
+				<p:selectCheckboxMenu  value="#{clientListController.filterSigned}" id="signed" style="width:110px;" styleClass="m-right"  
+					multiple="true" converter="javax.faces.Boolean" filter="true" filterMatchMode="contains">
+					 <f:selectItem itemLabel="#{msgs.yes}" itemValue="true" />
+                     <f:selectItem itemLabel="#{msgs.no}" itemValue="false" /> 
+		    	</p:selectCheckboxMenu>	
+		    	<p:selectCheckboxMenu  value="#{clientListController.filterExtralow}" style="width:110px;" styleClass="m-right"  
+					multiple="true" converter="javax.faces.Boolean" filter="true" filterMatchMode="contains">
+					 <f:selectItem itemLabel="#{msgs.yes}" itemValue="true" />
+                     <f:selectItem itemLabel="#{msgs.no}" itemValue="false" /> 
+		    	</p:selectCheckboxMenu>				
+				<p:selectCheckboxMenu  value="#{clientListController.filterCurators}" id="curator" style="width:250px;" styleClass="m-right"  
+					multiple="true" converter="userConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{clientListController.curators}" var="entity" itemLabel="#{entity.fio}" itemValue="#{entity}"/>					
+		    	</p:selectCheckboxMenu>
+		    	
+		    	<p:selectCheckboxMenu  value="#{clientListController.filterCuratorOrks}" id="curatorOrk" style="width:250px;" styleClass="m-right"  
+					multiple="true" converter="userConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{clientListController.curatorOrks}" var="entity" itemLabel="#{entity.fio}" itemValue="#{entity}"/>					
+		    	</p:selectCheckboxMenu>
+	
+			</h:panelGrid>
+			<h:panelGrid columns="1"  styleClass="f-left" >
+				<h:outputText value="#{msgs.responsiblePerson}" styleClass="label" />
+				<p:selectCheckboxMenu  value="#{clientListController.filterResponsiblePersons}" id="rp" style="width:250px;" styleClass="m-right"  
+					multiple="true" converter="rpConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{clientListController.rps}" var="entity" itemLabel="#{entity.fio}" itemValue="#{entity}"/>					
+		    	</p:selectCheckboxMenu>
+			</h:panelGrid>
+			<div class="clear"/>
+		
+			
+			<h:panelGrid columns="4"  styleClass="f-left">
+			    <h:outputText value="#{msgs.appartmentNumber}" styleClass="label m-right" />
+			    <h:outputText value="#{msgs.clientFio}/#{msgs.note}" styleClass="label m-right" />
+			    <h:outputText value="#{msgs.contractStatus}" styleClass="label m-right m-left" />
+			    <h:outputText value="#{msgs.contractDateType}" styleClass="label m-right" />
+			   
+				<p:inputText value="#{clientListController.filterTitle}"  styleClass="m-right m-left"/>
+				<p:inputText value="#{clientListController.searchString}"  styleClass="m-right  m-left"/>
+				
+				<p:selectCheckboxMenu  value="#{clientListController.filterStatus}" id="clientStatus" style="width:250px;" styleClass="m-right m-left"  
+					multiple="true" converter="enumConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{clientListController.clientStatuses}" var="entity" itemLabel="#{enums[entity]}" itemValue="#{entity}"/>			
+		    	</p:selectCheckboxMenu>	
+		    	
+		    	
+		    	
+		    	
+		    	<p:selectOneMenu  value="#{clientListController.filterContractDateType}" id="clientContractDateType" style="width:250px;" 
+		    		styleClass="m-right"   
+					converter="enumConverter" 
+					filter="true" filterMatchMode="contains">
+					<f:selectItem  itemLabel="#{msgs.contactDate}" noSelectionOption="true"/>
+					<f:selectItems value="#{clientListController.contractDateTypes}" var="entity" itemLabel="#{enums[entity]}" itemValue="#{entity}"/>			
+		    	</p:selectOneMenu>	
+			</h:panelGrid>
+			<h:panelGrid columns="2"  styleClass="f-left">
+			    <h:outputText value="#{msgs.dateFrom}" styleClass="label m-left" />
+				<h:outputText value="#{msgs.dateTo}" styleClass="label m-left" />
+				
+				<p:calendar showOtherMonths="true" selectOtherMonths="true"  value="#{clientListController.filterDateFrom}"  showOn="button" locale="ru" styleClass="m-left"/>
+				<p:calendar showOtherMonths="true" selectOtherMonths="true"  value="#{clientListController.filterDateTo}"  showOn="button" locale="ru" styleClass="m-left"/>
+			</h:panelGrid>
+			
+			<h:panelGrid columns="2"  styleClass="f-left" rendered="#{roleController.isAllowed('LAWYER')}">
+			    <h:outputText value="#{msgs.dateLegalSign} #{msgs.from}" styleClass="label m-left" />
+				<h:outputText value="#{msgs.to}" styleClass="label m-left" />
+				
+				<p:calendar showOtherMonths="true" selectOtherMonths="true"  value="#{clientListController.filterDate2From}"  showOn="button" locale="ru" styleClass="m-left"/>
+				<p:calendar showOtherMonths="true" selectOtherMonths="true"  value="#{clientListController.filterDate2To}"  showOn="button" locale="ru" styleClass="m-left"/>
+			</h:panelGrid>
+			
+			<h:panelGrid columns="1"  styleClass="f-left" rendered="#{roleController.isAllowed('CONTROLLER,ORK')}">
+				<h:outputText value="#{msgs.garant}" styleClass="label" />
+				<p:selectCheckboxMenu  value="#{clientListController.filterGarants}" id="garant" style="width:250px;" styleClass="m-right"  
+					multiple="true" converter="garantConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{clientListController.garants}" var="entity" itemLabel="#{entity.fio}" itemValue="#{entity}"/>					
+		    	</p:selectCheckboxMenu>
+			</h:panelGrid>
+			
+			<h:panelGrid columns="1"  styleClass="f-left">
+			    <h:outputText value="#{msgs.planType}" styleClass="label m-left" />
+				
+				<p:selectCheckboxMenu  value="#{clientListController.filterPtypes}" id="planType" style="width:200px;" styleClass="m-right"  
+					multiple="true" converter="enumConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{clientListController.ptypes}" var="entity" itemLabel="#{enums[entity]}" itemValue="#{entity}"/>
+		    	</p:selectCheckboxMenu>
+			</h:panelGrid>
+			
+			
+			<h:panelGrid columns="2"  styleClass="f-left">
+			   <h:outputText value="" styleClass="label" />
+				<h:outputText value="" styleClass="label" />
+				
+				<p:commandButton ajax="true" update="form" value="#{msgs.search}" actionListener="#{clientListController.filter}" styleClass="button green f-right" />
+			    <p:commandButton ajax="true" update="form filter-form" value="#{msgs.clearFilter}" actionListener="#{clientListController.clearFilter}" styleClass="button blue f-right" />
+			</h:panelGrid>
+		
+		</h:form>
+		
+		<div class="clear"></div>
+		
+		<h:form id ="form">
+			<p:dataTable var="entity" value="#{clientListController.model}"  paginator="true" rows="50" lazy="true" rowKey="#{entity.id}" rowIndexVar="index" tableStyleClass="display-table"
+	   			id="table" selectionMode="single" emptyMessage="#{msgs.noRecordsFound}" 
+	   			rowStyleClass="#{entity.status eq 'WAITING_HEAD_APPROVAL' ? 'admin-rows' : entity.status eq 'WAITING_DIRECTOR_APPROVAL' ? 'director-rows' : null}"
+	   			rowsPerPageTemplate="10,20,30,40,50,100000" paginatorPosition="bottom" pageLinks="10"
+	                   currentPageReportTemplate="Всего : #{clientListController.model.rowCount} из #{clientListController.model.totalCount}  &#160;&#160;| #{msgs.amountPerPage}"
+	               	   paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport} {RowsPerPageDropdown} {Exporters}"
+	                   selection="#{clientListController.client}"
+	                   first="#{clientListController.first}" >
+	            <f:facet name="{Exporters}">
+            		<h:commandLink id="excel" styleClass="m-left" rendered="#{!roleController.isAllowed('JUNIOR')}">
+					    <p:graphicImage library="img" name="excel.png"  />
+					   	<p:dataExporter type="xls" target="table" fileName="export" postProcessor="#{dataExportController.postProcessXLS}" />
+					</h:commandLink>
+				</f:facet>   
+				<p:ajax event="rowSelect" listener="#{clientController.onRowSelect}" disabled="#{not roleController.mobile}"  />
+				<p:ajax event="rowDblselect" listener="#{clientController.onRowSelect}"   />
+				<p:ajax event="page" listener="#{clientListController.onPageChange}"/>  			   
+			    <p:column headerText="ID" visible="false">
+			        <h:outputText value="#{entity.id}" />
+			    </p:column>
+			    
+			    <p:column headerText="№" >
+			        <h:outputText value="#{index+1}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.object}" sortBy="#{entity.appartment.title}">
+			        <h:outputText value="#{entity.appartment.construction.title} : #{entity.appartment.title}" />
+			         <h:outputText rendered="#{entity.appartment.specNote.length()>0}" value="(#{entity.appartment.specNote})" style="color:red;" />
+			    	 
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.fio}" sortBy="#{entity.fio}">
+			        <h:outputText value="#{entity.fio}" />
+			        <h:outputText rendered="#{entity.uptStatus}" value="(УПТ-#{entity.uptFio})" style="color:red;" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.contractNumber}"  sortBy="#{entity.contractNumber}">
+			        <h:outputText value="#{entity.contractNumber}" />
+			    </p:column>
+			    <p:column headerText="#{msgs.contactDate}"  sortBy="#{entity.dateContract}">
+			        <h:outputText value="#{entity.dateContract}" >
+			        	<f:convertDateTime pattern="dd-MM-yyyy" />
+			        </h:outputText>
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.priceForSquare}"  sortBy="#{entity.priceForSquare}">
+			        <h:outputText value="#{entity.priceForSquare}">
+			        	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+			        </h:outputText>
+			         <h:outputText rendered="#{entity.extralow eq true}" value="(!)" style="color:red;"/>
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.contractSum}" sortBy="#{entity.totalSum}">
+			        <h:outputText value="#{entity.totalSum}" >
+			        	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2"/>
+			        </h:outputText>
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.alreadyPayed}" sortBy="#{entity.alreadyPayed}">
+			        <h:outputText value="#{entity.alreadyPayed}" >
+			        	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2"/>
+			        </h:outputText>
+			    </p:column>
+			    <p:column headerText="#{msgs.leftSum}" sortBy="#{entity.notPayedYet}">
+			        <h:outputText value="#{entity.notPayedYet}" >
+			        	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2"/>
+			        </h:outputText>
+			    </p:column>
+			    <p:column headerText="#{msgs.leftSumDoc}" >
+			        <h:outputText rendered="#{entity.appartment.docTotalArea>0}" value="#{(entity.appartment.docTotalArea*entity.priceForSquare)-entity.alreadyPayed}" >
+			        	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2"  maxFractionDigits="2"/>
+			        </h:outputText>
+			    </p:column>
+			    <p:column headerText="#{msgs.contacts}" sortBy="#{entity.contacts}" rendered="#{roleController.isAllowed('ADMIN')}">
+			        <h:outputText value="#{entity.contacts}" />
+			    </p:column>
+			    <p:column headerText="КП|Оф.">
+			        <h:outputText value="#{msgs[entity.keys]} | #{msgs[entity.signed]}" />
+			    </p:column>
+			    <p:column rendered="#{!roleController.isAllowed('JUNIOR')}" headerText="#{msgs.note}" sortBy="#{entity.note}">
+			        <h:outputText value="#{entity.note}" />
+			    </p:column>
+			    <p:column headerText="#{msgs.curatorNote}" sortBy="#{entity.curatorNote}">
+			        <h:outputText value="#{entity.curatorNote}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.curator}" >
+			        <h:outputText value="#{entity.curator.fio}"/>			        	
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.contractType}" sortBy="#{entity.contractType}">
+			        <h:outputText value="#{enums[entity.contractType]}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.status}" sortBy="#{entity.status}">
+			        <h:outputText value="#{enums[entity.status]}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.garant}" rendered="#{roleController.isAllowed('CONTROLLER,ORK')}" sortBy="#{entity.garant}">
+			        <h:outputText value="#{entity.garant.fio}"/>			        	
+			    </p:column> 
+			    
+			    <p:column headerText="#{msgs.dateLegalSign}"  sortBy="#{entity.dateLegalSign}" rendered="#{roleController.isAllowed('LAWYER,ADMIN,AUDIT,ORK')}">
+			        <h:outputText value="#{entity.dateLegalSign}" >
+			        	<f:convertDateTime pattern="dd-MM-yyyy" />
+			        </h:outputText>
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.rehubDate} (#{msgs.onContractDate})">
+			        <h:outputText value="#{entity.plannedDate}" >
+			        	<f:convertDateTime pattern="dd-MM-yyyy" />
+			        </h:outputText>
+			    </p:column>
+			    <p:column headerText="#{msgs.rehubDate} (#{msgs.onUpdateSchedule})">
+			        <h:outputText value="#{entity.updatedPlannedDate}" >
+			        	<f:convertDateTime pattern="dd-MM-yyyy" />
+			        </h:outputText>
+			    </p:column>
+			    
+			    
+			    <p:column headerText="#{msgs.clientloyality}" sortBy="#{entity.loyality}">
+			        <h:outputText value="#{enums[entity.loyality]}" />
+			    </p:column>
+			    
+			   
+			</p:dataTable>
+		</h:form>
+		<p:blockUI block="form:table" trigger="form:table" >
+			#{msgs.loading}<br />
+		    <p:graphicImage library="img" name="ajaxloadingbar.gif"/>
+		</p:blockUI>	
+		<p:dialog modal="true" widgetVar="statusDialog" header="#{msgs.loading}" draggable="false" closable="false" resizable="false">
+		    <p:graphicImage library="img" name="ajaxloadingbar.gif"/>
+		</p:dialog>
+		<script type="text/javascript">
+			function start() {
+			    PF('statusDialog').show();
+			}			 
+			function stop() {
+			    PF('statusDialog').hide();
+			}		
+		</script>
+		<div class="clear"></div>			
+				
+	</ui:define>	
+	
+</ui:composition>

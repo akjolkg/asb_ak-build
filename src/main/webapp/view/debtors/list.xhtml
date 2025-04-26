@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+		<h2>#{msgs.debtorsList} </h2> <br/> 
+		
+		
+		<h:form id ="filter-form">		
+			<h:panelGrid columns="1" styleClass="f-left">
+				<h:outputText value="#{msgs.developer}" styleClass="label" />
+				
+				<p:selectCheckboxMenu  value="#{debtorsListController.filterDevelopers}" id="developer" style="width:250px;" styleClass="m-right"  
+					multiple="true" converter="companyConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{debtorsListController.developers}" var="entity" itemLabel="#{entity.title}" itemValue="#{entity}"/>
+					<p:ajax event="change" update="construction"  listener="#{debtorsListController.onCompanyChange}" />
+		    	</p:selectCheckboxMenu>
+		    </h:panelGrid>
+		    
+		    <h:panelGrid columns="1" styleClass="f-left">
+				<h:outputText value="#{msgs.appartmentType}" styleClass="label" />
+				<p:selectCheckboxMenu  value="#{debtorsListController.filterAppartmentTypes}" style="width:250px;" styleClass="m-right"  
+					multiple="true" converter="enumConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{debtorsListController.appartmentTypes}" var="entity" itemLabel="#{enums[entity]}" itemValue="#{entity}"/>					
+		    	</p:selectCheckboxMenu>
+			</h:panelGrid>	
+		    
+		    <div class="clear"></div>
+			
+			<h:panelGrid columns="3" styleClass="f-left">
+				<h:outputText value="#{msgs.company}" styleClass="label" />
+				<h:outputText value="#{msgs.construction}" styleClass="label" />
+				<h:outputText value="#{msgs.blockNumber}" styleClass="label" />
+				
+				<p:selectCheckboxMenu  value="#{debtorsListController.filterCompanies}" id="company" style="width:250px;" styleClass="m-right"  
+					multiple="true" converter="companyConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{debtorsListController.companies}" var="entity" itemLabel="#{entity.title}" itemValue="#{entity}"/>
+					<p:ajax event="change" update="construction"  listener="#{debtorsListController.onCompanyChange}" />
+		    	</p:selectCheckboxMenu>
+				<p:selectCheckboxMenu  value="#{debtorsListController.filterConstructions}"  
+						multiple="true" id="construction" style="width:250px;"  styleClass="m-right"
+						filter="true" filterMatchMode="contains" converter="constructionConverter">
+					<f:selectItems value="#{debtorsListController.constructions}" var="entity" itemLabel="#{entity.title}" itemValue="#{entity}"/>
+		    	</p:selectCheckboxMenu>
+		    	<p:selectCheckboxMenu  value="#{debtorsListController.filterBlocks}" multiple="true"   styleClass="m-right">
+		            <f:selectItems value="#{debtorsListController.blockList}"/>
+		        </p:selectCheckboxMenu>
+		    </h:panelGrid>
+				
+			<h:panelGrid columns="3" styleClass="f-left">
+				<h:outputText value="#{msgs.entranceNumber}" styleClass="label" />
+				<h:outputText value="#{msgs.flat}" styleClass="label" />
+				<h:outputText value="#{msgs.roomQuantity}" styleClass="label" />
+				
+				<p:selectCheckboxMenu  value="#{debtorsListController.filterEntrances}" converter="javax.faces.Integer" multiple="true"   styleClass="m-right">
+		            <f:selectItems value="#{debtorsListController.getIntegerList(1,10)}"/>
+		        </p:selectCheckboxMenu>						
+				<p:selectCheckboxMenu  value="#{debtorsListController.filterFlats}" converter="javax.faces.Integer" multiple="true"   styleClass="m-right">
+		            <f:selectItems value="#{debtorsListController.getIntegerList(0,20)}"/>
+		        </p:selectCheckboxMenu>
+		    	<p:selectCheckboxMenu  value="#{debtorsListController.filterRoomQuantities}" converter="javax.faces.Integer" multiple="true"   styleClass="m-right">
+		            <f:selectItems value="#{debtorsListController.getIntegerList(1,10)}"/>
+		        </p:selectCheckboxMenu>		
+			</h:panelGrid>
+			
+			
+			<div class="clear"/>
+			
+			<h:panelGrid columns="4"  styleClass="f-left">
+				<h:outputText value="#{msgs.clientType}" styleClass="label" />
+				<h:outputText value="#{msgs.clientFrom}" styleClass="label" />
+				<h:outputText value="#{msgs.gotKeys}" styleClass="label" />
+				<h:outputText value="#{msgs.contractStatus}" styleClass="label m-right " />
+
+				<p:selectCheckboxMenu  value="#{debtorsListController.filterTypes}" id="clientType" style="width:200px;" styleClass="m-right"  
+					multiple="true" converter="enumConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{debtorsListController.clientTypes}" var="entity" itemLabel="#{enums[entity]}" itemValue="#{entity}"/>
+		    	</p:selectCheckboxMenu>
+		    	<p:selectCheckboxMenu  value="#{debtorsListController.filterFroms}" id="clientFrom" style="width:200px;" styleClass="m-right"  
+					multiple="true" converter="enumConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{debtorsListController.clientFroms}" var="entity" itemLabel="#{enums[entity]}" itemValue="#{entity}"/>
+		    	</p:selectCheckboxMenu>
+		    	<p:selectCheckboxMenu  value="#{debtorsListController.filterKeys}" id="keys" style="width:110px;" styleClass="m-right"  
+					multiple="true" converter="javax.faces.Boolean" filter="true" filterMatchMode="contains">
+					 <f:selectItem itemLabel="#{msgs.yes}" itemValue="true" />
+                     <f:selectItem itemLabel="#{msgs.no}" itemValue="false" /> 
+		    	</p:selectCheckboxMenu>		
+		    	<p:selectCheckboxMenu  value="#{debtorsListController.filterStatus}" id="clientStatus" style="width:250px;" styleClass="m-right m-left"  
+					multiple="true" converter="enumConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{debtorsListController.clientStatuses}" var="entity" itemLabel="#{enums[entity]}" itemValue="#{entity}"/>			
+		    	</p:selectCheckboxMenu>	    	
+			</h:panelGrid>
+		
+			<h:panelGrid columns="4"  styleClass="f-left">
+				<h:outputText value="#{msgs.signed}" styleClass="label" />
+				<h:outputText value="#{msgs.extralow}" styleClass="label" />
+				<h:outputText value="#{msgs.curator}" styleClass="label" />	
+				<h:outputText value="#{msgs.curatorOrk}" styleClass="label" />				
+				
+				<p:selectCheckboxMenu  value="#{debtorsListController.filterSigned}" id="signed" style="width:110px;" styleClass="m-right"  
+					multiple="true" converter="javax.faces.Boolean" filter="true" filterMatchMode="contains">
+					 <f:selectItem itemLabel="#{msgs.yes}" itemValue="true" />
+                     <f:selectItem itemLabel="#{msgs.no}" itemValue="false" /> 
+		    	</p:selectCheckboxMenu>	
+		    	<p:selectCheckboxMenu  value="#{debtorsListController.filterExtralow}" style="width:110px;" styleClass="m-right"  
+					multiple="true" converter="javax.faces.Boolean" filter="true" filterMatchMode="contains">
+					 <f:selectItem itemLabel="#{msgs.yes}" itemValue="true" />
+                     <f:selectItem itemLabel="#{msgs.no}" itemValue="false" /> 
+		    	</p:selectCheckboxMenu>				
+				<p:selectCheckboxMenu  value="#{debtorsListController.filterCurators}" id="curator" style="width:250px;" styleClass="m-right"  
+					multiple="true" converter="userConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{debtorsListController.curators}" var="entity" itemLabel="#{entity.fio}" itemValue="#{entity}"/>					
+		    	</p:selectCheckboxMenu>
+		    	<p:selectCheckboxMenu  value="#{debtorsListController.filterCuratorOrks}" id="curatorOrk" style="width:250px;" styleClass="m-right"  
+					multiple="true" converter="userConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{debtorsListController.curatorOrks}" var="entity" itemLabel="#{entity.fio}" itemValue="#{entity}"/>					
+		    	</p:selectCheckboxMenu>
+	
+			</h:panelGrid>
+			
+			<div class="clear"/>
+		
+			
+			<h:panelGrid columns="2"  styleClass="f-left">
+			    <h:outputText value="#{msgs.appartmentNumber}" styleClass="label m-right " />
+			    <h:outputText value="#{msgs.clientFio}" styleClass="label m-right " />
+			   
+				<p:inputText value="#{debtorsListController.filterTitle}"  styleClass="m-left"/>
+				<p:inputText value="#{debtorsListController.searchString}"  styleClass="m-right"/>
+					
+			</h:panelGrid>
+	
+			<h:panelGrid columns="2"  styleClass="f-left">
+			    <h:outputText value="#{msgs.dateFrom}" styleClass="label m-left" />
+				<h:outputText value="#{msgs.dateTo}" styleClass="label m-left" />
+				
+				<p:calendar showOtherMonths="true" selectOtherMonths="true"  value="#{debtorsListController.filterDateFrom}"  showOn="button" locale="ru" styleClass="m-left"/>
+				<p:calendar showOtherMonths="true" selectOtherMonths="true"  value="#{debtorsListController.filterDateTo}"  showOn="button" locale="ru" styleClass="m-left"/>
+			</h:panelGrid>
+			<h:panelGrid columns="1"  styleClass="f-left" rendered="#{roleController.isAllowed('CONTROLLER,ORK')}">
+				<h:outputText value="#{msgs.garant}" styleClass="label" />
+				<p:selectCheckboxMenu  value="#{debtorsListController.filterGarants}" id="garant" style="width:250px;" styleClass="m-right"  
+					multiple="true" converter="garantConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{debtorsListController.garants}" var="entity" itemLabel="#{entity.fio}" itemValue="#{entity}"/>					
+		    	</p:selectCheckboxMenu>
+			</h:panelGrid>
+			<h:panelGrid columns="2"  styleClass="f-left">
+			   <h:outputText value="" styleClass="label" />
+				<h:outputText value="" styleClass="label" />
+				
+				<p:commandButton ajax="true" update="form" value="#{msgs.search}" actionListener="#{debtorsListController.filter}" styleClass="button green f-right" />
+			    <p:commandButton ajax="true" update="form filter-form" value="#{msgs.clearFilter}" actionListener="#{debtorsListController.clearFilter}" styleClass="button blue f-right" />
+			</h:panelGrid>
+		
+		</h:form>
+		
+		<div class="clear"></div>
+		
+		<h:form id ="form">
+			<p:dataTable var="entity" value="#{debtorsListController.model}" paginator="true" rows="50" lazy="true" rowIndexVar="index" tableStyleClass="display-table"
+	   			id="table" selectionMode="single" emptyMessage="#{msgs.noRecordsFound}" 
+	   			rowsPerPageTemplate="10,20,30,40,50,100000" paginatorPosition="bottom" pageLinks="10"
+	                   currentPageReportTemplate="Всего : #{debtorsListController.model.rowCount} из #{debtorsListController.model.rowCount}  &#160;&#160;| #{msgs.amountPerPage}"
+	               	   paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport} {RowsPerPageDropdown} {Exporters}"
+	                   first="#{debtorsListController.first}" >
+				<p:ajax event="page" listener="#{debtorsListController.onPageChange}"/> 
+				<p:ajax event="rowDblselect" listener="#{clientController.onRowSelectDebtor}"  />
+				<f:facet name="{Exporters}">
+            		<h:commandLink id="excel" styleClass="m-left" rendered="#{!roleController.isAllowed('JUNIOR')}">
+					    <p:graphicImage library="img" name="excel.png"  />
+					   	<p:dataExporter type="xls" target="table" fileName="export" postProcessor="#{dataExportController.postProcessXLS}" />
+					</h:commandLink>
+				</f:facet>       
+			    
+			    <p:column headerText="№">
+			        <h:outputText value="#{index+1}" />
+			    </p:column>
+			    
+			    
+			    <p:column headerText="#{msgs.object}">
+			        <h:outputText value="#{entity.object}" />
+			    </p:column>
+			    
+			    
+			    <p:column headerText="#{msgs.fio} #{msgs.client}">
+			        <h:outputText value="#{entity.fio}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.contactDate}">
+			        <h:outputText value="#{entity.contractDate}" >
+			        	<f:convertDateTime pattern="dd-MM-yyyy" />
+			        </h:outputText>
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.contacts}" rendered="#{roleController.isAllowed('ADMIN,ORK')}" exportable="#{!roleController.isAllowed('ORK')}">
+			        <h:outputText value="#{entity.contacts}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.datePayment}">
+			        <h:outputText value="#{entity.date}" >
+			        	<f:convertDateTime pattern="dd-MM-yyyy" />
+			        </h:outputText>
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.amountToPay}">
+			        <h:outputText value="#{entity.sum}" >
+			        	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+			        </h:outputText>
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.leftSumDoc}">
+			        <h:outputText value="#{entity.sumInvent}" >
+			        	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2"  maxFractionDigits="2"/>
+			        </h:outputText>
+			    </p:column>
+			    
+			    <p:column rendered="#{!roleController.isAllowed('JUNIOR')}" headerText="#{msgs.note}">
+			        <h:outputText value="#{entity.note}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.debtDays}">
+			        <h:outputText value="#{entity.days}" >
+			        	<f:convertNumber type="number" groupingUsed="true" />
+			        </h:outputText>
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.curator}">
+			        <h:outputText value="#{entity.curator}" />
+			    </p:column>
+			    <p:column rendered="#{!roleController.isAllowed('JUNIOR')}" headerText="#{msgs.curatorOrkNote}">
+			        <h:outputText value="#{entity.curatorNote}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.garant}" rendered="#{roleController.isAllowed('CONTROLLER,ORK')}" >
+			        <h:outputText value="#{entity.garant}" />
+			    </p:column>
+			    
+			    
+			    
+			   	<p:columnGroup type="footer">
+		                <p:column colspan="5" style="text-align:right" footerText="#{msgs.total} :"  />
+		                <p:column colspan="7">
+		                	<f:facet name="footer">
+			                	<h:outputText value="#{debtorsListController.model.totalSum}" styleClass="f-left">
+						        	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2"/>
+						        </h:outputText>
+			                </f:facet>
+		                </p:column>
+		                
+		        
+		        </p:columnGroup> 
+			   
+			</p:dataTable>
+		</h:form>
+		<p:blockUI block="form:table" trigger="form:table" >
+			#{msgs.loading}<br />
+		    <p:graphicImage library="img" name="ajaxloadingbar.gif"/>
+		</p:blockUI>	
+
+		<div class="clear"></div>			
+				
+	</ui:define>	
+	
+</ui:composition>

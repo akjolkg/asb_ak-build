@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+		<h2>#{msgs.schedule} </h2> <br/> 
+		<br/>
+		<div class="clear"></div>
+		<h:panelGrid columns="2">
+			<h:outputText value="#{msgs.object} :" styleClass="form-table-label disp-blc"/>
+			<h:outputText value="#{clientController.client.appartment.construction.title} : #{clientController.client.appartment.title}" />
+			
+			<h:outputText value="#{msgs.client} :" styleClass="form-table-label disp-blc"/>
+			<h:outputText value="#{clientController.client.fio}" />
+			
+			<h:outputText value="#{msgs.contractSum} :" styleClass="form-table-label disp-blc"/>
+			<h:outputText value="#{clientController.client.totalSum}" >
+				<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+			</h:outputText>
+			
+			<h:outputText value="#{msgs.firstPayment} :" styleClass="form-table-label disp-blc"/>
+			<h:outputText value="#{clientController.client.firstPayment}" >
+				<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+			</h:outputText>
+			
+			<h:outputText value="#{msgs.installmentSum} :" styleClass="form-table-label disp-blc"/>
+			<h:outputText value="#{clientController.client.totalSum-clientController.client.firstPayment}" >
+				<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+			</h:outputText>
+			
+			
+			
+			<h:outputText value="#{msgs.alreadyPayed} :" styleClass="form-table-label disp-blc"/>
+			<h:outputText value="#{clientController.client.alreadyPayed}" >
+				<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+			</h:outputText>
+			
+			<h:outputText value="#{msgs.leftSum} :" styleClass="form-table-label disp-blc"/>
+			<h:outputText value="#{clientController.client.notPayedYet}" >
+				<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+			</h:outputText>
+			
+			
+			
+			<h:outputText value="#{msgs.installmentDate} : " styleClass="form-table-label disp-blc"/>
+			<h:outputText value="#{clientController.client.appartment.construction.installmentDate}">
+				<f:convertDateTime pattern="dd-MM-yyyy" />
+			</h:outputText>
+				
+		
+		
+		
+		</h:panelGrid>
+		
+		<div class="clear"></div>
+		<br/>
+		
+		<h:form id ="main-form">
+			<h:panelGroup id="messages">
+				<p:growl globalOnly="true" />
+			</h:panelGroup>
+			<h:panelGrid columns="5" style="width: 100%;">
+				<h:outputText value="#{msgs.installmentStartDate}" styleClass="form-table-label disp-blc"/>
+				<h:outputText value="#{msgs.perInstallmentPayment}" styleClass="form-table-label disp-blc"/>
+				<h:outputText value="#{msgs.installmentPeriod}" styleClass="form-table-label disp-blc"/>
+				<h:outputText value="#{msgs.installmentDate} : " styleClass="form-table-label disp-blc"/>
+				<h:outputText value="" />
+				
+				<p:calendar showOtherMonths="true" selectOtherMonths="true" id="datePayment" value="#{clientController.client.dateInstallment}"  showOn="button" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}" locale="ru"/>
+				
+				<p:inputNumber decimalPlaces="2" value="#{clientController.client.perMonthPayment}" minValue="1" id="totalSum"   required="true"
+						requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				
+				
+				<p:inputNumber decimalPlaces="0" value="#{clientController.client.monthInstallment}" id="month" maxValue="24"   required="true"
+						requiredMessage="#{msgs.thisFieldIsRequired}"/>
+						
+				<p:calendar showOtherMonths="true" selectOtherMonths="true" rendered="#{roleController.isAllowed('ADMIN,SUBADMIN')}" id="datePaymentInstallment" value="#{clientController.client.appartment.construction.installmentDate}"  showOn="button" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}" locale="ru"/>
+				<h:outputText rendered="#{!roleController.isAllowed('ADMIN,SUBADMIN')}" value="#{clientController.client.appartment.construction.installmentDate}">
+					<f:convertDateTime pattern="dd-MM-yyyy" />
+				</h:outputText>
+				
+				<h:commandButton value="#{msgs.recalculate}" action="#{clientController.recalculateSchedule()}" styleClass="button light-blue"/>
+				
+				
+			
+				<p:message for="datePayment" />
+				<p:message for="totalSum"/>
+				<p:message for="month"/>
+				<p:message rendered="#{roleController.isAllowed('ADMIN')}" for="datePaymentInstallment"/>
+				
+				
+			</h:panelGrid>
+		
+		
+		
+		</h:form>
+		
+		
+		<h:form id ="form">
+			<p:dataTable var="entity" value="#{clientController.schedules}" editable="true" rowKey="#{entity.id}" rowIndexVar="index" tableStyleClass="display-table"
+	   			id="table" emptyMessage="#{msgs.noRecordsFound}">
+	   			<p:ajax event="rowEdit" listener="#{clientController.onRowEdit}" />
+       			<p:column headerText="№">
+			        <h:outputText value="#{index}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.datePayment}">
+			    	<p:cellEditor>
+		            	<f:facet name="output">	 
+		               		<h:outputText value="#{entity.datePayment}" >
+			        			<f:convertDateTime pattern="dd-MM-yyyy" />
+			        		</h:outputText>
+			        	</f:facet>
+		               	<f:facet name="input">	
+		               		<p:calendar showOtherMonths="true" selectOtherMonths="true" id="datePayment" value="#{entity.datePayment}"  showOn="button" required="true"
+								requiredMessage="#{msgs.thisFieldIsRequired}" locale="ru"/>
+							<p:message for="datePayment" />
+		               	</f:facet>
+		           </p:cellEditor>
+			   	</p:column>
+		       	<p:column headerText="#{msgs.amountToPay}">
+			    	<p:cellEditor>
+		            	<f:facet name="output">	 
+		               		<h:outputText value="#{entity.amountToPay}" >
+			        			<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+			        		</h:outputText>
+			        	</f:facet>
+		               	<f:facet name="input">	
+		               		<p:inputNumber decimalPlaces="2" value="#{entity.amountToPay}" id="amountToPay" style="width:100px;"  required="true"
+								requiredMessage="#{msgs.thisFieldIsRequired}">
+							</p:inputNumber>
+							<p:message for="amountToPay" />
+		               	</f:facet>
+		           </p:cellEditor>
+			    </p:column>
+			    <p:column headerText="#{msgs.alreadyPayed}">
+			    	<h:outputText value="#{entity.alreadyPayed}" >
+			        	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+			        </h:outputText>			        
+			    </p:column>
+			    <p:column headerText="#{msgs.payed}">			    	
+        			<p:selectBooleanCheckbox disabled="true" value="#{entity.active}" /> 
+			    </p:column>
+			    <p:column headerText="#{msgs.note}">
+			    	<h:outputText value="#{entity.note}" />			        				        
+			    </p:column>
+			    <p:column style="width:32px">
+		           <p:rowEditor />
+		       </p:column>
+		       
+		       
+			</p:dataTable>
+			
+			<h:commandButton value="#{msgs.saveChanges}" action="#{clientController.saveChangesSchedule()}" styleClass="button light-blue"/>
+			
+			
+		</h:form>
+		<p:blockUI block="form:table" trigger="form:table" >
+			#{msgs.loading}<br />
+		    <p:graphicImage library="img" name="ajaxloadingbar.gif"/>
+		</p:blockUI>	
+
+		<div class="clear"></div>			
+				
+	</ui:define>	
+	
+</ui:composition>

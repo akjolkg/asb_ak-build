@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+		<h2>#{msgs.denouncement} </h2> <br/> 
+		<br/>
+		<div class="clear"></div>
+		<h:panelGrid columns="2">
+			<h:outputText value="#{msgs.object} :" styleClass="form-table-label disp-blc"/>
+			<h:outputText value="#{clientController.client.appartment.construction.title} : #{clientController.client.appartment.title}" />
+			
+			<h:outputText value="#{msgs.client} :" styleClass="form-table-label disp-blc"/>
+			<h:outputText value="#{clientController.client.fio}" />
+			
+			<h:outputText value="#{msgs.contractSum} :" styleClass="form-table-label disp-blc"/>
+			<h:outputText value="#{clientController.client.totalSum}" >
+				<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+			</h:outputText>
+			
+			<h:outputText value="#{msgs.firstPayment} :" styleClass="form-table-label disp-blc"/>
+			<h:outputText value="#{clientController.client.firstPayment}" >
+				<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+			</h:outputText>
+			
+			<h:outputText value="#{msgs.installmentSum} :" styleClass="form-table-label disp-blc"/>
+			<h:outputText value="#{clientController.client.totalSum-clientController.client.firstPayment}" >
+				<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+			</h:outputText>
+			
+			
+			
+			<h:outputText value="#{msgs.alreadyPayed} :" styleClass="form-table-label disp-blc"/>
+			<h:outputText value="#{clientController.client.alreadyPayed}" >
+				<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+			</h:outputText>
+			
+			<h:outputText value="#{msgs.leftSum} :" styleClass="form-table-label disp-blc"/>
+			<h:outputText value="#{clientController.client.totalSum-clientController.client.alreadyPayed}" >
+				<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+			</h:outputText>
+			
+			
+			
+			<h:outputText value="#{msgs.installmentDate} : " styleClass="form-table-label disp-blc"/>
+			<h:outputText value="#{clientController.client.appartment.construction.installmentDate}">
+				<f:convertDateTime pattern="dd-MM-yyyy" />
+			</h:outputText>
+				
+		
+		
+		
+		</h:panelGrid>
+		
+		<div class="clear"></div>
+		<br/>
+		
+		<h:form id ="main-form">
+			<h:panelGroup id="messages">
+				<p:growl globalOnly="true" />
+			</h:panelGroup>
+			<h:panelGrid styleClass="form-table" columns="3">
+		    
+		    	<h:outputText value="#{msgs.denounceType}" styleClass="form-table-label disp-blc"/>
+		    	<p:selectOneMenu  value="#{clientController.denounce.type}" id="type" style="width:300px;" 
+					height="400"
+					required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}" converter="enumConverter">
+					<f:selectItem  itemLabel="#{msgs.selectValue}" noSelectionOption="true"/>
+					<f:selectItems value="#{clientController.denounceTypes}" var="enum" itemLabel="#{enums[enum]}" itemValue="#{enum}"/>
+		    	</p:selectOneMenu>
+				<p:message for="type" />
+				
+				<h:outputText value="#{msgs.note}" styleClass="form-table-label disp-blc"/>
+				<h:inputTextarea value="#{clientController.denounce.note}" id="note"  style="width:300px;"  required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="note" />
+				
+				<h:outputText value="#{msgs.denounceDate}" styleClass="form-table-label disp-blc"/>
+			    <p:calendar showOtherMonths="true" selectOtherMonths="true" id="contractDate" value="#{clientController.denounce.dateDenounce}"  showOn="button" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}" locale="ru" pattern="dd.MM.yyyy"/>
+				<p:message for="contractDate" />
+			</h:panelGrid>
+			<div class="clear"></div>
+			<br/>
+			
+			
+			<h:commandButton value="#{msgs.denounce}" action="#{clientController.doDenounce()}" styleClass="button red"/>
+			<a style="width: 100px;" class="button blue m-left m-top" onclick="history.go(-1)">#{msgs.back}</a>
+					
+		
+		
+		</h:form>
+		
+			</ui:define>	
+	
+</ui:composition>

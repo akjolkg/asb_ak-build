@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	
+ 	<ui:define name="content">
+		<h2>#{msgs.delete} </h2> <br/><br/>	  	
+		<p:growl globalOnly="true" />		
+		
+		<ui:include src="/view/cec/voter_data.xhtml">
+			<ui:param name="person" value="#{deletecardController.voter}" />
+		</ui:include>    
+		
+		<br/>
+		<h:form>
+			<h:panelGrid styleClass="form-table">		    	
+			    <h:panelGroup styleClass="f-left">
+				    <h:outputText value="#{msgs.type}" styleClass="form-table-label disp-blc"/>				    	
+				    <h:selectOneMenu value="#{deletecardController.types}" converter="enumConverter">
+    					<f:selectItems value="#{deletecardController.geDeleteTypes()}" var="type" itemValue="#{type}" itemLabel="#{enums[type.toString()]}" />
+    				</h:selectOneMenu>
+			    </h:panelGroup>
+			    
+				<h:panelGroup styleClass="f-left">
+					<h:outputText value="#{msgs.description}" styleClass="form-table-label disp-blc"/>
+				   	<h:inputTextarea id="description" cols="30" rows="5" required="true" requiredMessage="#{msgs.description} : Обязательное поле!" value="#{deletecardController.deleteDescription}" />
+			    	<h:message for="description" styleClass="error"/>
+			    	
+			    </h:panelGroup>
+			</h:panelGrid>
+			<a style="width: 100px;" class="button red m-left m-top" onclick="history.go(-1)">#{msgs.cancel}</a>
+			 
+			<h:outputText value="&#160;" />
+			<p:commandLink id="deleteButton" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" styleClass="button light-blue" value="#{msgs.delete}" action="#{deletecardController.doDelete()}" />
+			 <p:blockUI block=":entirePage" trigger="deleteButton" >
+		        #{msgs.loading}<br />
+		        <p:graphicImage library="img" name="ajaxloadingbar.gif"/>
+		    </p:blockUI> 
+		     <p:dialog modal="true" widgetVar="statusDialog" header="#{msgs.loading}" draggable="false" closable="false" resizable="false">
+			     <p:graphicImage library="img" name="ajaxloadingbar.gif"/>
+			</p:dialog>
+		</h:form>	
+		<script type="text/javascript">
+			function start() {
+			    PF('statusDialog').show();
+			}
+			 
+			function stop() {
+			    PF('statusDialog').hide();
+			}
+		</script>    	
+		<div class="clear"></div>		
+				
+	</ui:define>	
+</ui:composition>

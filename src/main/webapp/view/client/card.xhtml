@@ -1,0 +1,766 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+ 	<h:panelGroup layout="block" id="card-div">
+		<h2>#{msgs.clientCard} </h2> <br/>
+		<h:outputText rendered="#{clientController.difference gt 0 or clientController.difference lt 0}" value="#{clientController.difference} : Разница в сумме договора и графике оплаты Необходимо обновить график платежей!!!" styleClass="form-table-label disp-blc" style="color:red;"/>
+			    
+		<h:form id="add-card-form" prependId="false">
+			<h:panelGroup id="messages">
+				<p:growl globalOnly="true" />
+			</h:panelGroup>
+			<h:panelGrid styleClass="form-table f-left m-top m-left not-show" columns="3"  style="width:600px;">
+				<f:facet name="header">
+			       <h:outputText value="Ссылка на карточку клиента"  style="text-align: center; font-weight: 600;" styleClass="disp-blc m-top m-bottom"/>
+			    </f:facet>
+			    <h:panelGroup>
+			    <b><h:outputText id="text_element" value="#{clientController.clientCardUrl}" /></b>
+			    </h:panelGroup>
+			    <button onclick="copyToClipboard('text_element')" class="button">
+				    Копировать
+				</button>
+				<script>
+					function copyToClipboard(elementId) {
+
+					  // Create an auxiliary hidden input
+					  var aux = document.createElement("input");
+
+					  // Get the text from the element passed into the input
+					  aux.setAttribute("value", document.getElementById(elementId).innerHTML);
+
+					  // Append the aux input to the body
+					  document.body.appendChild(aux);
+
+					  // Highlight the content
+					  aux.select();
+
+					  // Execute the copy command
+					  document.execCommand("copy");
+
+					  // Remove the input from the body
+					  document.body.removeChild(aux);
+
+					}
+
+					function log(){
+						console.log('---')
+					}
+
+				</script>
+				
+			</h:panelGrid>
+			
+			<div class="clear"/>
+		   	
+			<h:panelGrid styleClass="form-table f-left m-top m-left" columns="2"  style="width:400px;">
+				<f:facet name="header">
+			       <h:outputText value="#{msgs.client}"  style="text-align: center; font-weight: 600;" styleClass="disp-blc m-top m-bottom"/>
+			    </f:facet>
+			    
+			   	
+			    
+			    
+				<h:outputText value="#{msgs.pin}" styleClass="form-table-label disp-blc" rendered="#{clientController.client.fizYur eq 'FIZ'}"/>
+				<h:outputText value="#{msgs.inn}" styleClass="form-table-label disp-blc" rendered="#{clientController.client.fizYur eq 'YUR'}"/>
+				<h:outputText value="#{clientController.client.pin}" />
+				
+				<h:outputText value="#{msgs.fio}" styleClass="form-table-label disp-blc" rendered="#{clientController.client.fizYur eq 'FIZ'}"/>
+				<h:outputText value="#{msgs.name}" styleClass="form-table-label disp-blc" rendered="#{clientController.client.fizYur eq 'YUR'}"/>
+				<h:outputText value="#{clientController.client.fio}" />
+				
+				<h:outputText value="#{msgs.birthdate}" styleClass="form-table-label disp-blc" rendered="#{clientController.client.fizYur eq 'FIZ'}"/>
+				<h:outputText value="#{msgs.formdate}" styleClass="form-table-label disp-blc" rendered="#{clientController.client.fizYur eq 'YUR'}"/>
+				<h:outputText value="#{clientController.client.birthdate}" >
+			    	<f:convertDateTime pattern="dd-MM-yyyy" />
+			    </h:outputText>
+				
+				
+				<h:outputText value="#{msgs.uptFio}" styleClass="form-table-label disp-blc" style="color:red;" rendered="#{clientController.client.uptStatus}"/>
+				<h:outputText value="#{clientController.client.uptFio}" style="color:red;"  rendered="#{clientController.client.uptStatus}" />
+				
+				
+				<h:outputText value="#{msgs.passportNumber}" styleClass="form-table-label disp-blc" rendered="#{clientController.client.fizYur eq 'FIZ'}"/>
+				<h:outputText value="#{msgs.registrationNumber}" styleClass="form-table-label disp-blc" rendered="#{clientController.client.fizYur eq 'YUR'}"/>
+				<h:outputText value="#{clientController.client.passportNumber}"/>
+				
+				<h:outputText value="#{msgs.passportAddress}" styleClass="form-table-label disp-blc" rendered="#{clientController.client.fizYur eq 'FIZ'}"/>
+				<h:outputText value="#{msgs.legalAddress}" styleClass="form-table-label disp-blc" rendered="#{clientController.client.fizYur eq 'YUR'}"/>
+				<h:outputText value="#{clientController.client.passportAddress}" />
+				
+				<h:outputText value="#{msgs.factAddress}" styleClass="form-table-label disp-blc" rendered="#{clientController.client.fizYur eq 'FIZ'}"/>
+				<h:outputText value="#{msgs.okpo}" styleClass="form-table-label disp-blc" rendered="#{clientController.client.fizYur eq 'YUR'}"/>
+				<h:outputText value="#{clientController.client.factAddress}" />
+				
+				<h:outputText value="#{msgs.whatsappNumber}" styleClass="form-table-label disp-blc" 
+				rendered="#{((roleController.isAllowed('ADMIN,FILIAL') or clientController.client.type.ordinal() eq 0 or clientController.client.type.ordinal() eq 3 or clientController.client.type.ordinal() eq 4)
+				or (clientController.client.notPayedYet > 0 and (roleController.isAllowed('ORK')))) and clientController.client.fizYur eq 'FIZ'}"/>
+				<h:outputText value="#{msgs.position}" styleClass="form-table-label disp-blc" 
+				rendered="#{((roleController.isAllowed('ADMIN,FILIAL') or clientController.client.type.ordinal() eq 0 or clientController.client.type.ordinal() eq 3 or clientController.client.type.ordinal() eq 4)
+				or (clientController.client.notPayedYet > 0 and (roleController.isAllowed('ORK')))) and clientController.client.fizYur eq 'YUR'}"/>
+				<h:outputText value="#{clientController.client.whatsappNumber}" 
+				rendered="#{(roleController.isAllowed('ADMIN,FILIAL') or clientController.client.type.ordinal() eq 0 or clientController.client.type.ordinal() eq 3 or clientController.client.type.ordinal() eq 4)
+				or (clientController.client.notPayedYet > 0 and (roleController.isAllowed('ORK')))}"/>
+				
+				<h:outputText value="#{msgs.contacts}" styleClass="form-table-label disp-blc" 
+				rendered="#{(roleController.isAllowed('ADMIN,FILIAL') or clientController.client.type.ordinal() eq 0 or clientController.client.type.ordinal() eq 3 or clientController.client.type.ordinal() eq 4)
+				or (clientController.client.notPayedYet > 0 and (roleController.isAllowed('ORK')))}"/>
+				<h:outputText value="#{clientController.client.contacts}" 
+				rendered="#{(roleController.isAllowed('ADMIN,FILIAL') or clientController.client.type.ordinal() eq 0 or clientController.client.type.ordinal() eq 3 or clientController.client.type.ordinal() eq 4)
+				or (clientController.client.notPayedYet > 0 and (roleController.isAllowed('ORK')))}"/>
+				
+				<h:outputText value="#{msgs.maritalStatus}" styleClass="form-table-label disp-blc"/>
+				<h:outputText rendered="#{clientController.client.maritalStatus}" value="#{msgs.yes}" />
+				<h:outputText rendered="#{!clientController.client.maritalStatus}" value="#{msgs.no}" />
+				
+				<h:outputText rendered="#{clientController.client.maritalStatus}" value="#{msgs.spouseFio}" styleClass="form-table-label disp-blc"/>
+				<h:outputText rendered="#{clientController.client.maritalStatus}" value="#{clientController.client.spouseFio}" />				
+				
+				<h:outputText value="КП|Оф." styleClass="form-table-label disp-blc"/>
+				<h:outputText value="#{msgs[clientController.client.keys]} | #{msgs[clientController.client.signed]}" />
+				
+				<h:outputText value="#{msgs.dateLegalSign}" styleClass="form-table-label disp-blc"/>
+				<h:outputText value="#{clientController.client.dateLegalSign}" >
+			    	<f:convertDateTime pattern="dd-MM-yyyy" />
+			    </h:outputText>
+				
+				<h:outputText value="#{msgs.extralow}" styleClass="form-table-label disp-blc not-show"/>
+				<h:outputText value="#{msgs[clientController.client.extralow]}" styleClass="not-show" />				
+				
+			</h:panelGrid>
+			<h:panelGrid styleClass="form-table m-top m-left" columns="2"  style="width:400px;">
+				<f:facet name="header">
+			       <h:outputText value="#{msgs.object}"  style="text-align: center; font-weight: 600;" styleClass="disp-blc m-top m-bottom"/>
+			    </f:facet>
+		    	<h:outputText value="#{msgs.construction}" styleClass="form-table-label disp-blc"/>
+		    	<h:outputText value="#{clientController.client.appartment.construction.title}" />
+				
+				<h:outputText value="#{msgs.appartmentPreNumber}" styleClass="form-table-label disp-blc"/>
+		    	<h:outputText value="#{clientController.client.appartment.title}" />
+				
+				<h:outputText value="#{msgs.appartmentDocNumber}" styleClass="form-table-label disp-blc"/>
+		    	<h:outputText value="#{clientController.client.appartment.docNumber}" />
+				
+				
+				<h:outputText rendered="#{clientController.client.appartment.type eq 'PARKING'}" value="#{msgs.flatParking}" styleClass="form-table-label disp-blc"/>
+				<h:outputText rendered="#{clientController.client.appartment.type ne 'PARKING'}" value="#{msgs.flat}" styleClass="form-table-label disp-blc"/>
+		    	<h:outputText value="#{clientController.client.appartment.flat}">
+			        <f:convertNumber type="number" groupingUsed="true"/>
+			    </h:outputText>
+			    
+			    <h:outputText rendered="#{clientController.client.appartment.type eq 'APPARTMENT'}" value="#{msgs.roomQuantity}" styleClass="form-table-label disp-blc"/>
+		    	<h:outputText rendered="#{clientController.client.appartment.type eq 'APPARTMENT'}" value="#{clientController.client.appartment.roomQuantity}">
+			        <f:convertNumber type="number" groupingUsed="true"/>
+			    </h:outputText>
+				
+				<h:outputText rendered="#{clientController.client.appartment.type ne 'PARKING'}" value="#{msgs.preTotalArea}" styleClass="form-table-label disp-blc"/>
+		    	<h:outputText rendered="#{clientController.client.appartment.type ne 'PARKING'}" value="#{clientController.client.appartment.totalArea}" >
+			        <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+			    </h:outputText>
+			    <h:outputText rendered="#{clientController.client.appartment.type ne 'PARKING'}" value="#{msgs.docTotalArea}" styleClass="form-table-label disp-blc"/>
+		    	<h:outputText rendered="#{clientController.client.appartment.type ne 'PARKING'}" value="#{clientController.client.appartment.docTotalArea}" >
+			        <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+			    </h:outputText>
+			    
+			    <h:outputText value="#{msgs.contractType}" styleClass="form-table-label disp-blc not-show" />
+				<h:outputText value="#{enums[clientController.client.contractType]}" styleClass="not-show" />		
+				
+			    <h:outputText value="#{msgs.clientType}" styleClass="form-table-label disp-blc not-show" />
+				<h:outputText value="#{enums[clientController.client.type]}" styleClass="not-show" />		
+				
+				<h:outputText value="#{msgs.clientFrom}" styleClass="form-table-label disp-blc not-show"/>
+				<h:panelGroup>
+					<h:outputText value="#{enums[clientController.client.clientFrom]}" styleClass="not-show" />
+					<h:outputText rendered="#{clientController.client.clientFrom eq 'OTHERS'}" value=" (#{clientController.client.fromPerson.fio})" styleClass="not-show"/>
+				</h:panelGroup>		
+				
+				<h:outputText value="#{msgs.planType}" styleClass="form-table-label disp-blc not-show" />
+				<h:outputText value="#{enums[clientController.client.appartment.ptype]}" styleClass="not-show" />	
+				
+				<h:outputText rendered="#{!roleController.isAllowed('JUNIOR')}" value="#{msgs.note}" styleClass="form-table-label disp-blc not-show"/>
+				<h:outputText rendered="#{!roleController.isAllowed('JUNIOR')}" value="#{clientController.client.note}" styleClass="not-show" />	
+				
+				<h:outputText value="#{msgs.clientloyality}" styleClass="form-table-label disp-blc not-show"/>
+				<h:panelGroup>
+					<h:outputText value="#{enums[clientController.client.loyality]}"  styleClass="not-show"/>
+				</h:panelGroup>		
+				
+				<h:outputText value="#{msgs.clientloyalityOrk}" styleClass="form-table-label disp-blc not-show"/>
+				<h:panelGroup>
+					<h:outputText value="#{enums[clientController.client.loyalityOrk]}"  styleClass="not-show"/>
+				</h:panelGroup>			
+					
+				
+				
+			</h:panelGrid>
+			<div class="clear"></div>
+			<h:panelGrid styleClass="form-table m-top m-left" columns="2"  style="width:400px;" rendered="#{(clientController.client.type.ordinal() eq 0 or
+					clientController.client.type.ordinal() eq 3 or
+					clientController.client.type.ordinal() eq 4) and clientController.client.prepay ne true}">
+				<h:outputText value="#{msgs.reserveDate}" styleClass="form-table-label disp-blc"/>
+				<h:outputText value="#{clientController.client.dateContract}" rendered="#{clientController.client.dateContract!=null}">
+			    	<f:convertDateTime pattern="dd-MM-yyyy" />
+			    </h:outputText>
+			    <h:outputText style="color:red;" value="??? 25-08-2018" rendered="#{clientController.client.dateContract==null}">
+			    </h:outputText>
+					
+			</h:panelGrid>
+			
+			<h:panelGrid styleClass="form-table m-top m-left" columns="2"  style="width:400px;" rendered="#{clientController.client.type.ordinal() eq 1 or
+					clientController.client.type.ordinal() eq 2 or
+					clientController.client.type.ordinal() eq 5 or
+					clientController.client.type.ordinal() eq 6 or
+					clientController.client.type.ordinal() eq 7 or
+					clientController.client.prepay eq true}">
+					
+				<f:facet name="header">
+			       <h:outputText value="#{msgs.contract}"  style="text-align: center; font-weight: 600;" styleClass="disp-blc m-top m-bottom"/>
+			    </f:facet>
+				
+				<h:outputText value="#{msgs.contractNumber}" styleClass="form-table-label disp-blc"/>
+				<h:outputText value="#{clientController.client.contractNumber}" />
+				
+				<h:outputText rendered="#{clientController.client.prepay eq true}" value="#{msgs.reserveDate}" styleClass="form-table-label disp-blc"/>
+				<h:outputText rendered="#{clientController.client.prepay eq true}" value="#{clientController.client.reserveDate}" >
+			    	<f:convertDateTime pattern="dd-MM-yyyy" />
+			    </h:outputText>
+			    
+				<h:outputText value="#{msgs.contactDate}" styleClass="form-table-label disp-blc"/>
+				<h:outputText value="#{clientController.client.dateContract}" >
+			    	<f:convertDateTime pattern="dd-MM-yyyy" />
+			    </h:outputText>
+				
+				<h:outputText rendered="#{clientController.client.appartment.type ne 'PARKING'}" value="#{msgs.priceForSquare}" styleClass="form-table-label disp-blc"/>
+				
+				<h:panelGroup rendered="#{clientController.client.appartment.type ne 'PARKING'}">
+					<h:outputText  value="#{clientController.client.priceForSquare}">
+				        <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+				    </h:outputText>
+				    <h:outputText rendered="#{clientController.client.extralow eq true}" value="(!)" style="color:red;"/>				    
+				</h:panelGroup>
+				
+				
+				<h:outputText value="#{msgs.contractSum}" styleClass="form-table-label disp-blc"/>
+				<h:outputText value="#{clientController.client.totalSum}" >
+			        <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+			    </h:outputText>
+			    
+				<h:outputText rendered="#{clientController.client.prepay eq true}" value="#{msgs.reservePayment}" styleClass="form-table-label disp-blc"/>
+				<h:outputText rendered="#{clientController.client.prepay eq true}" value="#{clientController.client.reserveAmount}" >
+			        <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+			    </h:outputText>
+				
+				
+				
+				<h:outputText value="#{msgs.firstPayment}" styleClass="form-table-label disp-blc"/>
+				<h:outputText value="#{clientController.client.firstPayment}" >
+			        <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+			    </h:outputText>
+			    
+			    
+			    <h:outputText value="#{msgs.alreadyPayed}" styleClass="form-table-label disp-blc"/>
+				<h:panelGroup>
+					<h:outputText value="#{clientController.client.alreadyPayed}" >
+				        <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+				    </h:outputText>
+				    <b>
+					    <h:outputText value="&#160;&#160;&#160;" />
+					    <h:outputText value="#{clientController.client.alreadyPayed*100/clientController.client.totalSum}" >
+					        <f:convertNumber type="number" groupingUsed="true" maxFractionDigits="0" />
+					    </h:outputText>
+					    <h:outputText value="%" />
+				    </b>
+			    </h:panelGroup>
+			    <h:outputText value="#{msgs.leftSum}" styleClass="form-table-label disp-blc"/>
+			    <h:panelGroup>
+					<h:outputText value="#{clientController.client.notPayedYet}" >
+			        	<f:convertNumber type="number" groupingUsed="true" maxFractionDigits="2" />
+			    	</h:outputText>
+			    	<b>
+				    	<h:outputText value="&#160;&#160;&#160;" />
+					    <h:outputText value="#{clientController.client.notPayedYet*100/clientController.client.totalSum}" >
+					        <f:convertNumber type="number" groupingUsed="true" maxFractionDigits="0" />
+					    </h:outputText>
+					    <h:outputText value="%" />
+					</b>
+				</h:panelGroup>
+				
+				<h:outputText rendered="#{clientController.debtDays ne null and (clientController.client.appartment.docTotalArea eq null or ((clientController.client.appartment.docTotalArea*clientController.client.priceForSquare)-clientController.client.alreadyPayed) ge 0.01)}" value="#{msgs.debtDays}" styleClass="form-table-label disp-blc" style="color:red;"/>
+			    <h:outputText rendered="#{clientController.debtDays ne null and (clientController.client.appartment.docTotalArea eq null or ((clientController.client.appartment.docTotalArea*clientController.client.priceForSquare)-clientController.client.alreadyPayed) ge 0.01)}" value="#{clientController.debtDays}"  style="color:red;"/>
+				
+			    
+			    <h:outputText rendered="#{clientController.client.appartment.docTotalArea ne null}" value="#{msgs.leftSumDoc}" styleClass="form-table-label disp-blc"/>
+				<h:panelGroup rendered="#{clientController.client.appartment.docTotalArea ne null}">	
+					<h:outputText  value="#{(clientController.client.appartment.docTotalArea*clientController.client.priceForSquare)-clientController.client.alreadyPayed}" >
+				        <f:convertNumber type="number" groupingUsed="true" minFractionDigits="2"  maxFractionDigits="2" />
+				    </h:outputText>
+				    <b>
+				    	<h:outputText value="&#160;&#160;&#160;" />
+					    <h:outputText value="#{((clientController.client.appartment.docTotalArea*clientController.client.priceForSquare)-clientController.client.alreadyPayed)*100/clientController.client.totalSum}" >
+					        <f:convertNumber type="number" groupingUsed="true" maxFractionDigits="0" />
+					    </h:outputText>
+					    <h:outputText value="%" />
+					</b>
+				</h:panelGroup>
+				
+				<h:outputText value="#{msgs.curator}" styleClass="form-table-label disp-blc"/>
+				<h:outputText  value="#{clientController.client.curator.fio}"/>		
+				
+				<h:outputText value="#{msgs.curatorOrk}" styleClass="form-table-label disp-blc"/>
+				<h:outputText  value="#{clientController.client.curatorOrk.fio}"/>	
+				
+				
+				<h:outputText value="#{msgs.exploitationDate} (#{msgs.onContractDate})" styleClass="form-table-label disp-blc not-show"/>
+				<h:outputText  value="#{clientController.client.plannedDate}" styleClass="not-show">
+					<f:convertDateTime pattern="dd-MM-yyyy" />	
+				</h:outputText>	
+				
+				<h:outputText value="#{msgs.exploitationDate} (#{msgs.onUpdateSchedule})" styleClass="form-table-label disp-blc not-show"/>
+				<h:outputText  value="#{clientController.client.updatedPlannedDate}" styleClass="not-show">
+					<f:convertDateTime pattern="dd-MM-yyyy" />	
+				</h:outputText>	
+				 
+		    </h:panelGrid>	 
+		    <div class="clear"/>
+		    <h:panelGrid styleClass="form-table f-left m-top m-left not-show" columns="3"  style="width:400px;">
+				<f:facet name="header">
+			       <h:outputText value="#{msgs.note}"  style="text-align: center; font-weight: 600;" styleClass="disp-blc m-top m-bottom"/>
+			    </f:facet>
+			    <h:outputText value="#{msgs.curatorNote}" styleClass="form-table-label disp-blc"/>
+				<h:inputTextarea disabled="#{clientController.client.curator ne roleController.currentUser}" value="#{clientController.client.curatorNote}" id="cnote"  style="width:300px;"/>
+				<h:panelGroup>
+					<p:commandButton rendered="#{clientController.client.curator eq roleController.currentUser}" value="#{msgs.saveNote}" ajax="true" style="margin-left:10px; width:150px;" 
+			    		actionListener="#{clientController.saveNote()}" update="add-card-form" 
+			    		styleClass="button green"/>
+			    </h:panelGroup>
+			    
+			    <h:outputText rendered="#{!roleController.isAllowed('JUNIOR')}" value="#{msgs.curatorOrkNote}" styleClass="form-table-label disp-blc"/>
+				<h:inputTextarea  rendered="#{!roleController.isAllowed('JUNIOR')}" disabled="#{roleController.currentUser.role ne 'ORK'}" value="#{clientController.client.curatorOrkNote}" id="conote"  style="width:300px;"/>
+				<h:panelGroup rendered="#{!roleController.isAllowed('JUNIOR')}">
+					<p:commandButton rendered="#{clientController.client.curatorOrk eq roleController.currentUser or roleController.currentUser.role eq 'ORK'}" value="#{msgs.saveNote}" ajax="true" style="margin-left:10px; width:150px;" 
+			    		actionListener="#{clientController.saveOrkNote()}" update="add-card-form" 
+			    		styleClass="button green"/>
+			    </h:panelGroup>
+			    
+			    
+		    	
+				
+			    
+			    
+			    
+		    	<h:outputText rendered="#{!roleController.isAllowed('JUNIOR')}" value="#{msgs.finDirNote}" styleClass="form-table-label disp-blc"/>
+				<h:inputTextarea rendered="#{!roleController.isAllowed('JUNIOR')}" disabled="#{!roleController.isAllowed('FIN_DIRECTOR,SUB_FIN_DIRECTOR')}" value="#{clientController.client.finDirNote}"  style="width:300px;"/>
+				<h:panelGroup rendered="#{!roleController.isAllowed('JUNIOR')}">
+					<p:commandButton rendered="#{roleController.isAllowed('FIN_DIRECTOR,SUB_FIN_DIRECTOR')}" value="#{msgs.saveNote}" ajax="true" style="margin-left:10px; width:150px;" 
+			    		actionListener="#{clientController.saveNote()}" update="add-card-form" 
+			    		styleClass="button green"/>
+			    </h:panelGroup>
+			    
+			    <h:outputText value="#{msgs.clientloyalityOrk}" styleClass="form-table-label disp-blc"/>
+				<p:selectOneMenu  disabled="#{!roleController.isAllowed('ORK')}" value="#{clientController.client.loyalityOrk}" id="loyalityOrk" style="width:300px;" 
+					height="400"
+					filter="true" filterMatchMode="contains"
+					converter="enumConverter">
+					<f:selectItem  itemLabel="#{msgs.selectValue}" noSelectionOption="true"/>
+					<f:selectItems value="#{clientController.clientLoyalities}" var="enum" itemLabel="#{enums[enum]}" itemValue="#{enum}"/>
+		    	</p:selectOneMenu>
+		    	<h:panelGroup></h:panelGroup>
+			    
+			</h:panelGrid>
+			
+			<div class="clear"/>
+		    <h:panelGrid rendered="#{roleController.isAllowed('CONTROLLER,ORK')}" styleClass="form-table f-left m-top m-left not-show" columns="2"  style="width:400px;">
+				<f:facet name="header">
+			       <h:outputText value="#{msgs.garant}"  style="text-align: center; font-weight: 600;" styleClass="disp-blc m-top m-bottom"/>
+			    </f:facet>
+			    <h:outputText value="#{msgs.garant}" styleClass="form-table-label disp-blc"/>
+			    <p:selectOneMenu  value="#{clientController.client.garant}" id="garant" style="width:300px;" converter="garantConverter">
+					<f:selectItem  itemLabel="#{msgs.selectValue}" noSelectionOption="true"/>
+					<f:selectItems value="#{clientController.garants}" var="garant" itemLabel="#{garant.fio}" itemValue="#{garant}"/>
+		    	</p:selectOneMenu>		    	
+		    	
+			    <h:outputText value="#{msgs.note}" styleClass="form-table-label disp-blc"/>
+			    <h:inputTextarea disabled="#{roleController.isAllowed('ORK')}" value="#{clientController.client.controllerNote}" id="ccnote"  style="width:300px;"/>
+				
+				
+				<h:outputText value="" styleClass="form-table-label disp-blc"/>
+			    
+			    <p:commandButton value="#{msgs.save}" ajax="true" style="margin-left:10px; width:150px;" 
+		    		actionListener="#{clientController.saveNote()}" update="add-card-form" 
+		    		styleClass="button green"/>
+				
+				
+			</h:panelGrid>
+			
+			
+			 <h:panelGrid rendered="#{roleController.isAllowed('LAWYER')}" styleClass="form-table f-left m-top m-left not-show" columns="3"  style="width:400px;">
+				<f:facet name="header">
+			       <h:outputText value="#{msgs.dateLegalSign}"  style="text-align: center; font-weight: 600;" styleClass="disp-blc m-top m-bottom"/>
+			    </f:facet>
+			    <h:outputText value="#{msgs.dateLegalSign}" styleClass="form-table-label disp-blc"/>
+			    <p:calendar showOtherMonths="true" selectOtherMonths="true" id="dateLegalSign" value="#{clientController.client.dateLegalSign}"  required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"  locale="ru" pattern="dd.MM.yyyy"/>
+			    
+			    <p:commandButton value="#{msgs.save}" ajax="true" style="margin-left:10px; width:150px;" 
+		    		actionListener="#{clientController.saveNote()}" update="add-card-form" 
+		    		styleClass="button green"/>
+				
+			</h:panelGrid>
+			
+		    
+		    
+		    <div class="clear"/>
+		    <h:panelGrid styleClass="form-table f-left m-top m-left" columns="1"  style="width:800px;" rendered="#{clientController.client.type.ordinal() eq 1 or
+					clientController.client.type.ordinal() eq 2 or
+					clientController.client.type.ordinal() eq 5 or
+					clientController.client.type.ordinal() eq 6 or
+					clientController.client.type.ordinal() eq 7}">
+				<f:facet name="header">
+			       <h:outputText value="#{msgs.schedule}"  style="text-align: center; font-weight: 600;" styleClass="disp-blc m-top m-bottom"/>
+			    </f:facet>
+			    <p:dataTable var="entity" value="#{clientController.schedules}" rowKey="#{entity.id}" rowIndexVar="index" tableStyleClass="display-table"
+		   			id="table" emptyMessage="#{msgs.noRecordsFound}">
+		   			<p:column headerText="№">
+				        <h:outputText value="#{index}" />
+				    </p:column>
+				    
+				    <p:column headerText="#{msgs.datePayment}">
+				    	<h:outputText value="#{entity.datePayment}" >
+				        	<f:convertDateTime pattern="dd-MM-yyyy" />
+				        </h:outputText>
+				   	</p:column>
+			       	<p:column headerText="#{msgs.amountToPay}">
+				    	<h:outputText value="#{entity.amountToPay}" >
+				        	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+				        </h:outputText>				        
+				    </p:column>
+				    <p:column headerText="#{msgs.alreadyPayed}">
+				    	<h:outputText value="#{entity.alreadyPayed}" >
+				        	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+				        </h:outputText>			        
+				    </p:column>
+				    <p:column headerText="#{msgs.leftSum}">
+				    	<h:outputText value="#{entity.amountToPay-entity.alreadyPayed}" >
+				        	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+				        </h:outputText>			        
+				    </p:column>
+				   
+				    
+				    <p:column headerText="#{msgs.dateFactPayment}">			    	
+	        			<h:outputText value="#{entity.factPayment}" >
+				        	<f:convertDateTime pattern="dd-MM-yyyy" />
+				        </h:outputText> 
+				    </p:column>
+				    
+				    <p:column headerText="#{msgs.pkoNumber}">			    	
+	        			<h:outputText value="#{entity.pkoNumber}" /> 
+				    </p:column>
+				    
+				    
+				     <p:column headerText="#{msgs.payed}">			    	
+	        			<p:selectBooleanCheckbox disabled="true" value="#{entity.active}" /> 
+				    </p:column>
+				    
+				    
+				    
+				    <p:column headerText="#{msgs.note}">
+				    	<h:outputText value="#{entity.note}" />			        				        
+				    </p:column>
+			       
+				</p:dataTable>	 
+		    </h:panelGrid>	 
+		    <div class="clear"/>
+		    <h:panelGrid styleClass="form-table f-left m-top m-left" columns="1"  style="width:800px;">
+				<f:facet name="header">
+			       <h:outputText value="#{msgs.payments}"  style="text-align: center; font-weight: 600;" styleClass="disp-blc m-top m-bottom"/>
+			    </f:facet>
+			    <p:dataTable var="entity" value="#{clientController.payments}" rowKey="#{entity.id}" rowIndexVar="index" tableStyleClass="display-table"
+		   			id="tablepayment" emptyMessage="#{msgs.noRecordsFound}">
+		   			<p:column headerText="№">
+				        <h:outputText value="#{index+1}" />
+				    </p:column>
+				    
+				    <p:column headerText="#{msgs.object}">
+				        <h:outputText value="#{entity.client.appartment.construction.title} : #{entity.client.appartment.title}" />
+				    </p:column>
+				    
+				    
+				    <p:column headerText="#{msgs.fio} #{msgs.client}">
+				        <h:outputText value="#{entity.client.fio}" />
+				    </p:column>
+				    			    
+				    <p:column headerText="#{msgs.datePayment}">
+				        <h:outputText value="#{entity.datePayment}" >
+				        	<f:convertDateTime pattern="dd-MM-yyyy HH-mm" />
+				        </h:outputText>
+				    </p:column>
+				    
+				    <p:column headerText="#{msgs.pkoNumber}">
+				        <h:outputText value="#{entity.checkNumber}" />
+				    </p:column>
+				    
+				    <p:column headerText="#{msgs.paymentType}">
+				        <h:outputText rendered="#{entity.firstPayment eq true}" value="#{msgs.firstPayment}" />
+				        <h:outputText rendered="#{entity.firstPayment eq false}" value="#{msgs.paymentBySchedule}" />
+				    </p:column>
+				    
+				    <p:column headerText="#{msgs.amountToPay}">
+				        <h:outputText value="#{entity.paymentAmount}" >
+				        	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+				        </h:outputText>
+				    </p:column>
+				    
+				    <p:column headerText="#{msgs.note}">
+				        <h:outputText value="#{entity.note}" />
+				    </p:column>
+			       
+				</p:dataTable>	 
+		    </h:panelGrid>	 
+		    
+		</h:form>
+	</h:panelGroup>
+	
+		    <div class="clear"/>
+	<h:form id="second-form" prependId="false">
+			<h:panelGroup id="messages2">
+				<p:growl globalOnly="true" />
+			</h:panelGroup>
+		    <h:panelGrid styleClass="form-table f-left m-top m-left" columns="1"  style="width:800px;" >
+				<f:facet name="header">
+			       <h:outputText value="#{msgs.documents}"  style="text-align: center; font-weight: 600;" styleClass="disp-blc m-top m-bottom"/>
+			    </f:facet>
+				<p:dataTable var="entity" value="#{clientController.documents}" rowKey="#{entity.id}" rowIndexVar="index" tableStyleClass="display-table"
+		   			id="table2" emptyMessage="#{msgs.noRecordsFound}">
+		   			<p:ajax event="rowEdit" listener="#{clientController.onRowEdit}" />
+	       			<p:column headerText="№">
+				        <h:outputText value="#{index+1}" />
+				    </p:column>
+				    
+				    <p:column headerText="#{msgs.date}">
+				    	<h:outputText value="#{entity.date}" >
+				        	<f:convertDateTime pattern="dd-MM-yyyy" />
+				        </h:outputText>
+				   	</p:column>
+				   	
+			       	<p:column headerText="#{msgs.documentType}">
+               		    <h:outputText value="#{enums[entity.documentType.toString()]}" />
+			     	</p:column>
+			     	
+			     	
+			     	<p:column headerText="#{msgs.name}">
+               		    <h:outputText value="#{entity.attachment.fileName}" />
+			     	</p:column>
+				    
+				    <p:column headerText="#{msgs.documents}">
+				    	<p:graphicImage rendered="#{entity.attachment.contentType.contains('image')}" id="img"  styleClass="off" width="auto" height="60px" value="#{utilController.getDownloadURL(utilController.generateKeyAliveCurrentSession(entity.attachment))}"/>
+						<p:overlayPanel rendered="#{entity.attachment.contentType.contains('image')}" id="imagePanel" for="img" hideEffect="fade">
+					        <p:graphicImage value="#{utilController.getDownloadURL(utilController.generateKeyAliveCurrentSession(entity.attachment))}" />
+					    </p:overlayPanel>	
+				    </p:column>
+				    
+				    <p:column headerText="#{msgs.download}">
+						<p:commandButton value="#{msgs.download}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrowthick-1-s">
+	        				<p:fileDownload value="#{downloadController.downloadFile(entity.attachment)}" />
+	   					</p:commandButton>
+   				    </p:column>
+			       
+				</p:dataTable>	 
+		    </h:panelGrid>	 
+		    
+		    
+		</h:form>
+		<div class="clear"></div>
+		
+		<h:panelGrid styleClass="form-table f-left m-top m-left" columns="1"  style="width:800px;" rendered="#{roleController.isAllowed('SUBADMIN,ADMIN,FIN_DIRECTOR,SUB_FIN_DIRECTOR,ORK')}">
+				<f:facet name="header">
+			       <h:outputText value="#{msgs.commentLog}"  style="text-align: center; font-weight: 600;" styleClass="disp-blc m-top m-bottom"/>
+			    </f:facet>
+				<p:dataTable var="entity" value="#{clientController.comments}" rowKey="#{entity.id}" rowIndexVar="index" tableStyleClass="display-table"
+		   			id="table3" emptyMessage="#{msgs.noRecordsFound}">
+		   			<p:column headerText="№">
+				        <h:outputText value="#{index+1}" />
+				    </p:column>
+				    
+				    <p:column headerText="#{msgs.date}">
+				    	<h:outputText value="#{entity.dateCreated}" >
+				        	<f:convertDateTime pattern="dd-MM-yyyy HH:mm" />
+				        </h:outputText>
+				   	</p:column>
+				   	
+			       	<p:column headerText="#{msgs.curatorOrk}">
+               		    <h:outputText value="#{entity.user.fio}" />
+			     	</p:column>
+			     	
+			     	
+			     	<p:column headerText="#{msgs.note}">
+               		    <h:outputText value="#{entity.note}" />
+			     	</p:column>
+			     	<p:column headerText="#{msgs.previousNote}">
+               		    <h:outputText value="#{entity.previousNote}" />
+			     	</p:column>
+				</p:dataTable>	 
+		    </h:panelGrid>	 
+		
+			<div class="clear"></div>
+		
+		<h:panelGrid styleClass="form-table f-left m-top m-left" columns="3"  style="width:700px;"  rendered="#{roleController.isAllowed('SUBADMIN,ADMIN,FIN_DIRECTOR,SUB_FIN_DIRECTOR,JUNIOR,ORK,FILIAL') and clientController.client.status eq 'APPROVED'}">
+			<h:outputText value="#{msgs.contract}" styleClass="form-table-label disp-blc"/>
+			<h:form>
+			
+				<p:commandButton  rendered="#{roleController.isAllowed('SUBADMIN,ADMIN')}" value="#{msgs.contract}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="fa fa-unlock">
+        			<p:fileDownload value="#{clientJasperController.generateClientContractNew(clientController.client)}" />
+   				</p:commandButton>	
+   				
+   				<p:commandButton  rendered="#{roleController.isAllowed('SUBADMIN,ADMIN,FIN_DIRECTOR,SUB_FIN_DIRECTOR') or (roleController.isAllowed('JUNIOR') and clientController.today) }" value="#{msgs.contract}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="fa fa-lock">
+        			<p:fileDownload value="#{clientJasperController.generateClientContractDirectNew(clientController.client)}" />
+   				</p:commandButton>	
+   				
+			
+			    <p:commandButton rendered="#{clientController.client.prepay eq true}" value="#{msgs.reserveAgreement}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrowthick-1-s">
+        			<p:fileDownload value="#{clientJasperController.generateClientReserveDirect(clientController.client)}" />
+   				</p:commandButton>	
+   				<h:panelGroup rendered="#{false}">
+   				
+	   				<p:commandButton disabled="#{clientController.client.appartment.type eq 'APPARTMENT'}" rendered="#{roleController.isAllowed('SUBADMIN,ADMIN,FIN_DIRECTOR,SUB_FIN_DIRECTOR') or (roleController.isAllowed('JUNIOR') and clientController.today) }" value="#{msgs.contract}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrowthick-1-s">
+	        			<p:fileDownload value="#{clientJasperController.generateClientContractDirect(clientController.client)}" />
+	   				</p:commandButton>
+	   				<p:commandButton disabled="#{clientController.client.appartment.type eq 'APPARTMENT'}" rendered="#{roleController.isAllowed('SUBADMIN,ADMIN')}" value="#{msgs.contract} : WORD" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrowthick-1-s">
+	        			<p:fileDownload value="#{clientJasperController.generateClientContractDirectWord(clientController.client)}" />
+	   				</p:commandButton>	
+   				
+   				</h:panelGroup>
+   				
+   				<p:commandButton rendered="#{roleController.isAllowed('SUBADMIN,ADMIN,JUNIOR') and clientController.client.contractType eq 'VIA_STATE_REGISTER'}" value="#{msgs.groundWork} : WORD" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrowthick-1-s">
+        			<p:fileDownload value="#{clientJasperController.generateClientGroundWork(clientController.client)}" />
+   				</p:commandButton>	
+   				
+   				<p:commandButton rendered="#{roleController.isAllowed('SUBADMIN,ADMIN')}" value="#{msgs.contractPassport}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrowthick-1-s">
+        			<p:fileDownload value="#{clientJasperController.generateClientContractPassport(clientController.client)}" />
+   				</p:commandButton>	
+   				
+   				
+			</h:form>
+		
+		</h:panelGrid>
+		<div class="clear"></div>
+		<h:panelGrid styleClass="form-table f-left m-top m-left" columns="3"  style="width:700px;"  rendered="#{roleController.isAllowed('SUBADMIN,ADMIN,ORK') and clientController.client.status eq 'APPROVED'}">
+			<h:outputText value="КП|Оф." styleClass="form-table-label disp-blc"/>
+			<h:form>
+			
+				<p:commandButton rendered="#{roleController.isAllowed('SUBADMIN,ADMIN,ORK')}" value="#{msgs.gotKeys}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrowthick-1-s">
+        			<p:fileDownload value="#{clientJasperController.generateClientGotKeys(clientController.client)}" />
+   				</p:commandButton>	
+   				<p:commandButton rendered="#{roleController.isAllowed('SUBADMIN,ADMIN')}" value="#{msgs.signed}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrowthick-1-s">
+        			<p:fileDownload value="#{clientJasperController.generateClientSigned(clientController.client)}" />
+   				</p:commandButton>	
+   				
+   				
+			</h:form>
+		
+		</h:panelGrid>
+		
+		
+		
+		<div class="clear"></div>
+		
+		<h:panelGrid styleClass="form-table f-left m-top m-left" columns="2"  style="width:400px;" rendered="#{clientController.client.status eq 'NEW' and clientController.client.sendBackReason ne null}">
+			
+			<h:outputText value="#{msgs.sendBackReason}" styleClass="form-table-label disp-blc" style="color:red; margin-top:20px; margin-bottom:20px;"/>	
+			<h:outputText value="#{clientController.client.sendBackReason}" styleClass="form-table-label disp-blc" style="color:red; margin-top:20px; margin-bottom:20px;"/>
+			
+		</h:panelGrid>
+		
+		
+		<div class="clear"></div>
+			
+		<h:form >
+			
+			<h:commandButton rendered="#{roleController.isAllowed('KASSA,FIN_DIRECTOR,SUB_FIN_DIRECTOR,KASSA_FILIAL') and clientController.client.status eq 'APPROVED'}" value="#{msgs.addPayment}" action="#{paymentController.addPayment(clientController.client,'/view/client/list.xhtml')}" styleClass="button light-blue"/>
+			<h:commandButton rendered="#{((clientController.client.curator eq roleController.currentUser) or roleController.isAllowed('SUBADMIN,ADMIN,SUB_FIN_DIRECTOR,FIN_DIRECTOR,ORK')) and clientController.client.status eq 'NEW'}" 
+				value="#{msgs.sendToAdminApprove}" action="#{clientController.sendToAdminApprove()}" styleClass="button light-blue"/>
+			<h:commandButton rendered="#{roleController.isAllowed('SUBADMIN,ADMIN') and clientController.client.status eq 'WAITING_HEAD_APPROVAL'}" 
+				value="#{msgs.sendToFinDirectorApprove}" action="#{clientController.sendToFinDirectorApprove()}" styleClass="button light-blue"/>
+			<h:commandButton rendered="#{roleController.isAllowed('FIN_DIRECTOR,SUB_FIN_DIRECTOR') and clientController.client.status eq 'WAITING_DIRECTOR_APPROVAL'}" 
+				value="#{msgs.approve}" action="#{clientController.approve()}" styleClass="button light-blue"/>
+				
+			<p:commandButton rendered="#{(roleController.isAllowed('SUBADMIN,ADMIN,FIN_DIRECTOR,SUB_FIN_DIRECTOR') and clientController.client.status eq 'WAITING_HEAD_APPROVAL')
+				or (roleController.isAllowed('FIN_DIRECTOR,SUB_FIN_DIRECTOR') and clientController.client.status eq 'WAITING_DIRECTOR_APPROVAL')}"
+				 styleClass="button red m-left m-top" value="#{msgs.sendForEdit}" oncomplete="PF('myDlg').show()" />
+				
+			<a style="width: 100px;" class="button blue m-left m-top" onclick="history.go(-1)">#{msgs.back}</a>
+			<p:commandButton value="Печать" type="button" onclick="onPrinterClick();" onblur="onPrinterComplete();" styleClass="m-left m-top" icon="ui-icon-print" style="margin-bottom: 20px" rendered="#{clientController.client.status eq 'APPROVED'}">
+			    <p:printer target="card-div" />
+			</p:commandButton>
+			
+			<p:commandButton value="Банковские реквизиты" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrowthick-1-s">
+        		<p:fileDownload value="#{clientJasperController.generateClientBankDirect(clientController.client)}" />
+   			</p:commandButton>	
+   			
+			
+		    <div class="clear"/>
+		    
+		    <p:confirmDialog id='myDialog' widgetVar="myDlg"  modal="true" resizable="false" header="При необходимости введите причину отправки на редактирование!">
+		       	 <f:facet name="message">
+			       	 <h:outputText value='Причина отправки на редактирование :'/>
+			       	 <br/>
+	                 <h:inputTextarea value="#{clientController.sendBackReason}"/>
+                 </f:facet>
+		       
+		        <p:commandButton value="#{msgs.yes}" ajax="false" action="#{clientController.sendToDecline()}" icon="ui-icon-check"  oncomplete="PF('myDlg').hide()"/>
+		        <p:commandButton value="#{msgs.no}" type="button"  icon="ui-icon-close" onclick="PF('myDlg').hide()" />
+		    </p:confirmDialog>
+		    
+		   
+		    <br/>
+		    <h:commandButton value="#{msgs.modifySchedule}" rendered="#{clientController.client.status eq 'APPROVED' and roleController.isAllowed('ORK,SUBADMIN,ADMIN')}"
+		    		style="width:387px;" 
+		    		action="#{clientController.goToModifySchedule()}" 
+		    		styleClass="button red m-left"/>
+		    		
+		    		
+		     <br/>
+		      <br/>
+		       <br/>
+		    
+		    <p:commandButton value="#{msgs.recalculate}" ajax="true" style="width:387px;" 
+		    		actionListener="#{clientController.recalculateClient()}" update="add-card-form" 
+		    		styleClass="button green m-left"/>
+		    
+			
+		
+		</h:form>	
+		
+		<p:dialog visible="#{clientController.client.loyalityOrk eq null and clientController.client.status eq 'APPROVED' and roleController.isAllowed('ORK')}" modal="true" widgetVar="loyalityDialog" header="Заполните лояльность клиента!!!" draggable="false" closable="false" resizable="false">
+			 	<h:form>
+			  <h:panelGrid columns="1">   
+			  	<br/>
+			     <h:outputText value="#{msgs.clientloyalityOrk}" styleClass="form-table-label disp-blc"/>
+				<br/>
+					<p:selectOneMenu  value="#{clientController.client.loyalityOrk}" id="loyalityOrk2" style="width:300px;" 
+						height="400"
+						filter="true" filterMatchMode="contains"
+						converter="enumConverter">
+						<f:selectItem  itemLabel="#{msgs.selectValue}" noSelectionOption="true"/>
+						<f:selectItems value="#{clientController.clientLoyalities}" var="enum" itemLabel="#{enums[enum]}" itemValue="#{enum}"/>
+			    	</p:selectOneMenu>
+				<br/>
+					<p:message for="loyalityOrk2" />
+					
+					<br/>
+				    
+				    <p:commandButton value="#{msgs.save}" ajax="false" style="margin-left:10px; width:150px;" 
+			    		actionListener="#{clientController.saveNote()}" update="add-card-form" 
+			    		styleClass="button green"/>
+				
+				
+				</h:panelGrid>
+			     </h:form>
+			</p:dialog>
+	
+		<h:outputScript library = "js" name = "printerClassRemover.js" /> 		
+	</ui:define>	
+</ui:composition>

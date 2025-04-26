@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+		<h2>#{msgs.transactionList} </h2> <br/><br/>	    
+		<h:form id="form" prependId="false" styleClass="tik-form">
+			<p:messages/>
+			
+			<p:panelGrid style="width:100%" styleClass="form-table tik-table">
+				<p:row>
+     				<p:column styleClass="w-1-4">
+						<h:outputLabel for="pin" value="#{msgs.pin}" styleClass="form-table-label disp-blc"/>
+						<h:inputText value="#{transactionController.pin}" id="pin" styleClass="w-1-1"/>
+					</p:column>
+				  	<p:column styleClass="w-1-4">
+						<h:outputText value="#{msgs.surname}" styleClass="form-table-label disp-blc"/>
+						<h:inputText value="#{transactionController.lastName}" styleClass="w-1-1"/>
+					</p:column>
+					<p:column styleClass="w-1-4">
+						<h:outputText value="#{msgs.firstname}" styleClass="form-table-label disp-blc"/>
+						<h:inputText value="#{transactionController.firstName}" styleClass="w-1-1"/>
+					</p:column>
+					<p:column styleClass="w-1-4">
+						<h:outputText value="#{msgs.patronymic}" styleClass="form-table-label disp-blc"/>
+						<h:inputText value="#{transactionController.patronymic}" styleClass="w-1-1"/>
+					</p:column>
+				</p:row>				
+			</p:panelGrid>
+			<p:panelGrid style="width:100%" styleClass="form-table tik-table">
+				<p:row>
+					<p:column styleClass="w-1-3">
+						<h:outputLabel value="#{msgs.region}" styleClass="form-table-label disp-blc"/>
+						<p:selectOneMenu id="region" value="#{transactionController.region}" styleClass="w-1-1-i">
+				            <f:selectItem noSelectionOption="true" itemLabel="#{msgs.allRegions}"/>
+		                    <f:selectItems value="#{transactionController.regionList}" var="region" />
+		                    <f:ajax render="tikId uik @this" execute="@this" listener="#{transactionController.onRegionSelect}"/>
+				        </p:selectOneMenu>
+					</p:column>
+					<p:column styleClass="w-1-3">
+						<h:outputLabel value="#{msgs.tik}" styleClass="form-table-label disp-blc"/>
+						 <p:selectOneMenu  id="tikId" value="#{transactionController.tik}" converter="tikConverter" styleClass="w-1-1-i">
+				            <f:selectItem noSelectionOption="true" itemLabel="#{msgs.allTiks}"/>
+		                    <f:selectItems value="#{transactionController.tikList}" var="tikMen" itemValue="#{tikMen}" itemLabel="#{tikMen.name}" />
+		                    <f:ajax render="uik @this" execute="@this" listener="#{transactionController.onTikSelect}"/>                        
+				        </p:selectOneMenu>
+					</p:column>
+					<p:column styleClass="w-1-3">
+						<h:outputLabel value="#{msgs.uik}" styleClass="form-table-label disp-blc"/>
+						<p:selectOneMenu id="uik" value="#{transactionController.uik}" converter="cachedConverter" styleClass="w-1-1-i">
+				            <f:selectItem noSelectionOption="true" itemLabel="#{msgs.allUiks}"/>
+		                        <f:selectItems value="#{transactionController.uikList}" var="uik" itemLabel="#{uik.name}" itemValue="#{uik}"/>
+		                        <f:ajax render="@this" execute="@this"/>
+				        </p:selectOneMenu>
+					</p:column>
+				</p:row>
+			</p:panelGrid>	
+			<p:panelGrid style="width:100%" styleClass="form-table tik-table">
+				<p:row>
+					<p:column styleClass="w-1-3">
+						<h:outputLabel value="#{msgs.transactionType}" styleClass="form-table-label disp-blc"/>
+						 <p:selectOneMenu   value="#{transactionController.transactionType}" converter="enumConverter" styleClass="w-1-1-i">
+				            <f:selectItem noSelectionOption="true" itemLabel="#{msgs.allTransactionTypes}" itemValue= "null"/>
+		                    <f:selectItems value="#{transactionController.transactionTypes}" var="tikMen" itemValue="#{tikMen}" itemLabel="#{enums[tikMen]}" />
+		                    <f:ajax render="uik @this" execute="@this" listener="#{transactionController.onTikSelect}"/>                        
+				        </p:selectOneMenu>
+					</p:column>
+					<p:column styleClass="w-1-3">
+						<h:outputLabel value="#{msgs.dateFrom}" styleClass="form-table-label disp-blc"/>
+						<p:calendar value="#{transactionController.dateFrom}" styleClass="datepicker" />
+					</p:column>
+					<p:column styleClass="w-1-3">
+						<h:outputLabel value="#{msgs.dateTo}" styleClass="form-table-label disp-blc"/>
+						<p:calendar value="#{transactionController.dateTo}" styleClass="datepicker" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>	
+			<p:commandButton id="searchButton" styleClass="button light-blue m-top" ajax="true" update=":table" value="#{msgs.search}" action="#{transactionController.searchTransaction()}"/>
+			<p:blockUI block=":entirePage" trigger="searchButton :table" >
+		        #{msgs.loading}<br />
+		        <p:graphicImage library="img" name="ajaxloadingbar.gif"/>
+		    </p:blockUI>
+		</h:form>
+		
+		<br/>
+		
+		<br/>
+		<div class="clear"></div>
+		<p:dataTable var="transaction" value="#{transactionController.model}" paginator="true" rows="10" lazy="true" rowKey="#{transaction.id}" rowIndexVar="index" tableStyleClass="display-table"
+   			id="table" selectionMode="single" emptyMessage="#{msgs.noRecordsFound}" 
+   			rowsPerPageTemplate="10,20,30,40,50" paginatorPosition="bottom" pageLinks="10"
+                   currentPageReportTemplate="Количество транзакций на страницу" 
+                   paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport} {RowsPerPageDropdown}"
+                   selection="#{transactionController.transactionLog}"
+                   first="#{transactionController.first}" >
+			<p:ajax event="rowSelect" listener="#{transactionController.view}" />
+			 <p:ajax event="page" listener="#{transactionController.onPageChange}"/>  
+		    <p:column headerText="#{msgs.date}">
+		        <h:outputText value="#{transaction.dateCreated}">
+		        	<f:convertDateTime type="date" pattern="dd-MM-yyyy HH-mm" timeZone="GMT+6"/>
+				</h:outputText>
+		    </p:column>
+		     <p:column headerText="#{msgs.pin}">
+		        <h:outputText value="#{transaction.permanentcard.pin}" />
+		    </p:column>
+		    <p:column headerText="#{msgs.surname}">
+		        <h:outputText value="#{transaction.permanentcard.surname}" />
+		    </p:column>
+			<p:column headerText="#{msgs.firstname}">
+		        <h:outputText value="#{transaction.permanentcard.name}" />
+		    </p:column>
+		    <p:column headerText="#{msgs.patronymic}">
+		        <h:outputText value="#{transaction.permanentcard.patronymic}" />
+		    </p:column>
+		    
+		     <p:column headerText="#{msgs.uik}">
+		        <h:outputText value="#{transaction.uik.name}" />
+		    </p:column>
+		    
+		     <p:column headerText="#{msgs.tik}">
+		        <h:outputText value="#{transaction.tik.name}" />
+		    </p:column>
+		    <p:column headerText="#{msgs.transactionType}">
+		        <h:outputText value="#{enums[transaction.type]}" />
+		    </p:column>
+		    
+		</p:dataTable>
+		<p:blockUI block="table" trigger="table" >
+			#{msgs.loading}<br />
+		    <p:graphicImage library="img" name="ajaxloadingbar.gif"/>
+		</p:blockUI>	
+
+		<div class="clear"></div>			
+				
+	</ui:define>	
+	
+</ui:composition>

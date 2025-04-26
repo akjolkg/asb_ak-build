@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="contract_template" pageWidth="612" pageHeight="1200" whenNoDataType="AllSectionsNoDetail" columnWidth="592" leftMargin="0" rightMargin="20" topMargin="0" bottomMargin="20" isIgnorePagination="true" uuid="53900af5-bd24-4eb4-b561-f8a8187c0831">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/opt/jasper/asb/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="construction_ids" class="java.lang.String"/>
+	<parameter name="client_type_ids" class="java.lang.String"/>
+	<parameter name="ap_type_ids" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select main.title,main.type,main.client_type,main.year,
+	case when main.month=1 then 'Январь'
+		when main.month=2 then 'Февраль'
+		when main.month=3 then 'Март'
+		when main.month=4 then 'Апрель'
+		when main.month=5 then 'Май'
+		when main.month=6 then 'Июнь'
+		when main.month=7 then 'Июль'
+		when main.month=8 then 'Август'
+		when main.month=9 then 'Сентябрь'
+		when main.month=10 then 'Октябрь'
+		when main.month=11 then 'Ноябрь'
+		when main.month=12 then 'Декабрь'
+	end as month,
+
+
+
+
+main.average, s2.average as average_group,sub.filter_text from
+(select cc.title,ap.type,
+	case
+		when c.type=0 then 'Бронь'
+		when c.type=1 then 'Бартер'
+		when c.type=2 then 'Хадия'
+		when c.type=3 then 'Бронь на бартер'
+		when c.type=4 then 'Бронь на хадию'
+		when c.type=5 then 'Залог'
+		when c.type=6 then 'Бартер на земельный участок'
+		when c.type=7 then 'Обычный'
+		when c.type=8 then 'Обмен'
+		else 'Свободный'
+	end as client_type,
+	 case
+	when c.type=0 then 8
+	when c.type=1 then 2
+	when c.type=2 then 6
+	when c.type=3 then 9
+	when c.type=4 then 10
+	when c.type=5 then 4
+	when c.type=6 then 3
+	when c.type=7 then 1
+	when c.type=8 then 7
+	else 2
+ end
+ as ordered_type,
+
+
+	extract(year from c.date_contract) as year,
+	extract(month from c.date_contract) as month,
+	avg(c.price_for_square)::numeric(18,2) as average
+from client c
+inner join appartment ap on c.appartment_id=ap.id
+inner join construction cc on cc.id=ap.construction
+where (c.client_from is null or c.client_from<2)
+ and (c.id is null or c.type in (0,3,4) or c.status=3)
+and ap.construction in ($P!{construction_ids}) and c.type in ($P!{client_type_ids}) and ap.type in ($P!{ap_type_ids})
+group by cc.title,ap.type,c.type, extract(year from c.date_contract),extract(month from c.date_contract)
+order by year,extract(month from c.date_contract),title,type,ordered_type) main
+left join (
+ select cc.title,ap.type,
+	extract(year from c.date_contract) as year,
+	extract(month from c.date_contract) as month,
+	avg(c.price_for_square)::numeric(18,2) as average
+
+from client c
+inner join appartment ap on c.appartment_id=ap.id
+inner join construction cc on cc.id=ap.construction
+where (c.client_from is null or c.client_from<2)
+ and (c.id is null or c.type in (0,3,4) or c.status=3)
+and ap.construction in ($P!{construction_ids}) and c.type in ($P!{client_type_ids}) and ap.type in ($P!{ap_type_ids})
+group by cc.title, ap.type, extract(year from c.date_contract),extract(month from c.date_contract)
+order by year,extract(month from c.date_contract),title,ap.type
+)s2
+
+
+on main.title=s2.title and main.type=s2.type and main.year=s2.year and main.month=s2.month
+left join (select REPLACE(
+		REPLACE(
+			REPLACE(
+				REPLACE(
+					REPLACE(
+						REPLACE(
+							REPLACE(
+								REPLACE(
+									REPLACE($P{client_type_ids},'0','Бронь'),
+								'1','Бартер'),
+							'2','Хадия'),
+						'3','Бронь на бартер'),
+					'4','Бронь на хадию'),
+				'5','Залог'),
+			'6','Бартер на земельный участок'),
+		'7','Обычный'),
+      '8', 'Обмен') as filter_text
+)sub  on sub.filter_text<>main.title
+
+
+order by year,main.month,type,title,ordered_type]]>
+	</queryString>
+	<field name="title" class="java.lang.String"/>
+	<field name="type" class="java.lang.Integer"/>
+	<field name="client_type" class="java.lang.String"/>
+	<field name="year" class="java.lang.Double"/>
+	<field name="month" class="java.lang.String"/>
+	<field name="average" class="java.math.BigDecimal"/>
+	<field name="average_group" class="java.math.BigDecimal"/>
+	<field name="filter_text" class="java.lang.String"/>
+	<variable name="average_group" class="java.math.BigDecimal" resetType="Group" resetGroup="gruppa" calculation="Average">
+		<variableExpression><![CDATA[$F{average}]]></variableExpression>
+	</variable>
+	<group name="gruppa">
+		<groupExpression><![CDATA[$F{year}+$F{month}+$F{title}+$F{type}]]></groupExpression>
+		<groupHeader>
+			<band height="14">
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="44f35ba9-dcd3-42ef-af3c-e8c73c6ab93b" stretchType="RelativeToTallestObject" mode="Opaque" x="11" y="0" width="271" height="14" backcolor="#9DE3E8">
+						<property name="net.sf.jasperreports.export.xls.freeze.column.edge" value="Right"/>
+					</reportElement>
+					<box leftPadding="5">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{title}+($F{type}==0?" - Квартиры":$F{type}==1?" - Помещения":$F{type}==2?" - Паркинг":"")]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true">
+					<reportElement uuid="008d4368-60bf-4101-a739-ae7a03adb56e" stretchType="RelativeToBandHeight" mode="Opaque" x="282" y="0" width="42" height="14" backcolor="#9DE3E8"/>
+					<box leftPadding="5">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="9" isBold="true" isItalic="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{year}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+					<reportElement uuid="bdf2a39e-63ef-4533-a6bf-c3c2d0149436" stretchType="RelativeToBandHeight" mode="Opaque" x="324" y="0" width="76" height="14" backcolor="#9DE3E8"/>
+					<box leftPadding="5">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="9" isBold="true" isItalic="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{month}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="gruppa" pattern="#,##0.00 $" isBlankWhenNull="true">
+					<reportElement uuid="aed86c9a-ef72-4446-a910-ddef04aa1087" stretchType="RelativeToBandHeight" mode="Opaque" x="400" y="0" width="137" height="14" backcolor="#9DE3E8"/>
+					<box leftPadding="5">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="9" isBold="true" isItalic="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{average_group}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="50" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="b37cde5f-ee80-4bf7-a4c3-d1bad5759230" stretchType="RelativeToTallestObject" x="11" y="0" width="271" height="30"/>
+				<box leftPadding="5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Отчёт о средней стоимости на период"]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd.MM.yyyy HH:mm">
+				<reportElement uuid="7aa7c501-ae57-4d7d-89ae-04d1b03490e7" x="11" y="30" width="271" height="20"/>
+				<box leftPadding="5"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd-MM-yyyy" isBlankWhenNull="true">
+				<reportElement uuid="5e0bfeeb-55c4-4f39-94e2-ccdbcdff14d6" stretchType="RelativeToTallestObject" x="282" y="0" width="255" height="50"/>
+				<box leftPadding="5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" isBold="true" isItalic="true" isUnderline="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{filter_text}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="32" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="61e82365-09e2-4b6e-bf6f-4bdb0347fd7d" stretchType="RelativeToTallestObject" mode="Opaque" x="11" y="0" width="271" height="32" backcolor="#D5D5D5">
+					<property name="net.sf.jasperreports.export.xls.freeze.column.edge" value="Right"/>
+				</reportElement>
+				<box leftPadding="5">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Объект]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="32779dcc-2b27-40a0-8b80-081bfa834093" stretchType="RelativeToTallestObject" mode="Opaque" x="324" y="0" width="76" height="32" backcolor="#D5D5D5">
+					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Месяц]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="4ef947b6-c30e-454d-9d56-f2ac399cc53e" stretchType="RelativeToTallestObject" mode="Opaque" x="400" y="0" width="137" height="32" backcolor="#D5D5D5">
+					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Срендяя стоимость]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="24e4f842-a8d8-4203-b29c-0d63acd42af6" stretchType="RelativeToTallestObject" mode="Opaque" x="282" y="0" width="42" height="32" backcolor="#D5D5D5">
+					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Год]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="14" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="b0657288-b099-4c7b-a442-997b9e3b097f" stretchType="RelativeToTallestObject" x="11" y="0" width="271" height="14">
+					<property name="net.sf.jasperreports.export.xls.freeze.column.edge" value="Right"/>
+				</reportElement>
+				<box leftPadding="5">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{title}+" ("+$F{client_type}+")"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true">
+				<reportElement uuid="0854eed2-be94-4faa-a3f2-3f5351b75e77" stretchType="RelativeToBandHeight" x="324" y="0" width="76" height="14"/>
+				<box leftPadding="5">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9" isBold="false" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{month}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Auto" pattern="#,##0.00 $" isBlankWhenNull="true">
+				<reportElement uuid="6002cb81-72c8-4664-ab33-62bc90ed20de" stretchType="RelativeToBandHeight" x="400" y="0" width="137" height="14"/>
+				<box leftPadding="5">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9" isBold="false" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{average}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="###0" isBlankWhenNull="true">
+				<reportElement uuid="713763a4-4931-4892-839a-b559c8854b3a" stretchType="RelativeToBandHeight" x="282" y="0" width="42" height="14"/>
+				<box leftPadding="5">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9" isBold="false" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{year}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

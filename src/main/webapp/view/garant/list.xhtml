@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+		<h2>#{msgs.garants} </h2> <br/> 
+		<div class="clear"></div>
+		<h:form rendered="#{roleController.isAllowed('CONTROLLER')}">
+			<h:commandLink value="#{msgs.addGarant}" action="#{garantCreator.add()}" styleClass="button green f-right" />
+		</h:form>
+		<br/>
+		<div class="clear"></div>
+		<h:form id ="form">
+			<p:dataTable var="entity" value="#{garantListController.model}" paginator="true" rows="50" lazy="true" rowKey="#{entity.id}" rowIndexVar="index" tableStyleClass="display-table"
+	   			id="table" selectionMode="single" emptyMessage="#{msgs.noRecordsFound}" 
+	   			rowsPerPageTemplate="10,20,30,40,50" paginatorPosition="bottom" pageLinks="10"
+	   			currentPageReportTemplate="Всего : #{garantListController.model.rowCount} из #{garantListController.model.totalCount}  &#160;&#160;| #{msgs.amountPerPage}"
+	            paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport} {RowsPerPageDropdown}"
+	            selection="#{garantListController.garant}"
+	            first="#{garantListController.first}" >
+				<p:ajax event="page" listener="#{garantListController.onPageChange}"/>  
+			    
+			    <p:column headerText="№">
+			        <h:outputText value="#{index+1}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.fio}">
+			        <h:outputText value="#{entity.fio}" />
+			    </p:column>
+			    
+			    
+			    <p:column headerText="#{msgs.contacts}">
+			        <h:outputText value="#{entity.contacts}" />
+			    </p:column>
+			    
+				<p:column headerText="#{msgs.date}">
+			        <h:outputText value="#{entity.dateCreated}" >
+			          <f:convertDateTime type="date" pattern="dd-MM-yyyy HH:mm" timeZone="GMT+6"/>
+	             	</h:outputText>
+			    </p:column>
+			    
+			    
+			    <p:column headerText="#{msgs.operation}" rendered="#{roleController.isAllowed('CONTROLLER')}">
+			    	<h:commandButton action="#{garantCreator.edit(entity)}" value="#{msgs.edit}" styleClass="btn-icon edit" title="#{msgs.edit}" />
+			    </p:column>
+			</p:dataTable>
+		</h:form>
+		<p:blockUI block="form:table" trigger="form:table" >
+			#{msgs.loading}<br />
+		    <p:graphicImage library="img" name="ajaxloadingbar.gif"/>
+		</p:blockUI>	
+
+		<div class="clear"></div>			
+				
+	</ui:define>	
+	
+</ui:composition>

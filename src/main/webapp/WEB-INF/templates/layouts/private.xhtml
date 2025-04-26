@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"> 
+
+<ui:composition template="base.xhtml">
+
+	<ui:define name="outer-wrap-header">
+	</ui:define>
+
+	<ui:define name="outer-wrap-nav"/>
+
+    <ui:define name="outer-wrap-content">
+
+        <div id="wrap-private-content">
+            <div id="sidebar-menu">
+            	<h:form>
+	            	<div class="logo-title">
+	            		<h:commandLink action="#{userController.home()}">
+							<h1 class="title">#{msgs.title}</h1>
+						</h:commandLink>
+					</div>
+            	</h:form>
+                <ui:insert name="sidebar-menu">
+                	<ui:include src="../private/sidebar-menu.xhtml"/>
+                </ui:insert>                
+            </div>
+             <div id="private-content">
+             	<div style="float:right; max-width: 80%">
+             		<h:panelGroup > 
+	             		<p:repeat value="#{userController.loginUtil.users}" var="user">
+	             			<div class="circle m-top m-right" style="float:right;background:rgb(#{user.red},#{user.green},#{user.blue},0.5);color:rgb(#{user.blue},#{user.red},#{user.green});">
+	            				<h:outputText  value="#{user.shortFio}" title="#{user.fio} : Вход выполнен в  #{user.lastLogin}" />
+	            		
+	            			</div>
+						</p:repeat>
+					</h:panelGroup>
+            		   	
+            	</div>
+            	
+            	<div id="content" class="private" >
+                	<ui:insert name="content"/>
+                	
+                </div>
+            </div>
+        </div>
+
+    </ui:define>
+
+	<ui:define name="outer-wrap-footer"/>
+
+</ui:composition>
+
+</html>

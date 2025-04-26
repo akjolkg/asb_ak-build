@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+ 		
+		<h2>#{msgs.addUser} </h2> <br/><br/>	        
+		<h:form id="add-card-form" prependId="false">
+			<h:panelGroup id="messages">
+				<p:growl globalOnly="true" />
+			</h:panelGroup>
+		    <h:panelGrid styleClass="form-table" columns="3">
+		    	<h:outputText value="#{msgs.pin}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{userCreator.user.pin}" id="pin" style="width:200px;" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="pin" />
+				
+				<h:outputText value="#{msgs.fio}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{userCreator.user.fio}" id="fio"  style="width:300px;"  required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="fio" />
+				
+				<h:outputText value="#{msgs.role}" styleClass="form-table-label disp-blc"/>
+		    	<p:selectOneMenu  value="#{userCreator.user.role}" id="role" style="width:300px;" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}" converter="enumConverter">
+					<p:ajax update="constructions"/>
+					<f:selectItem  itemLabel="#{msgs.selectValue}" noSelectionOption="true"/>
+					<f:selectItems value="#{userCreator.roles}" var="entity" itemLabel="#{enums[entity]}" itemValue="#{entity}"/>
+		    	</p:selectOneMenu>
+				<p:message for="role" />
+				
+				<h:outputText value="#{msgs.username}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{userCreator.user.username}" id="username"  style="width:300px;"  required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="username" />
+				
+				<h:outputText value="#{msgs.password}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{userCreator.user.password}" id="password"  style="width:300px;"  required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="password" />
+				
+				<h:outputText value="#{msgs.contacts}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{userCreator.user.contacts}" id="contacts"  style="width:300px;"  required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="contacts" />
+				
+				<h:outputText value="#{msgs.reserveAmount}" styleClass="form-table-label disp-blc"/>
+				<p:inputNumber value="#{userCreator.user.reserveAmount}"  styleClass="m-right" decimalPlaces="0" id="reserve"/>	
+				<p:message for="reserve" />
+				
+				<h:panelGroup id="constructions">
+					<h:outputText value="#{msgs.construction}" styleClass="form-table-label disp-blc"/>
+					<p:selectCheckboxMenu value="#{userCreator.selectedConstructions}"  
+						multiple="true" id="construction" style="width:250px;"  styleClass="m-right"
+						filter="true" filterMatchMode="contains" converter="constructionConverter">
+					<f:selectItems value="#{userCreator.constructions}" var="entity" itemLabel="#{entity.title}" itemValue="#{entity}"/>
+		    	</p:selectCheckboxMenu>
+				
+				
+				</h:panelGroup>
+				
+				
+				
+				
+		    	
+		    </h:panelGrid>	
+		   
+		    <div class="m-top">
+		    	<h:commandButton value="#{msgs.save}" action="#{userCreator.doSave()}" styleClass="button light-blue"/>
+		    	<h:commandButton value="#{msgs.cancel}" action="#{userCreator.cancel()}" immediate="true" styleClass="button red m-left"/>
+		   	</div>
+		    
+		</h:form>
+			
+		<div class="clear"></div>	
+				
+	</ui:define>	
+</ui:composition>

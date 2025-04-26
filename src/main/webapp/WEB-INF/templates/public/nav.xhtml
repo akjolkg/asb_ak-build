@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"> 
+
+<ui:composition>
+
+	<ul class="clearfix">
+        <li class="first">
+            <h:outputLink value="#{addressController.getPOPPAddress()}/view/plan/listCompany.xhtml">
+                <span class="term">Планы</span>
+                <span class="desc">Планируемые закупки</span>
+            </h:outputLink>
+        </li>
+        <li>
+			<h:outputLink value="#{addressController.getPOPPAddress()}/view/order/list.xhtml">
+				<span class="term">Объявления</span>
+				<span class="desc">Всего объявлений</span>
+			</h:outputLink>
+		</li>
+		 <li>
+			<h:outputLink value="#{addressController.getPOPPAddress()}/view/order/oldTenders.xhtml">
+				<span class="term">Бумажные тендера</span>
+				<span class="desc">Объявления со старого портала</span>
+			</h:outputLink>
+		</li>
+		<li>
+			<a href="#{addressController.getPOPPAddress()}/view/order/winners.xhtml">
+				<span class="term">Победители</span>
+				<span class="desc">Среди поставщиков</span>
+			</a>
+		</li>
+		<li>
+			<a href="#{addressController.getPOPPAddress()}/view/order/rejectList.xhtml">
+				<span class="term">Отмененные торги</span>
+				<span class="desc">Среди объявлений</span>
+			</a>
+	    </li>
+        <li>
+            <a href="">
+                <span class="term">Договоры</span>
+                <span class="desc">Заключенные контракты</span>
+            </a>
+        </li>
+		<li class="last">
+			<h:outputLink value="#{addressController.getPOPPAddress()}/view/auction/list.xhtml">
+				<span class="term">Аукционы</span>
+				<span class="desc">На снижение цены</span>
+			</h:outputLink>
+		</li>
+	</ul>
+
+</ui:composition>
+
+</html>

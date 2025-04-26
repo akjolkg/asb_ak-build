@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+		<h2>#{msgs.settings} </h2> <br/><br/>
+		
+		<h2>#{msgs.usingFieldsInAppartment}</h2>
+			        
+		<h:form id="form" prependId="false">
+			<p:messages/>
+		    <h:panelGrid styleClass="form-table" columns="1">
+		    	<p:pickList id="pickList" value="#{userController.fields}" var="field" itemLabel="#{field}" required="true" requiredMessage="#{msgs.thisFieldIsRequired}" itemValue="#{field}" style="height:500px;" />
+		    </h:panelGrid>	
+		    
+		    <div class="m-top">
+		    	<h:commandButton value="#{msgs.change}" action="#{userController.saveFields()}" styleClass="button light-blue"/>
+		    	<h:commandButton value="#{msgs.cancel}" action="#{userController.cancel()}" immediate="true" styleClass="button red  m-left"/>
+		    </div>
+		    
+		</h:form>
+			
+		<div class="clear"></div>	
+				
+	</ui:define>	
+</ui:composition>

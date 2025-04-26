@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+ 		<h2>#{msgs.addPayment} </h2> <br/><br/>	        
+		<h:form id="add-card-form" prependId="false">
+			<h:panelGroup id="messages">
+				<p:growl globalOnly="true" />
+			</h:panelGroup>
+		    <h:panelGrid styleClass="form-table" columns="3">
+		    	<h:outputText value="#{msgs.pin}" styleClass="form-table-label disp-blc"/>
+				<p:inputText disabled="#{paymentCreator.payment.id ne null}" id="pin" value="#{paymentCreator.pin}" size="14" required="true"  binding="#{paymentCreator.pinUi}"
+					requiredMessage="#{msgs.thisFieldIsRequired}" >
+					<p:ajax event="blur" process="@this" update="@form" listener="#{paymentCreator.onPinComplete()}" />
+				</p:inputText>
+				<p:message for="pin"/>		    	
+					
+				<h:outputText value="#{msgs.linkedList}" styleClass="form-table-label disp-blc"/>
+				<h:outputText value="#{enums[paymentCreator.payment.voter.agitator.parent.parent.gtype]} | #{paymentCreator.payment.voter.agitator.parent.parent.fio} | #{paymentCreator.payment.voter.agitator.parent.fio} | #{paymentCreator.payment.voter.agitator.fio}"  id="linkedList"/>
+				<p:message for="linkedList" />	
+					
+				<h:outputText value="#{msgs.firstname}" styleClass="form-table-label disp-blc"/>
+				<h:inputText  disabled="true" value="#{paymentCreator.payment.voter.firstname}" id="firstname" required="true"
+					    	requiredMessage="#{msgs.thisFieldIsRequired}" />
+				<p:message for="firstname" />
+				
+				<h:outputText value="#{msgs.surname}" styleClass="form-table-label disp-blc"/>
+				<h:inputText disabled="true" value="#{paymentCreator.payment.voter.surname}" id="surname" required="true"
+					    	requiredMessage="#{msgs.thisFieldIsRequired}" />
+				<p:message for="surname" />
+				
+				<h:outputText value="#{msgs.patronymic}" styleClass="form-table-label disp-blc"/>
+				<h:inputText disabled="true" value="#{paymentCreator.payment.voter.patronymic}" id="patronymic" />
+				<p:message for="patronymic" />
+				
+				<h:outputText value="#{msgs.birthdate}" styleClass="form-table-label disp-blc"/>
+				<h:inputText disabled="true" value="#{paymentCreator.payment.voter.birthdate}" id="birthdate">
+					<f:convertDateTime pattern="dd.MM.yyyy" />
+				</h:inputText>
+				<p:message for="patronymic" />
+				
+				<h:outputText value="#{msgs.uik}" styleClass="form-table-label disp-blc"/>
+				<h:inputText disabled="true" value="#{paymentCreator.payment.voter.uik.name}" id="uik" />
+				<p:message for="uik" />
+				
+				<h:outputText value="#{msgs.passportNumber}" styleClass="form-table-label disp-blc"/>
+				<h:inputText disabled="true" value="#{paymentCreator.payment.voter.passportNumber}" id="passportNumber"  required="true"
+					    	requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="passportNumber" />
+				
+				<h:outputText value="#{msgs.contacts}" styleClass="form-table-label disp-blc"/>
+				<h:inputText disabled="true"  value="#{paymentCreator.payment.voter.contacts}" id="contacts"  required="true"
+					    	requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="contacts" />
+				
+				<h:outputText value="#{msgs.passportOnHands}" styleClass="form-table-label disp-blc"/>
+				<p:autoComplete size="60" id="agitator" dropdown="true" style="width:560px;"
+				    	required="true"
+				    	requiredMessage="#{msgs.thisFieldIsRequired}"
+						var="c"
+						itemValue="#{c}" itemLabel="#{c.fio}" 
+						value="#{paymentCreator.payment.passport}" 
+						converter="agitatorConverter"  
+						completeMethod="#{paymentCreator.findAgitator}" >
+					<p:column>
+					    <h:outputText value="#{c.role.title}" />
+				    </p:column>
+					<p:column>
+					    <h:outputText value="#{c.pin}" />
+				    </p:column>
+				    <p:column>
+				 	   <h:outputText value="#{c.fio}" />
+				    </p:column>
+				</p:autoComplete>
+				<p:message for="agitator" />	
+				
+				<h:outputText value="#{msgs.voterAmount}" styleClass="form-table-label disp-blc"/>
+				<h:inputText  value="#{paymentCreator.payment.amountVoter}" id="voterAmount" required="true"
+					    	requiredMessage="#{msgs.thisFieldIsRequired}" />
+				<p:message for="voterAmount" />
+				
+				<h:outputText value="#{msgs.getterAmount}" styleClass="form-table-label disp-blc"/>
+				<h:inputText  value="#{paymentCreator.payment.amountGetter}" id="getterAmount" required="true"
+					    	requiredMessage="#{msgs.thisFieldIsRequired}" />
+				<p:message for="getterAmount" />
+				
+				
+							
+						    	
+		    </h:panelGrid>	
+		   
+		    <div class="m-top">
+		    	<h:commandButton value="#{msgs.save}" action="#{paymentCreator.doSave()}" styleClass="button light-blue"/>
+		    	<h:commandButton value="#{msgs.cancel}" action="#{paymentCreator.cancel()}" immediate="true" styleClass="button red m-left"/>
+		    </div>
+		    
+		</h:form>
+			
+		<div class="clear"></div>	
+				
+	</ui:define>	
+</ui:composition>

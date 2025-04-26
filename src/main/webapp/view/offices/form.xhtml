@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+ 		
+		<h2>#{msgs.addOffice} </h2> <br/>
+		<h:form id="add-card-form" prependId="false">
+			<h:panelGroup id="messages">
+				<p:growl globalOnly="true" />
+			</h:panelGroup>
+		    <h:panelGrid styleClass="form-table" columns="3">
+		    	<h:outputText value="#{msgs.construction}" styleClass="form-table-label disp-blc"/>
+		    	<p:selectOneMenu  value="#{officeCreator.appartment.construction}" id="construction" style="width:300px;" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}" converter="constructionConverter">
+					<f:selectItem  itemLabel="#{msgs.selectValue}" noSelectionOption="true"/>
+					<f:selectItems value="#{appartmentListController.constructions}" var="entity" itemLabel="#{entity.title}" itemValue="#{entity}"/>
+		    	</p:selectOneMenu>
+				<p:message for="construction" />
+				
+				<h:outputText value="#{msgs.appartmentPreNumber}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{officeCreator.appartment.title}" id="name"  style="width:300px;"  required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="name" />
+				<h:outputText value="#{msgs.appartmentDocNumber}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{officeCreator.appartment.docNumber}" id="docNumber"  style="width:300px;"  />
+				<p:message for="docNumber" />
+				
+				<h:outputText value="#{msgs.blockNumber}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{officeCreator.appartment.blockNumber}" id="blockNumber"  style="width:100px;"  required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="blockNumber" />
+				
+				
+				<h:outputText value="#{msgs.flat}" styleClass="form-table-label disp-blc"/>
+				<p:inputNumber decimalPlaces="0" value="#{officeCreator.appartment.flat}" id="flat" style="width:100px;"  required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="flat" />
+				
+				
+				<h:outputText value="#{msgs.preTotalArea}" styleClass="form-table-label disp-blc"/>
+				<p:inputNumber decimalPlaces="2" value="#{officeCreator.appartment.totalArea}" id="totalArea" style="width:100px;"  required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="totalArea" />
+				
+				<h:outputText value="#{msgs.docTotalArea}" styleClass="form-table-label disp-blc"/>
+				<p:inputNumber decimalPlaces="2" value="#{officeCreator.appartment.docTotalArea}" id="docTotalArea" style="width:100px;"/>
+				<p:message for="docTotalArea" />
+				
+				<h:outputText value="#{msgs.appartmentSpecNote}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{officeCreator.appartment.specNote}" id="specNote"  style="width:300px;"  />
+				<p:message for="specNote" />
+				
+				<h:outputText value="#{msgs.planType}" styleClass="form-table-label disp-blc"/>
+				<p:selectOneMenu  value="#{officeCreator.appartment.ptype}" id="ptype" style="width:300px;" 
+					height="400"
+					required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}" converter="enumConverter">
+					<f:selectItems value="#{officeCreator.ptypes}" var="enum" itemLabel="#{enums[enum]}" itemValue="#{enum}"/>					
+		    	</p:selectOneMenu>
+				<p:message for="ptype" />	
+				
+				<h:outputText value="#{msgs.officeType}" styleClass="form-table-label disp-blc"/>
+				<p:selectOneMenu  value="#{officeCreator.appartment.officeType}" id="officeType" style="width:300px;" 
+					height="400"
+					filter="true" filterMatchMode="contains"
+					required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}" converter="enumConverter">
+					<f:selectItem  itemLabel="#{msgs.selectValue}" noSelectionOption="true"/>
+					<f:selectItems value="#{officeCreator.officeTypes}" var="enum" itemLabel="#{enums[enum]}" itemValue="#{enum}"/>
+					
+		    	</p:selectOneMenu>
+				<p:message for="officeType" />
+				
+				
+					    	
+		    </h:panelGrid>	
+		   
+		    <div class="m-top">
+		    	<h:commandButton value="#{msgs.save}" action="#{officeCreator.doSave()}" styleClass="button light-blue"/>
+		    	<h:commandButton value="#{msgs.cancel}" action="#{officeCreator.cancel()}" immediate="true" styleClass="button red m-left"/>
+		   	</div>
+		    
+		</h:form>
+			
+		<div class="clear"></div>	
+				
+	</ui:define>	
+</ui:composition>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"> 		
+ 		
+	<h:panelGrid styleClass="form-table" columns="2">
+		<h:panelGroup id="tik" styleClass="f-left">
+			<h:outputText value="#{msgs.tik}" styleClass="form-table-label disp-blc"/>
+				<p:selectOneMenu id="tik-select" value="#{uikSelector.tik}" requiredMessage="#{error.thisFieldIsRequired}" effect="none" converter="tikConverter"
+				        		styleClass="w-1-1">
+			        	<f:selectItems value="#{uikSelector.tiks}" var="tik" itemLabel="#{tik.name}" itemValue="#{tik}"/>
+			        	<p:ajax event="change" update="uik"/>	            
+		        </p:selectOneMenu>
+		        <h:message for="tik-select" id="tik-message" styleClass="error"/>
+			</h:panelGroup>
+			<h:panelGroup id="uik" styleClass="f-left">
+				<h:outputText value="#{msgs.uik}" styleClass="form-table-label disp-blc"/>
+				<p:selectOneMenu id="uik-select" value="#{uikSelector.uik}" required="true" requiredMessage="Необходимо заполнить данное поле!" effect="none" converter="uikConverter"
+				        		disabled="#{uikSelector.tik == null}">
+		        	<f:selectItem itemLabel="#{msgs.selectValue}"/>
+		        	<f:selectItems value="#{uikSelector.getUiks(uikSelector.tik)}" var="uik" itemLabel="#{uik.name}" itemValue="#{uik}"/>
+		        	<p:ajax event="change" update="@this"/>
+		        </p:selectOneMenu>
+				<p:message for="uik-select" id="uik-message" styleClass="error"/>
+			</h:panelGroup>	  	
+	</h:panelGrid>
+	
+</ui:composition>

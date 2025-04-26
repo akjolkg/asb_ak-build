@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:panelGrid columns="2" styleClass="form-table"
+		columnClasses="form-table-odd-col">
+
+		<h:outputText value="#{msgs.pin}" styleClass="form-table-label" />
+		<h:outputText value="#{person.permanentcard.pin}" />
+
+		<h:outputText value="#{msgs.surname}" styleClass="form-table-label" />
+		<h:outputText value="#{person.permanentcard.surname}" />
+		
+		<h:outputText value="#{msgs.firstname}" styleClass="form-table-label" />
+		<h:outputText value="#{person.permanentcard.name}" />
+
+		<h:outputText value="#{msgs.patronymic}" styleClass="form-table-label" />
+		<h:outputText value="#{person.permanentcard.patronymic}" />
+
+		<h:outputText value="#{msgs.birthdate}" styleClass="form-table-label" />
+		<h:outputText value="#{person.permanentcard.birthdate}" />
+
+		<h:outputText value="#{msgs.address}" styleClass="form-table-label" />
+		<h:panelGroup rendered="#{person.street==null}">
+			<h:outputText 
+				value="#{person.permanentcard.locality}"/>
+			<h:outputText 
+				value=" : #{person.permanentcard.area}" rendered="#{person.permanentcard.area ne null}"/>
+			<h:outputText 
+				value=" : #{person.permanentcard.subArea}" rendered="#{person.permanentcard.subArea ne null}"/>
+			<h:outputText 
+				value=": #{person.permanentcard.street} : #{person.permanentcard.building} : #{person.permanentcard.apartment}" />
+		</h:panelGroup>
+		<h:outputText rendered="#{person.street!=null}"
+			value="#{person.locality} : #{person.street} : #{person.building} : #{person.apartment}" />
+
+		<h:outputText value="#{msgs.region}" styleClass="form-table-label" />
+		<h:outputText value="#{person.uik.tik.region}" />
+
+		<h:outputText value="#{msgs.tik}" styleClass="form-table-label" />
+		<h:outputText value="#{person.uik.tik.name}" />
+
+		<h:outputText value="#{msgs.uik}" styleClass="form-table-label" />
+		<h:outputText value="#{person.uik.name}" />
+
+	</h:panelGrid>
+</ui:composition>

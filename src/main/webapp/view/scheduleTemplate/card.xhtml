@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+ 		
+		<h2>#{msgs.scheduleTemplateCard} </h2> <br/>
+		<h:form id="add-card-form" prependId="false">
+			<h:panelGroup id="messages">
+				<p:growl globalOnly="true" />
+			</h:panelGroup>
+		   	
+			<h:panelGrid styleClass="form-table f-left m-top m-left" columns="2"  style="width:400px;">
+				<h:outputText value="#{msgs.object} :" styleClass="form-table-label disp-blc"/>
+			<h:outputText value="#{scheduleTemplateController.scheduleTemplate.client.appartment.construction.title} : #{scheduleTemplateController.scheduleTemplate.client.appartment.title}" />
+			
+			<h:outputText value="#{msgs.client} :" styleClass="form-table-label disp-blc"/>
+			<h:outputText value="#{scheduleTemplateController.scheduleTemplate.client.fio}" />
+			
+			<h:outputText value="#{msgs.contractSum} :" styleClass="form-table-label disp-blc"/>
+			<h:outputText value="#{scheduleTemplateController.scheduleTemplate.client.totalSum}" >
+				<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+			</h:outputText>
+			
+			<h:outputText value="#{msgs.firstPayment} :" styleClass="form-table-label disp-blc"/>
+			<h:outputText value="#{scheduleTemplateController.scheduleTemplate.client.firstPayment}" >
+				<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+			</h:outputText>
+			
+			<h:outputText value="#{msgs.installmentSum} :" styleClass="form-table-label disp-blc"/>
+			<h:outputText value="#{scheduleTemplateController.scheduleTemplate.client.totalSum-scheduleTemplateController.scheduleTemplate.client.firstPayment}" >
+				<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+			</h:outputText>
+			
+			
+			
+			<h:outputText value="#{msgs.alreadyPayed} :" styleClass="form-table-label disp-blc"/>
+			<h:outputText value="#{scheduleTemplateController.scheduleTemplate.client.alreadyPayed}" >
+				<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+			</h:outputText>
+			
+			<h:outputText value="#{msgs.leftSum} :" styleClass="form-table-label disp-blc"/>
+			<h:outputText value="#{scheduleTemplateController.scheduleTemplate.client.totalSum-scheduleTemplateController.scheduleTemplate.client.alreadyPayed}" >
+				<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+			</h:outputText>
+			
+			
+			
+			<h:outputText value="#{msgs.installmentDate} : " styleClass="form-table-label disp-blc"/>
+			<h:outputText value="#{scheduleTemplateController.scheduleTemplate.client.appartment.construction.installmentDate}">
+				<f:convertDateTime pattern="dd-MM-yyyy" />
+			</h:outputText>
+			    
+				<h:outputText value="#{msgs.note}" styleClass="form-table-label disp-blc"/>
+				<h:outputText value="#{scheduleTemplateController.scheduleTemplate.note}" />		
+				
+				
+			    <h:outputText value="#{msgs.dateCreated}" styleClass="form-table-label disp-blc"/>
+				<h:outputText  value="#{scheduleTemplateController.scheduleTemplate.dateCreated}" >
+			    	<f:convertDateTime pattern="dd-MM-yyyy HH:mm:ss" />
+			    </h:outputText>
+			    
+			    
+			    <h:outputText value="#{msgs.status}" styleClass="form-table-label disp-blc"/>
+				<h:outputText value="#{enums[scheduleTemplateController.scheduleTemplate.status]}" />
+				
+			</h:panelGrid>
+			
+			<div class="clear"></div>
+			<h:panelGrid styleClass="form-table f-left m-top m-left" columns="3" rendered="#{scheduleTemplateController.scheduleTemplate.status eq 'APPROVED'}"  style="width:400px;">
+				<h:outputText value="#{msgs.print}" styleClass="form-table-label disp-blc"/>
+					<p:commandButton value="#{msgs.scheduleModifyAgreement}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrowthick-1-s">
+	        			<p:fileDownload value="#{clientJasperController.generateScheduleModifyAgreement(scheduleTemplateController.scheduleTemplate)}" />
+	   				</p:commandButton>	
+	   			
+			</h:panelGrid>
+			
+			
+			<div class="clear"/>
+			<h:panelGrid styleClass="form-table m-top m-left" columns="1" >
+				<h:outputText value="#{scheduleTemplateController.scheduleTemplate.history}" escape="false"/>
+		    </h:panelGrid>	 
+		</h:form>
+		
+		<div class="clear"></div>
+		
+		<h:panelGrid styleClass="form-table f-left m-top m-left" columns="2"  style="width:400px;" rendered="#{scheduleTemplateController.scheduleTemplate.status eq 'NEW' and scheduleTemplateController.scheduleTemplate.sendBackReason ne null}">
+			
+			<h:outputText value="#{msgs.sendBackReason}" styleClass="form-table-label disp-blc" style="color:red; margin-top:20px; margin-bottom:20px;"/>	
+			<h:outputText value="#{scheduleTemplateController.scheduleTemplate.sendBackReason}" styleClass="form-table-label disp-blc" style="color:red; margin-top:20px; margin-bottom:20px;"/>
+			
+		</h:panelGrid>
+		
+		
+		<div class="clear"></div>
+		<br/>
+		
+			
+		<h:form >
+		 <h:panelGrid styleClass="form-table m-top" columns="1"  style="width:800px;" >
+				<f:facet name="header">
+			       <h:outputText value="#{msgs.schedule}"  style="text-align: center; font-weight: 600;" styleClass="disp-blc m-top m-bottom"/>
+			    </f:facet>
+			<p:dataTable var="entity" value="#{scheduleTemplateController.subSchedules}" editable="true" rowKey="#{entity.id}" rowIndexVar="index" tableStyleClass="display-table"
+	   			id="table" emptyMessage="#{msgs.noRecordsFound}">
+	   			<p:ajax event="rowEdit" listener="#{scheduleTemplateController.onRowEdit}" />
+	   			
+	   			<p:column headerText="№">
+			        <h:outputText value="#{index}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.datePayment}">
+			    	<p:cellEditor>
+		            	<f:facet name="output">	 
+		               		<h:outputText value="#{entity.datePayment}" >
+			        			<f:convertDateTime pattern="dd-MM-yyyy" />
+			        		</h:outputText>
+			        	</f:facet>
+		               	<f:facet name="input">	
+		               		<p:calendar showOtherMonths="true" selectOtherMonths="true" id="datePayment" value="#{entity.datePayment}"  showOn="button" required="true"
+								requiredMessage="#{msgs.thisFieldIsRequired}" locale="ru"/>
+							<p:message for="datePayment" />
+		               	</f:facet>
+		           </p:cellEditor>
+			   	</p:column>
+		       	<p:column headerText="#{msgs.amountToPay}">
+			    	<p:cellEditor>
+		            	<f:facet name="output">	 
+		               		<h:outputText value="#{entity.amountToPay}" >
+			        			<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+			        		</h:outputText>
+			        	</f:facet>
+		               	<f:facet name="input">	
+		               		<p:inputNumber decimalPlaces="2" value="#{entity.amountToPay}" id="amountToPay" style="width:100px;"  required="true"
+								requiredMessage="#{msgs.thisFieldIsRequired}">
+							</p:inputNumber>
+							<p:message for="amountToPay" />
+		               	</f:facet>
+		           </p:cellEditor>
+			    </p:column>
+			    <p:column headerText="#{msgs.note}">
+			    	<p:cellEditor>
+		            	<f:facet name="output">	 
+		               		<h:outputText value="#{entity.note}" />
+			        	</f:facet>
+		               	<f:facet name="input">	
+		               		<p:inputText value="#{entity.note}" style="width:100px;" />
+		               	</f:facet>
+		           </p:cellEditor></p:column>
+		           
+		        <p:column headerText="#{msgs.operation}" rendered="#{scheduleTemplateController.scheduleTemplate.status eq 'NEW'}">
+		        		<p:commandButton value="#{msgs.deleteRow}" styleClass="button red" action="#{scheduleTemplateController.deleteRow(entity)}" ajax="false"/>
+		               	
+		        
+		        
+		        </p:column>
+			    <p:column style="width:32px" rendered="#{scheduleTemplateController.scheduleTemplate.status eq 'NEW'}">
+		           <p:rowEditor />
+		       </p:column>
+		       
+		       
+		        <f:facet name="footer" >
+		        	<p:commandButton rendered="#{scheduleTemplateController.scheduleTemplate.status eq 'NEW'}" value="#{msgs.addRow}" styleClass="button green" action="#{scheduleTemplateController.addRow()}" ajax="false"/>
+			    </f:facet>
+		       
+			</p:dataTable>
+		
+			</h:panelGrid>  
+	
+		
+			<br/>
+			<div class="clear"/>
+			
+			<h:commandButton value="#{msgs.delete}" rendered="#{scheduleTemplateController.scheduleTemplate.status eq 'NEW'}"
+		    		style="width:387px;" 
+		    		action="#{scheduleTemplateController.goToDelete()}" 
+		    		styleClass="button red"/>
+			<div class="clear"></div>
+			
+			<h:commandButton rendered="#{roleController.isAllowed('ORK,SUBADMIN,ADMIN,FIN_DIRECTOR,SUB_FIN_DIRECTOR') and scheduleTemplateController.scheduleTemplate.status eq 'NEW'}" 
+				value="#{msgs.sendToFinDirectorApprove}" action="#{scheduleTemplateController.sendToFinDirectorApprove()}" styleClass="button light-blue"/>
+			<h:commandButton rendered="#{roleController.isAllowed('FIN_DIRECTOR,SUB_FIN_DIRECTOR') and scheduleTemplateController.scheduleTemplate.status eq 'WAITING_DIRECTOR_APPROVAL'}" 
+				value="#{msgs.approve}" action="#{scheduleTemplateController.approve()}" styleClass="button light-blue"/>
+			
+			<p:commandButton rendered="#{(roleController.isAllowed('FIN_DIRECTOR,SUB_FIN_DIRECTOR') and scheduleTemplateController.scheduleTemplate.status eq 'WAITING_DIRECTOR_APPROVAL')}"
+				 styleClass="button red m-left m-top" value="#{msgs.sendForEdit}" oncomplete="PF('myDlg').show()" />
+				
+			<a style="width: 100px;" class="button blue m-left m-top" onclick="history.go(-1)">#{msgs.back}</a>
+		    <div class="clear"/>
+		    
+		    <p:confirmDialog id='myDialog' widgetVar="myDlg"  modal="true" resizable="false" header="При необходимости введите причину отправки на редактирование!">
+		       	 <f:facet name="message">
+			       	 <h:outputText value='Причина отправки на редактирование :'/>
+			       	 <br/>
+	                 <h:inputTextarea value="#{scheduleTemplateController.sendBackReason}"/>
+                 </f:facet>
+		       
+		        <p:commandButton value="#{msgs.yes}" ajax="false" action="#{scheduleTemplateController.sendToDecline()}" icon="ui-icon-check"  oncomplete="PF('myDlg').hide()"/>
+		        <p:commandButton value="#{msgs.no}" type="button"  icon="ui-icon-close" onclick="PF('myDlg').hide()" />
+		    </p:confirmDialog>
+		</h:form>	
+		
+		
+			
+			
+				
+	</ui:define>	
+</ui:composition>

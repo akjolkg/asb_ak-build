@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+		<h2>#{msgs.documents} </h2> <br/> 
+		<br/>
+	    <h:form id ="form">
+		<div class="m-top">
+	    	<h:commandButton value="#{msgs.addDocument}" action="#{clientController.goToAddDocuments()}" styleClass="button light-blue m-left"/>
+	   	</div>
+		   	
+		<div class="clear"></div>
+		<br/>  	
+			
+		
+			<p:dataTable var="entity" value="#{clientController.documents}" editable="true" rowKey="#{entity.id}" rowIndexVar="index" tableStyleClass="display-table"
+	   			id="table" emptyMessage="#{msgs.noRecordsFound}">
+	   			<p:ajax event="rowEdit" listener="#{clientController.onRowEdit}" />
+       			<p:column headerText="№">
+			        <h:outputText value="#{index+1}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.date}">
+               		<h:outputText value="#{entity.date}" >
+	        			<f:convertDateTime pattern="dd-MM-yyyy" />
+	        		</h:outputText>
+			   	</p:column>
+		       	
+		       	<p:column headerText="#{msgs.documentType}">
+               		<h:outputText value="#{enums[entity.documentType.toString()]}" />
+			   	</p:column>
+			   
+			   	<p:column headerText="#{msgs.documents}">
+						<a href="#{utilController.getDownloadURL(utilController.generateKeyAliveCurrentSession(entity.attachment))}">
+							<h:outputText value="#{entity.attachment.fileName}" />
+						</a>
+				</p:column>
+				
+				<p:column headerText="#{msgs.download}">
+					<p:commandButton value="#{msgs.download}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrowthick-1-s">
+        				<p:fileDownload value="#{downloadController.downloadFile(entity.attachment)}" />
+   					</p:commandButton>
+   				</p:column>
+   				
+   				<p:column headerText="#{msgs.delete}">
+					<p:commandButton actionListener="#{clientController.deleteDoc(entity)}" update="@form :form :table" icon="fa fa-remove" value="#{msgs.delete}" ajax="false"  />
+   				</p:column>
+			   
+			</p:dataTable>
+			
+		</h:form>
+		<p:blockUI block="form:table" trigger="form:table" >
+			#{msgs.loading}<br />
+		    <p:graphicImage library="img" name="ajaxloadingbar.gif"/>
+		</p:blockUI>	
+
+		<div class="clear"></div>			
+				
+	</ui:define>	
+	
+	
+</ui:composition>

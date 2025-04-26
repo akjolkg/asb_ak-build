@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+ 		<h2>#{msgs.addDublicateVoter} </h2> <br/><br/>	        
+		<h:form id="add-card-form" prependId="false">
+			<h:panelGroup id="messages">
+				<p:growl globalOnly="true" />
+			</h:panelGroup>
+		    <h:panelGrid styleClass="form-table" columns="3">
+		    	<h:outputText value="#{msgs.pin}" styleClass="form-table-label disp-blc"/>
+				<p:inputText disabled="true" id="pin" value="#{voterCreator.dVoter.voter.pin}" size="14" required="true"  binding="#{voterCreator.pinUi}"
+					requiredMessage="#{msgs.thisFieldIsRequired}" >
+				</p:inputText>
+				<p:message for="pin"/>
+		    	
+		    	<h:outputText value="#{msgs.currentAgitator}" styleClass="form-table-label disp-blc"/>
+				<h:outputText value="#{voterCreator.dVoter.voter.agitator.fio}"/>
+				<p:message for="pin"/>
+		    	
+		    	
+		    	
+		    	
+		    	<h:outputText value="#{msgs.newAgitator}" styleClass="form-table-label disp-blc"/>
+				<p:autoComplete size="60" id="agitator" dropdown="true" style="width:560px;"
+				    	required="true"
+				    	requiredMessage="#{msgs.thisFieldIsRequired}"
+						var="c"
+						itemValue="#{c}" itemLabel="#{c.fio}" 
+						value="#{voterCreator.dVoter.agitator}" 
+						converter="agitatorConverter"  
+						completeMethod="#{voterCreator.findAgitator}" >
+					<p:column>
+					    <h:outputText value="#{c.pin}" />
+				    </p:column>
+				    <p:column>
+				 	   <h:outputText value="#{c.fio}" />
+				    </p:column>
+				</p:autoComplete>
+				<p:message for="agitator" />
+						    	
+		    </h:panelGrid>	
+		   
+		    <div class="m-top">
+		    	<h:commandButton value="#{msgs.save}" action="#{voterCreator.doSaveDvoter()}" styleClass="button light-blue" rendered="#{voterCreator.brokenVoter eq 2}"/>
+		    	<h:commandButton value="#{msgs.cancel}" action="#{voterCreator.cancel()}" immediate="true" styleClass="button red m-left"/>
+		    </div>
+		    
+		</h:form>
+			
+		<div class="clear"></div>	
+				
+	</ui:define>	
+</ui:composition>

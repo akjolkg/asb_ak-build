@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+		<h2>#{msgs.curators} </h2> <br/>
+		<ui:include src="/view/operator/filter/curator.xhtml"/>
+        <div class="clear"></div>		
+		<h:form id="form">
+			<p:dataTable var="entity" value="#{curatorList.model}" paginator="true" rows="10" lazy="true" rowKey="#{entity.id}" rowIndexVar="index" tableStyleClass="display-table"
+	   			id="table" selectionMode="single" emptyMessage="#{msgs.noRecordsFound}" 
+	   			rowsPerPageTemplate="10,20,30,40,50" paginatorPosition="bottom" pageLinks="10"
+	                   currentPageReportTemplate="Всего : #{curatorList.model.rowCount} из #{curatorList.model.totalCount}  &#160;&#160;| #{msgs.amountPerPage}"
+	                   paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport} {RowsPerPageDropdown}"
+	                   selection="#{curatorList.curator}"
+	                   first="#{curatorList.first}" >
+				<p:ajax event="page" listener="#{curatorList.onPageChange}"/>  
+			    
+			    
+			    <p:column headerText="#{msgs.garant}">
+			        <h:outputText value="#{entity.parent.pin} : #{entity.parent.fio}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.pin}">
+			        <h:outputText value="#{entity.pin}" />
+			    </p:column>
+			    
+			    
+			    
+			    <p:column headerText="#{msgs.fullname}">
+			        <h:outputText value="#{entity.fio}" />
+			    </p:column>
+			    
+				<p:column headerText="#{msgs.contacts}">
+			        <h:outputText value="#{entity.contacts}" />
+			    </p:column>
+			   
+			</p:dataTable>
+		</h:form>
+		<p:blockUI block="form:table" trigger="form:table" >
+			#{msgs.loading}<br />
+		    <p:graphicImage library="img" name="ajaxloadingbar.gif"/>
+		</p:blockUI>	
+
+		<div class="clear"></div>			
+				
+	</ui:define>	
+	
+</ui:composition>

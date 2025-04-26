@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+ 	
+ 	
+ 		<style>
+ 			#container{
+			     background-image:url(#{utilController.getDownloadURL(utilController.generateKeyAliveCurrentSession(screenSaverController.document.attachment))});
+			 	 background-position: center;
+				  background-repeat: no-repeat;
+				  background-size: cover;
+			 }
+			 
+			h1 {
+			    text-align: center;
+			    color: #ffffff;
+			    font-size: 45px;
+			    text-shadow: 0px 0px 5px #000000;
+			}
+			h2 {
+			    text-align: center;
+			    color: #ffffff;
+			    font-size: 40px;
+			    text-shadow: 0px 0px 5px #000000;
+			}
+			
+			p {
+			    text-indent: 50px;
+			    text-align: right;
+			    letter-spacing: 3px;
+			    text-shadow: 0px 0px 5px #000000;
+			    font-size: 30px;
+			    color: #ffffff;
+			    vertical-align: text-bottom;
+			}
+			
+			div.parent {
+			    position: relative;
+			    height: 90vh;			    
+			}
+			
+			div.absolute {
+			    position: absolute;
+			    width: 100%;
+			    bottom: 10px;			    
+			}  		
+ 		</style> 	
+ 		
+ 		
+ 		<div class="parent" >
+ 			<h:outputLink styleClass="button" value="/asb/view/user/instructions.xhtml">РЕГЛАМЕНТ АСБ</h:outputLink>
+ 			<h:outputLink styleClass="button" value="/asb/view/user/info.xhtml">Сведения АСБ</h:outputLink>
+ 			<h1>Вас приветствует «АСБ»</h1>
+			<h2>Благодатного дня!</h2>
+		
+			<div  style="width: 50%; position:absolute;    bottom:0;    right:0;">
+				<p style=" ">
+					<h:outputText value="#{screenSaverController.document.headerText}" />
+				</p>
+			</div>	 		
+		</div>
+ 		
+ 		
+ 		
+ 		
+ 		
+	</ui:define>	
+	
+</ui:composition>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+		<h2>#{msgs.voterListApprove} </h2>	<br/>
+			<ui:include src="/view/controller/filter/voterApprove.xhtml"/>
+       <div class="clear"></div>
+		<h:form id="form" prependId="false">
+			<p:dataTable var="entity" value="#{voterListApproveController.model}" paginator="true" rows="10" lazy="true" rowKey="#{entity.id}" rowIndexVar="index" tableStyleClass="display-table"
+	   			id="table" emptyMessage="#{msgs.noRecordsFound}" 
+	   			rowsPerPageTemplate="10,20,30,40,50" paginatorPosition="bottom" pageLinks="10"
+	                   currentPageReportTemplate="Всего : #{voterListApproveController.model.rowCount} из #{voterListApproveController.model.totalCount}  &#160;&#160;| #{msgs.amountPerPage}" 
+	                   paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport} {RowsPerPageDropdown}"
+	                   first="#{voterListApproveController.first}" >
+				<p:ajax event="page" listener="#{voterListApproveController.onPageChange}"/>
+				<p:column headerText="#{msgs.garant}">
+			        <h:outputText value="#{entity.agitator.parent.parent.fio}" />
+			    </p:column>
+				<p:column headerText="#{msgs.curator}">
+			        <h:outputText value="#{entity.agitator.parent.fio}" />
+			    </p:column>  
+			    <p:column headerText="#{msgs.agitator}">
+			        <h:outputText value="#{entity.agitator.fio}" />
+			    </p:column>
+			    <p:column headerText="#{msgs.pin}">
+			        <h:outputText value="#{entity.pin}" />
+			    </p:column>
+			    <p:column headerText="#{msgs.insertedData}" style="background-color:rgb(252, 227, 227);">
+			        <h:outputText value="#{entity.surname}" />
+			        <hr class="hr-in-data-table"/>
+			        <h:outputText value="#{entity.firstname}" />
+			        <hr class="hr-in-data-table"/>
+			        <h:outputText value="#{entity.patronymic}" />
+			        <hr class="hr-in-data-table"/>
+			        <h:outputText value="#{entity.passportNumber}" />
+			    </p:column>
+			    <p:column headerText="#{msgs.dataFromPs}">
+			        <h:outputText value="#{entity.surnameIC}" />
+			        <hr class="hr-in-data-table"/>
+			        <h:outputText value="#{entity.firstnameIC}" />
+			        <hr class="hr-in-data-table"/>
+			        <h:outputText value="#{entity.patronymicIC}" />
+			        <hr class="hr-in-data-table"/>
+			        <h:outputText value="#{entity.passportNumberIC}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.address}" >
+			       	<h:outputText value="#{entity.addressIC}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.contacts}" >
+			        <h:outputText value="#{entity.contacts}" />
+			    </p:column>
+			    			    
+			    <p:column headerText="#{msgs.uik}">
+			        <h:outputText value="#{entity.uik.name}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.tik}">
+			        <h:outputText value="#{entity.uik.tik.name}" />
+			    </p:column>    
+			    
+			    <p:column headerText="#{msgs.operation}" style="width:250px;">
+			        <p:commandButton value="#{msgs.approve}" title="#{msgs.approve}" 
+			        	style="width:100px; background-color:rgb(67, 159, 78);"   
+			        	styleClass="button green"  action="#{voterListApproveController.sendToConfirm(entity)}" ajax="false" />
+			        <p:commandButton value="#{msgs.reject}" title="#{msgs.reject}" 
+			        	style="width:100px;margin-left:20px; background-color:rgb(249, 179, 179);"   
+			        	styleClass="button red"  action="#{voterListApproveController.sendForEdit(entity)}" ajax="false" />
+			    </p:column>			    
+			</p:dataTable>
+		</h:form>
+			
+		
+		<p:blockUI block="form:table" trigger="form:table" >
+			#{msgs.loading}<br />
+		    <p:graphicImage library="img" name="ajaxloadingbar.gif"/>
+		</p:blockUI>	
+
+		<div class="clear"></div>			
+				
+	</ui:define>	
+	
+</ui:composition>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+ 		<h2>#{msgs.addBrokenVoter} </h2> <br/><br/>	        
+		<h:form id="add-card-form" prependId="false">
+			<h:panelGroup id="messages">
+				<p:growl globalOnly="true" />
+			</h:panelGroup>
+		    <h:panelGrid styleClass="form-table" columns="3">
+		    	<h:outputText value="#{msgs.agitator}" styleClass="form-table-label disp-blc"/>
+				<p:autoComplete size="60" id="agitator" dropdown="true" style="width:560px;"
+				    	required="true"
+				    	requiredMessage="#{msgs.thisFieldIsRequired}"
+						var="c"
+						itemValue="#{c}" itemLabel="#{c.fio}" 
+						value="#{voterCreator.bVoter.agitator}" 
+						converter="agitatorConverter"  
+						completeMethod="#{voterCreator.findAgitator}" >
+					<p:column>
+					    <h:outputText value="#{c.pin}" />
+				    </p:column>
+				    <p:column>
+				 	   <h:outputText value="#{c.fio}" />
+				    </p:column>
+				</p:autoComplete>
+				<p:message for="agitator" />
+		    
+		    
+		    	<h:outputText value="#{msgs.pin}" styleClass="form-table-label disp-blc"/>
+				<p:inputText disabled="true" id="pin" value="#{voterCreator.bVoter.pin}" size="14" required="true"  binding="#{voterCreator.pinUi}"
+					requiredMessage="#{msgs.thisFieldIsRequired}" >
+				</p:inputText>
+				<p:message for="pin"/>
+					
+				<h:outputText value="#{msgs.firstname}" styleClass="form-table-label disp-blc"/>
+				<h:inputText  value="#{voterCreator.bVoter.firstname}" id="firstname" required="true"
+					    	requiredMessage="#{msgs.thisFieldIsRequired}" />
+				<p:message for="firstname" />
+				
+				<h:outputText value="#{msgs.surname}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{voterCreator.bVoter.surname}" id="surname" required="true"
+					    	requiredMessage="#{msgs.thisFieldIsRequired}" />
+				<p:message for="surname" />
+				
+				<h:outputText value="#{msgs.patronymic}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{voterCreator.bVoter.patronymic}" id="patronymic" />
+				<p:message for="patronymic" />
+				
+				
+				<h:outputText value="#{msgs.birthdate}" styleClass="form-table-label disp-blc"/>
+				<h:panelGroup>
+					<p:inputMask mask="99/99/9999" id="birthdate" value="#{voterCreator.bVoter.birthdate}" required="true" requiredMessage="#{msgs.thisFieldIsRequired}">
+						<f:convertDateTime pattern="dd/MM/yyyy" />
+					</p:inputMask>
+					<p:watermark  value="DD/MM/YYYY" for="birthdate" />
+				</h:panelGroup>
+				<p:message for="birthdate" />
+				
+				
+				
+				<h:outputText value="#{msgs.passportNumber}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{voterCreator.bVoter.passportNumber}" id="passportNumber"  required="true"
+					    	requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="passportNumber" />
+				
+				
+				
+				<h:outputText value="#{msgs.address}" styleClass="form-table-label disp-blc"/>
+				<h:inputTextarea value="#{voterCreator.bVoter.address}" id="address"  required="true"
+					    	requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="address" />
+				
+				<h:outputText value="#{msgs.contacts}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{voterCreator.bVoter.contacts}" id="contacts"  required="true"
+					    	requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="contacts" />
+						    	
+		    </h:panelGrid>	
+		   
+		    <div class="m-top">
+		    	<h:commandButton value="#{msgs.save}" action="#{voterCreator.doSaveBvoter()}" styleClass="button light-blue" rendered="#{voterCreator.brokenVoter eq 1}"/>
+		    	<h:commandButton value="#{msgs.cancel}" action="#{voterCreator.cancel()}" immediate="true" styleClass="button red m-left"/>
+		    </div>
+		    
+		</h:form>
+			
+		<div class="clear"></div>	
+				
+	</ui:define>	
+</ui:composition>

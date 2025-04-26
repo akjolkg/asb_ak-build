@@ -1,0 +1,764 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="pko" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b97dc229-0610-4c71-9231-63e2302ef3c4">
+	<property name="ireport.zoom" value="1.7715610000000022"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="528"/>
+	<parameter name="payment_id" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[select ccc.title as company,cc.title as construction, p.date_payment, to_char( p.date_payment, 'dd.MM.yyyy') as date_string ,p.check_number_integer as number,
+p.payment_amount as amount,'Предварительный договор купли продажи кв. от '|| to_char( c.date_contract, 'dd.MM.yyyy')||'  объект №'||ap.title as reason, c.fio, amount_as_string(p.payment_amount::numeric,ccc.currency,ccc.sub_currency) as string_amount
+
+
+ from payment p
+inner join client c on c.id=p.client_id
+inner join appartment ap on ap.id=c.appartment_id
+inner join construction cc on cc.id=ap.construction
+inner join company ccc on ccc.id=cc.company_id
+where p.id=$P{payment_id}]]>
+	</queryString>
+	<field name="company" class="java.lang.String"/>
+	<field name="construction" class="java.lang.String"/>
+	<field name="date_payment" class="java.sql.Timestamp"/>
+	<field name="date_string" class="java.lang.String"/>
+	<field name="number" class="java.lang.Integer"/>
+	<field name="amount" class="java.lang.Double"/>
+	<field name="reason" class="java.lang.String"/>
+	<field name="fio" class="java.lang.String"/>
+	<field name="string_amount" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="357" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="578ac8a0-310c-42d9-8f77-3f6cb0b893b8" x="368" y="124" width="13" height="64"/>
+				<textElement rotation="Left">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Линия отреза]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="c57adaa4-cbad-4c40-9ebe-884fd49085a5" x="371" y="1" width="1" height="123"/>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="7432a6fa-7765-4f8c-aff7-f04e9f654f77" x="372" y="199" width="1" height="157"/>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement uuid="475a7575-5520-4b5a-9f1a-15a08c728846" x="288" y="1" width="72" height="12"/>
+				<box leftPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Код"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="3bcb8346-30d5-440f-914a-a2e01c788ec2" x="288" y="13" width="72" height="12"/>
+				<box leftPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<textFieldExpression><![CDATA["0310001"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="8b43eced-06e4-46dc-8ef0-e39fc31e357e" x="288" y="25" width="72" height="12"/>
+				<box leftPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="6b88f79d-2967-4a96-b200-e99f3175ddee" x="42" y="124" width="76" height="21"/>
+				<box leftPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA["код структурного подразделения"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="4066025a-b6d5-4478-bdac-0feec40600ae" x="191" y="13" width="95" height="12"/>
+				<textElement textAlignment="Right">
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<text><![CDATA[Форма по ОКУД]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2e55b213-cd1c-42e6-8ffc-33d032dc089e" x="191" y="25" width="95" height="12"/>
+				<textElement textAlignment="Right">
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+				<text><![CDATA[по ОКПО]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="90afcda4-ab10-4b67-8eeb-498a812bb48f" x="0" y="37" width="203" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="3f34ec8f-8102-4aa1-a19e-5b73d9422ddb" x="0" y="38" width="203" height="7"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="5"/>
+				</textElement>
+				<text><![CDATA[организация]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="70ac4be7-c8c0-45d7-80e7-d32c445fe9bf" x="0" y="59" width="203" height="15"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="5"/>
+				</textElement>
+				<text><![CDATA[структурное подразделение]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="6e7db3a3-3cf2-405b-8a6c-0f29b328be4c" x="0" y="58" width="203" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="dcc91171-3c8e-4f21-86b3-be5f56838684" x="229" y="68" width="70" height="18"/>
+				<box leftPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Номер документа"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="d02abb57-96ca-49e9-8368-cfea384e698d" x="299" y="68" width="61" height="18"/>
+				<box leftPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Дата составления"]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd.MM.yyyy" isBlankWhenNull="true">
+				<reportElement uuid="5702252c-5f8b-48d6-8e85-66dce74cf6fc" x="299" y="86" width="61" height="15"/>
+				<box leftPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{date_payment}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="1705c841-44a3-4b69-acd6-5139d1c39e73" x="229" y="86" width="70" height="15"/>
+				<box leftPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{number}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="33b1f671-13b4-473b-9958-021f47ee05ff" x="0" y="81" width="233" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ПРИХОДНЫЙ КАССОВЫЙ ОРДЕР
+]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="cd06b4ea-fe61-4b4b-b82d-652031a4d16e" x="0" y="106" width="42" height="39"/>
+				<box leftPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Дебет"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="d623dae8-f7b7-47f2-8f85-81c298336dee" x="42" y="106" width="212" height="18"/>
+				<box leftPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Кредит"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="93eae8b6-62f4-4dd5-83db-8419c96729d4" x="118" y="124" width="73" height="21"/>
+				<box leftPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA["корреспондирующий счет,субсчет"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="df5e0eed-2c73-4269-809d-89fa94ea55c4" x="191" y="124" width="63" height="21"/>
+				<box leftPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA["код аналитического учета"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="ccb9d317-b88e-426b-b66a-719a179c3e07" x="254" y="106" width="53" height="39"/>
+				<box leftPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Сумма"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="f06b5034-65ed-46ff-a11b-780fc62367d4" x="307" y="106" width="53" height="39"/>
+				<box leftPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Код целевого назначения"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="a16d5c15-f7fd-4a8b-a5a6-82e4c1f3ca35" x="0" y="145" width="42" height="18"/>
+				<box leftPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="a7fd1e27-7ef3-49c4-a037-fe9e11809df1" x="42" y="145" width="76" height="18"/>
+				<box leftPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="bcf7ba8c-4f33-4185-b568-ca0abd2c9208" x="118" y="145" width="73" height="18"/>
+				<box leftPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="67712e82-97b5-407f-a557-0aee3c7fdefe" x="191" y="145" width="63" height="18"/>
+				<box leftPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="551c5ba1-bafb-4452-acc3-03c8e04707e3" x="254" y="145" width="53" height="18"/>
+				<box leftPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="fbccad10-88ad-403b-bc5e-e07d101ba3db" x="307" y="145" width="53" height="18"/>
+				<box leftPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="7"/>
+				</textElement>
+			</textField>
+			<staticText>
+				<reportElement uuid="5f3bd94c-23d6-4c66-a330-2c83a865bb6b" x="0" y="167" width="68" height="20"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Принято от:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="67bc2bd9-fa1a-45d0-b83d-ccb3ae6bd361" x="383" y="78" width="171" height="28"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true" isItalic="true" isUnderline="false"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<textFieldExpression><![CDATA["                     "+$F{fio}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="79521c51-3472-4180-80df-23060e2538e7" x="0" y="197" width="68" height="20"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Основание:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="145d4423-0a0b-4a29-bd3c-a5c374993ec8" x="68" y="197" width="292" height="30"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true" isItalic="true" isUnderline="false"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{reason}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="580286ea-7553-4a1b-8b3e-5f024d2f63d8" x="0" y="227" width="68" height="20"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Сумма:]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="54489c34-ca56-40a5-bfc5-9777e002b30a" x="68" y="227" width="292" height="30"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true" isItalic="true" isUnderline="false"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{string_amount}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="fe03adc1-0713-460f-9958-018076cc4b02" x="68" y="275" width="292" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="16755d53-5af7-40c4-8d47-05ded7457c9f" x="0" y="275" width="68" height="18"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Приложение:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ef0b77c7-cb76-416a-a354-665e33dd1d87" x="0" y="257" width="68" height="18"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[В том числе:]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="13a51f0b-93dc-462b-92f5-79525b35f5e7" x="68" y="292" width="292" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="c1381af4-60a8-463c-957f-ecbd41d7c0d6" x="0" y="307" width="360" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="4d6843ae-c7c9-4a1b-960d-1212ce201c4a" x="0" y="311" width="94" height="12"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Главный бухгалтер]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="b15e46e8-2401-4491-a40d-4b990441b5fc" x="94" y="322" width="77" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="0e736586-8db0-49a8-9451-75d4a88bcaf3" x="181" y="322" width="179" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="c522400d-cd7f-4c47-b5fe-fc89559d2c7f" x="94" y="324" width="77" height="10"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="5"/>
+				</textElement>
+				<text><![CDATA[подпись]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6041483c-2dc4-42b2-8594-5c612f34f9de" x="181" y="324" width="179" height="10"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="5"/>
+				</textElement>
+				<text><![CDATA[расшифровка подписи]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="0b901876-981e-49a2-9d7e-1223c5f6a9c0" x="0" y="334" width="94" height="12"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Получил кассир]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="5b6acdba-54ab-4e1a-912a-5edaca2f9f4f" x="94" y="346" width="77" height="10"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="5"/>
+				</textElement>
+				<text><![CDATA[подпись]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="85a3887d-d99c-4b72-91bf-d5a561696d53" x="181" y="345" width="179" height="10"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="5"/>
+				</textElement>
+				<text><![CDATA[расшифровка подписи]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="751a2115-cbed-4a8c-9a0b-6b95d6ade3be" x="94" y="345" width="77" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement uuid="1ead2c34-d29c-4c98-8677-f19444f36e4e" x="181" y="344" width="179" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="8a110765-b2ce-411c-a348-2baa6b81dd99" x="288" y="37" width="72" height="16"/>
+				<box leftPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.75"/>
+					<leftPen lineWidth="0.75"/>
+					<bottomPen lineWidth="0.75"/>
+					<rightPen lineWidth="0.75"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans"/>
+				</textElement>
+			</textField>
+			<line>
+				<reportElement uuid="3072df2c-2987-4cf2-8ae1-e1cdadb18c49" x="383" y="25" width="172" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="0a0bb5e0-73b0-4491-b100-ee7fdff8c201" x="383" y="25" width="172" height="7"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="5"/>
+				</textElement>
+				<text><![CDATA[организация]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="17ec6705-0a1c-4440-97b8-da2b8ce0b456" x="383" y="32" width="172" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[КВИТАНЦИЯ]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="85a3ea07-5469-488c-a85e-bc5e0500727b" x="383" y="52" width="172" height="20"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["            к приходному кассовому ордеру № " +  $F{number} + " от " +$F{date_string} +"   г."]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="b6b75546-c990-4667-bb6d-f608bc3c715e" x="383" y="78" width="55" height="14"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Принято от:
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d8b4feb5-4146-48a0-8556-dc9e1e9f5be7" x="383" y="227" width="55" height="18"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[В том числе:]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="20a4ef8d-29c9-4b3b-bc66-daab67381fe9" x="438" y="245" width="117" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="c1023016-2c00-4a98-9f40-b11f02c799b5" x="383" y="252" width="69" height="18"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[ М.П.(штампа)]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="d38966a3-c2c0-479e-b0b9-638d4574d35d" x="452" y="250" width="103" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{date_string}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="64872289-578f-4811-b425-4299301cf3a9" x="383" y="273" width="84" height="12"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Главный бухгалтер]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="09a1dcf8-91e8-4cec-8e96-28f3d5765a0a" x="467" y="284" width="88" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="e22f006f-c9dc-444b-9a5e-13b25174bb8b" x="467" y="285" width="88" height="10"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="5"/>
+				</textElement>
+				<text><![CDATA[подпись]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="075f97c7-e973-42bd-88cb-c4316f27ac39" x="383" y="304" width="172" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="209c8572-8c08-410d-8694-47dc64583be3" x="383" y="304" width="172" height="10"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="5"/>
+				</textElement>
+				<text><![CDATA[расшифровка подписи]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="238b2a11-72bd-47b2-8781-f76209f8c2fa" x="383" y="316" width="84" height="12"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Получил кассир]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="9bc3c7d4-9bce-482b-bac3-19e15cf4a065" x="467" y="328" width="87" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="923121bc-d74a-48c7-b9ef-9032a5e59669" x="467" y="328" width="88" height="10"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="5"/>
+				</textElement>
+				<text><![CDATA[подпись]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="6df43abb-ee71-42e7-a544-8c1e4b3e1314" x="383" y="344" width="172" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement uuid="7c0cfde0-76b3-44ae-903c-eff2fd4e0424" x="383" y="345" width="172" height="10"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="5"/>
+				</textElement>
+				<text><![CDATA[расшифровка подписи]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="7c671d34-2dbd-4325-b34f-17d898f51a60" x="0" y="-2" width="203" height="37"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="DejaVu Sans" size="8" isBold="true" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{company}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="985e2679-c5e1-4591-aab2-0027ef230336" x="383" y="-4" width="172" height="25"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="DejaVu Sans" size="8" isBold="true" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{company}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="4c80c049-c78a-4107-9f93-1e93d83e2902" x="383" y="107" width="171" height="53"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true" isItalic="true" isUnderline="false"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<textFieldExpression><![CDATA["                  "+$F{reason}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="b4b7ab11-5b80-4116-b4ed-c377ef3568ea" x="68" y="167" width="292" height="30"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true" isItalic="true" isUnderline="false"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="2df5d031-9b17-4631-ab4f-9a439711c1f4" x="383" y="179" width="171" height="50"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8" isBold="true" isItalic="true" isUnderline="false"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<textFieldExpression><![CDATA["            "+$F{string_amount}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="f6d715d7-b5a0-49f4-bed8-f93de25a8c8d" x="383" y="107" width="55" height="20"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Основание:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="0d89408f-8d59-44a2-8399-b83ea5b5afb8" x="383" y="179" width="55" height="20"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Сумма:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="195d4e7c-34e5-4543-a128-c31fea255cc3" x="383" y="163" width="55" height="20"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="8"/>
+				</textElement>
+				<text><![CDATA[Сумма:]]></text>
+			</staticText>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="5332d32d-ee82-40f3-a91d-53582b073fe3" x="438" y="164" width="116" height="18"/>
+				<box leftPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Top">
+					<font fontName="DejaVu Sans" size="8" isBold="true" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="0b11ca4e-9216-4e0a-89fa-07c93f810ada" x="0" y="41" width="203" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font fontName="DejaVu Sans" size="8" isBold="true" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{construction}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

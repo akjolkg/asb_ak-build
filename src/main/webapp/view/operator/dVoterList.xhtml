@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+		<h2>#{msgs.dublicateVoterList} </h2><br/>
+			<ui:include src="/view/operator/filter/dVoter.xhtml"/>
+       <div class="clear"></div>
+		<h:form id="form">
+			<p:dataTable var="entity" value="#{dublicateVoterListController.model}" paginator="true" rows="10" lazy="true" rowKey="#{entity.id}" rowIndexVar="index" tableStyleClass="display-table"
+	   			id="table" selectionMode="single" emptyMessage="#{msgs.noRecordsFound}" 
+	   			rowsPerPageTemplate="10,20,30,40,50" paginatorPosition="bottom" pageLinks="10"
+	                   currentPageReportTemplate="Всего : #{dublicateVoterListController.model.rowCount} из #{dublicateVoterListController.model.totalCount}  &#160;&#160;| #{msgs.amountPerPage}"
+	                   paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport} {RowsPerPageDropdown}"
+	                   selection="#{dublicateVoterListController.dublicateVoter}"
+	                   first="#{dublicateVoterListController.first}" >
+				<p:ajax event="page" listener="#{dublicateVoterListController.onPageChange}"/>  
+			    <p:column headerText="#{msgs.operator}">
+			        <h:outputText value="#{entity.user.fio}" />
+			    </p:column>
+			    <p:column headerText="#{msgs.newAgitator}" style="background-color:rgb(252, 227, 227);">
+			        <h:outputText value="#{entity.agitator.fio}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.currentAgitator}" >
+			        <h:outputText value="#{entity.voter.agitator.fio}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.pin}" style="background-color:rgb(252, 227, 227);">
+			        <h:outputText value="#{entity.voter.pin}" />
+			    </p:column>
+			    <p:column headerText="#{msgs.surname}">
+			        <h:outputText value="#{entity.voter.surname}" />
+			    </p:column>
+				<p:column headerText="#{msgs.firstname}">
+			        <h:outputText value="#{entity.voter.firstname}" />
+			    </p:column>
+			    <p:column headerText="#{msgs.patronymic}">
+			        <h:outputText value="#{entity.voter.patronymic}" />
+			    </p:column>
+			    <p:column headerText="#{msgs.birthdate}"> 
+			        <h:outputText value="#{entity.voter.birthdate}">
+			        	<f:convertDateTime type="date" dateStyle="medium" />
+			        </h:outputText>
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.contacts}" style="background-color:rgb(252, 227, 227);">
+			        <h:outputText value="#{entity.voter.contacts}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.address}" style="background-color:rgb(252, 227, 227);">
+			       	<h:outputText value="#{entity.voter.address}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.passportNumber}" style="background-color:rgb(252, 227, 227);">
+			       	<h:outputText value="#{entity.voter.passportNumber}" />
+			    </p:column>
+			    
+			     <p:column headerText="#{msgs.uik}">
+			        <h:outputText value="#{entity.voter.uik.name}" />
+			    </p:column>
+			    
+			     <p:column headerText="#{msgs.tik}">
+			        <h:outputText value="#{entity.voter.uik.tik.name}" />
+			    </p:column>
+			    <p:column headerText="#{msgs.status}">
+			        <h:graphicImage id="notFilled" library="images" name="error.png" height="20"
+						width="20" rendered="#{entity.voter.status eq 'REJECTED'}" />
+					<p:tooltip for="notFilled" value="#{enums[entity.voter.status]}" />
+					<h:graphicImage id="filled" library="images" name="valid.png" height="20"
+						width="20" rendered="#{entity.voter.status eq 'APPROVED'}" />
+					<p:tooltip for="filled" value="#{enums[entity.voter.status]}" />
+			    </p:column>
+			</p:dataTable>
+		</h:form>
+		<p:blockUI block="form:table" trigger="form:table" >
+			#{msgs.loading}<br />
+		    <p:graphicImage library="img" name="ajaxloadingbar.gif"/>
+		</p:blockUI>	
+
+		<div class="clear"></div>			
+				
+	</ui:define>	
+	
+</ui:composition>

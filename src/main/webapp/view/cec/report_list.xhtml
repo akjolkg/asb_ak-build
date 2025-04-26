@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+		<h2>#{msgs.reports} </h2> <br/><br/>	    
+		<h:form id="form" prependId="false" styleClass="tik-form">
+			<p:messages/>
+			<p:panelGrid style="width:100%" styleClass="form-table tik-table" rendered="#{uikController.superAdmin==true}">
+				<h:panelGroup styleClass="f-right">
+					<h:outputText value="Автовыбор УИК" />
+					<p:autoComplete id="event" value="#{reportController.uikAuto}" completeMethod="#{reportController.completeUik}"
+						var="uikAuto" itemLabel="#{uikAuto.name}" itemValue="#{uikAuto}" converter="uikConverter"
+					>
+			            <p:ajax event="itemSelect" listener="#{reportController.onUikSelect}" update="form" />
+			        </p:autoComplete>				
+				</h:panelGroup>
+			</p:panelGrid>				
+			<p:panelGrid style="width:100%" styleClass="form-table tik-table">
+				<p:row>
+					<p:column style="width: 220px;" rendered="#{uikController.superAdmin==true}">
+						<h:outputLabel value="#{msgs.region}" styleClass="form-table-label disp-blc"/>
+						<p:selectOneMenu id="region" value="#{reportController.region}">
+				            <f:selectItem noSelectionOption="true" itemLabel="#{msgs.allRegions}"/>
+		                    <f:selectItems value="#{reportController.regionList}" var="region" />
+		                    <f:ajax render="tikId uik @this" execute="@this" listener="#{reportController.onRegionSelect}"/>
+				        </p:selectOneMenu>
+					</p:column>
+					<p:column style="width: 460px;" rendered="#{uikController.superAdmin==true}">
+						<h:outputLabel value="#{msgs.tik}" styleClass="form-table-label disp-blc"/>
+						 <p:selectOneMenu  id="tikId" value="#{reportController.tik}" converter="tikConverter" styleClass="w-1-1-i">
+				            <f:selectItem noSelectionOption="true" itemLabel="#{msgs.allTiks}"/>
+		                    <f:selectItems value="#{reportController.tikList}" var="tikMen" itemValue="#{tikMen}" itemLabel="#{tikMen.name}" />
+		                    <f:ajax render="uik @this" execute="@this" listener="#{reportController.onTikSelect}"/>                        
+				        </p:selectOneMenu>
+					</p:column>
+					<p:column>
+						<h:outputLabel value="#{msgs.uik}" styleClass="form-table-label disp-blc"/>
+						<p:selectOneMenu id="uik" value="#{reportController.uik}" converter="cachedConverter" styleClass="w-1-1-i">
+				            <f:selectItem noSelectionOption="true" itemLabel="#{msgs.allUiks}"/>
+		                        <f:selectItems value="#{reportController.uikList}" var="uik" itemLabel="#{uik.name}" itemValue="#{uik}"/>
+		                        <f:ajax render="@this" execute="@this"/>
+				        </p:selectOneMenu>
+					</p:column>					
+				</p:row>
+				<p:row>
+					<p:column>
+						<h:panelGroup styleClass="f-left m-right form-table-odd-col">
+					    	<h:outputText value="#{msgs.from}" styleClass="form-table-label disp-blc"/>			    	
+					    	<p:calendar value="#{reportController.dateFrom}" locale="ru" styleClass="datepicker"/>
+					    </h:panelGroup>
+					</p:column>
+					<p:column>
+						<h:panelGroup styleClass="f-left m-right form-table-odd-col">
+					    	<h:outputText value="#{msgs.to}" styleClass="form-table-label disp-blc"/>			    	
+					    	<p:calendar value="#{reportController.dateTo}" locale="ru" styleClass="datepicker"/>
+					    </h:panelGroup>
+					</p:column>
+					
+				
+				
+				</p:row>
+				
+			</p:panelGrid>	
+			<p:dialog modal="true" widgetVar="statusDialog" header="#{msgs.loading}" draggable="false" closable="false" resizable="false">
+			     <p:graphicImage library="img" name="ajaxloadingbar.gif"/>
+			</p:dialog>
+			
+			<br/>
+			<br/>
+			
+			
+			
+			
+			<p:commandButton id="reportButton0" value="#{msgs.hangingListReport}" onclick="PrimeFaces.monitorDownload(start, stop);" ajax="false"  icon="ui-icon-arrowthick-1-s">
+			    <p:fileDownload value="#{reportController.reportHangingList()}" />			    
+		    </p:commandButton>
+		    <br/>
+			<br/>
+		    
+		    <p:commandButton id="reportButton1" value="#{msgs.voterListReport}" onclick="PrimeFaces.monitorDownload(start, stop);" ajax="false"  icon="ui-icon-arrowthick-1-s">
+			    <p:fileDownload value="#{reportController.report()}" />			    
+		    </p:commandButton>
+		    <br/>
+			<br/>
+			
+		     
+		    <p:commandButton id="reportButton2" value="#{msgs.transactionDynamic}" onclick="PrimeFaces.monitorDownload(start, stop);" ajax="false"  icon="ui-icon-arrowthick-1-s">
+			    <p:fileDownload value="#{reportController.report2()}" />			    
+		    </p:commandButton>
+		    
+		    <br/>
+			<br/>			
+		     
+		    <p:commandButton rendered="#{uikController.superAdmin==true}" id="reportButton3" value="#{msgs.reportCountByRegion}" onclick="PrimeFaces.monitorDownload(start, stop);" ajax="false"  icon="ui-icon-arrowthick-1-s">
+			    <p:fileDownload value="#{reportController.reportCountByRegion()}" />			    
+		    </p:commandButton>
+		    <br/>
+			
+			
+		     
+		    <p:commandButton rendered="#{uikController.superAdmin==true}" id="reportButton4" value="#{msgs.reportCountByTik}" onclick="PrimeFaces.monitorDownload(start, stop);" ajax="false"  icon="ui-icon-arrowthick-1-s">
+			    <p:fileDownload value="#{reportController.reportCountByTik()}" />			    
+		    </p:commandButton>
+		    
+		    <br/>
+		    <p:commandButton id="reportButton5" value="#{msgs.reportCountByUik}" onclick="PrimeFaces.monitorDownload(start, stop);" ajax="false"  icon="ui-icon-arrowthick-1-s">
+			    <p:fileDownload value="#{reportController.reportCountByUik()}" />			    
+		    </p:commandButton>
+		    
+		    <br/>
+		    <br/>
+		     <p:commandButton rendered="#{uikController.superAdmin==true}" id="reportButtonForm2" value="Отчёт список избирателей по заявлению форма 2" onclick="PrimeFaces.monitorDownload(start, stop);" ajax="false"  icon="ui-icon-arrowthick-1-s">
+			    <p:fileDownload value="#{reportController.reportTemporalCard()}" />			    
+		    </p:commandButton>
+					
+		    
+		    <br/>
+			<br/>	
+			
+			<p:commandButton rendered="#{uikController.superAdmin==true}" id="reportButtonk" value="Statistic of Voters.xls" onclick="PrimeFaces.monitorDownload(start, stop);" ajax="false"  icon="ui-icon-arrowthick-1-s">
+			    <p:fileDownload value="#{reportController.reportCountByUikKorean()}" />			    
+		    </p:commandButton>
+		    <br/>					
+		     
+		    <p:commandButton rendered="#{uikController.superAdmin==true}" id="reportButton6" value="Отчёт количества избирателей по ТИКу" onclick="PrimeFaces.monitorDownload(start, stop);" ajax="false"  icon="ui-icon-arrowthick-1-s">
+			    <p:fileDownload value="#{reportController.reportCountByTikAmount()}" />			    
+		    </p:commandButton>
+		    <br/>			
+		     
+		    <p:commandButton id="reportButton7" value="Отчёт количества избирателей по УИКу" onclick="PrimeFaces.monitorDownload(start, stop);" ajax="false"  icon="ui-icon-arrowthick-1-s">
+			    <p:fileDownload value="#{reportController.reportCountByUikAmount()}" />			    
+		    </p:commandButton>
+		    <br/>
+			
+			
+			
+			
+		    
+		    <script type="text/javascript">
+				function start() {
+				    PF('statusDialog').show();
+				}
+				 
+				function stop() {
+				    PF('statusDialog').hide();
+				}
+			</script>    
+		  
+			
+		</h:form>
+		<div class="clear"></div>			
+				
+	</ui:define>	
+	<ui:define name="add-js">
+        <h:outputScript library="js" name="calendar.js"/>
+    </ui:define>
+	
+</ui:composition>

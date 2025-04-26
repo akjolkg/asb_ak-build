@@ -1,0 +1,541 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="contract_template" pageWidth="612" pageHeight="1200" whenNoDataType="AllSectionsNoDetail" columnWidth="592" leftMargin="0" rightMargin="20" topMargin="0" bottomMargin="20" isIgnorePagination="true" uuid="53900af5-bd24-4eb4-b561-f8a8187c0831">
+	<property name="ireport.zoom" value="1.4641000000000015"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<parameter name="construction_ids" class="java.lang.String"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/opt/jasper/asb/"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select * from(select cc.id,cc.title,ap.room_quantity,count(ap.id)::numeric(18,2) as total,
+	sum(ap.total_area)  as area,
+	sum(case when c.id is null then 0
+		 when c.type in (0,3,4) then 0
+		 when c.status<>3 then 0
+		 else 1
+	    end)::numeric(18,2)  as sold
+from appartment ap
+inner join construction cc on cc.id=ap.construction
+left join client c on c.appartment_id=ap.id
+where ap.type=0 and ap.construction in ($P!{construction_ids})
+group by cc.id,cc.title,ap.room_quantity
+order by cc.title,ap.room_quantity)a
+left join (select cc.id,count(ap.id)::numeric(18,2) as total_all
+	from appartment ap
+inner join construction cc on cc.id=ap.construction
+where ap.type=0 and ap.construction in ($P!{construction_ids})
+group by cc.id)b on a.id=b.id]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer"/>
+	<field name="title" class="java.lang.String"/>
+	<field name="room_quantity" class="java.lang.Integer"/>
+	<field name="total" class="java.math.BigDecimal"/>
+	<field name="area" class="java.math.BigDecimal"/>
+	<field name="sold" class="java.math.BigDecimal"/>
+	<field name="total_all" class="java.math.BigDecimal"/>
+	<variable name="count" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<variable name="total" class="java.math.BigDecimal" resetType="Group" resetGroup="total_group" calculation="Sum">
+		<variableExpression><![CDATA[$F{total}]]></variableExpression>
+	</variable>
+	<variable name="sold" class="java.math.BigDecimal" resetType="Group" resetGroup="total_group" calculation="Sum">
+		<variableExpression><![CDATA[$F{sold}]]></variableExpression>
+	</variable>
+	<variable name="area" class="java.math.BigDecimal" resetType="Group" resetGroup="total_group" calculation="Sum">
+		<variableExpression><![CDATA[$F{area}]]></variableExpression>
+	</variable>
+	<group name="total_group">
+		<groupExpression><![CDATA[$F{title}]]></groupExpression>
+		<groupHeader>
+			<band/>
+		</groupHeader>
+		<groupFooter>
+			<band height="15">
+				<textField isStretchWithOverflow="true">
+					<reportElement uuid="93b6d28c-557d-4af0-a537-143fada37faf" stretchType="RelativeToTallestObject" mode="Opaque" x="11" y="0" width="168" height="14" backcolor="#97D7EB">
+						<property name="net.sf.jasperreports.export.xls.freeze.column.edge" value="Right"/>
+					</reportElement>
+					<box leftPadding="5">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="9" isBold="true" isItalic="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{title}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0" isBlankWhenNull="true">
+					<reportElement uuid="07b99219-7925-4d64-9f55-9a62b8d7ab11" stretchType="RelativeToBandHeight" mode="Opaque" x="179" y="0" width="60" height="14" backcolor="#97D7EB"/>
+					<box>
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="9" isBold="true" isItalic="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Всего :"]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0.00 %" isBlankWhenNull="true">
+					<reportElement uuid="b8a2b5bc-b85f-451d-9c63-87d6f1d92f55" stretchType="RelativeToBandHeight" mode="Opaque" x="433" y="0" width="53" height="14" backcolor="#97D7EB"/>
+					<box>
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="9" isBold="true" isItalic="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{sold}.divide($V{total}, new MathContext(100))]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0" isBlankWhenNull="true">
+					<reportElement uuid="68ddc367-712e-4552-a2b0-fdf8bcfbb0b5" stretchType="RelativeToBandHeight" mode="Opaque" x="239" y="0" width="40" height="14" backcolor="#97D7EB"/>
+					<box>
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="9" isBold="true" isItalic="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{total}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0" isBlankWhenNull="true">
+					<reportElement uuid="83f68913-eb1c-45c6-aeb2-e797dac576e1" stretchType="RelativeToBandHeight" mode="Opaque" x="383" y="0" width="50" height="14" backcolor="#97D7EB"/>
+					<box>
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="9" isBold="true" isItalic="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{sold}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0.00 %" isBlankWhenNull="true">
+					<reportElement uuid="6e2e6519-86d8-45d3-829e-0cf8f878d96c" stretchType="RelativeToBandHeight" mode="Opaque" x="536" y="0" width="56" height="14" backcolor="#97D7EB"/>
+					<box>
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="9" isBold="true" isItalic="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{total}.subtract($V{sold}).divide($V{total}, new MathContext(100))]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0" isBlankWhenNull="true">
+					<reportElement uuid="5f1b0f10-7837-47c1-be01-52ab044c05fe" stretchType="RelativeToBandHeight" mode="Opaque" x="486" y="0" width="50" height="14" backcolor="#97D7EB"/>
+					<box>
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="9" isBold="true" isItalic="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{total}.subtract($V{sold})]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0.00 %" isBlankWhenNull="true">
+					<reportElement uuid="3d95066b-63aa-447e-92da-be8506b519eb" stretchType="RelativeToBandHeight" mode="Opaque" x="279" y="0" width="54" height="14" backcolor="#97D7EB"/>
+					<box>
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="9" isBold="true" isItalic="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{total}.divide($V{total}, new MathContext(100))]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement uuid="50776f8c-a5d2-4a6d-b802-54e3769b0137" stretchType="RelativeToBandHeight" mode="Opaque" x="333" y="0" width="50" height="14" backcolor="#97D7EB"/>
+					<box>
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="9" isBold="true" isItalic="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{area}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="50" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="b37cde5f-ee80-4bf7-a4c3-d1bad5759230" stretchType="RelativeToTallestObject" x="11" y="0" width="581" height="30"/>
+				<box leftPadding="5"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Анализ продаж по количествам квартир"]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd.MM.yyyy HH:mm">
+				<reportElement uuid="7aa7c501-ae57-4d7d-89ae-04d1b03490e7" x="11" y="30" width="226" height="20"/>
+				<box leftPadding="5"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="32" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="61e82365-09e2-4b6e-bf6f-4bdb0347fd7d" stretchType="RelativeToTallestObject" mode="Opaque" x="11" y="0" width="168" height="32" backcolor="#D5D5D5">
+					<property name="net.sf.jasperreports.export.xls.freeze.column.edge" value="Right"/>
+				</reportElement>
+				<box leftPadding="5">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Объект]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="32779dcc-2b27-40a0-8b80-081bfa834093" stretchType="RelativeToTallestObject" mode="Opaque" x="179" y="0" width="60" height="32" backcolor="#D5D5D5">
+					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Количество комнат]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="4ef947b6-c30e-454d-9d56-f2ac399cc53e" stretchType="RelativeToTallestObject" mode="Opaque" x="433" y="0" width="53" height="32" backcolor="#D5D5D5">
+					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[%Продано]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="3284157e-e381-4dd4-98b9-87ff82c23763" stretchType="RelativeToTallestObject" mode="Opaque" x="239" y="0" width="40" height="32" backcolor="#D5D5D5">
+					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Всего]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="8924743e-d1c0-40c4-9e91-80a779b2b21a" stretchType="RelativeToTallestObject" mode="Opaque" x="383" y="0" width="50" height="32" backcolor="#D5D5D5">
+					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Продано]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f2bd7d51-8f22-44fc-b6d0-2cca91ede3dd" stretchType="RelativeToTallestObject" mode="Opaque" x="536" y="0" width="56" height="32" backcolor="#D5D5D5">
+					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[%Осталось]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="7fc0a558-9006-419a-a041-ec3d0f03d3d1" stretchType="RelativeToTallestObject" mode="Opaque" x="486" y="0" width="50" height="32" backcolor="#D5D5D5">
+					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Осталось]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="e8ed8db9-0a28-4fe8-8c6a-3cc6d1dd9f52" stretchType="RelativeToTallestObject" mode="Opaque" x="279" y="0" width="54" height="32" backcolor="#D5D5D5">
+					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[%Всего]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="80de7d7e-d6e5-43ea-aa78-29de38584e71" stretchType="RelativeToTallestObject" mode="Opaque" x="333" y="0" width="50" height="32" backcolor="#D5D5D5">
+					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Площадь]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="14" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="b0657288-b099-4c7b-a442-997b9e3b097f" stretchType="RelativeToTallestObject" x="11" y="0" width="168" height="14">
+					<property name="net.sf.jasperreports.export.xls.freeze.column.edge" value="Right"/>
+				</reportElement>
+				<box leftPadding="5">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{title}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+				<reportElement uuid="0854eed2-be94-4faa-a3f2-3f5351b75e77" stretchType="RelativeToBandHeight" x="179" y="0" width="60" height="14"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9" isBold="false" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{room_quantity}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Auto" pattern="#,##0.00 %" isBlankWhenNull="true">
+				<reportElement uuid="6002cb81-72c8-4664-ab33-62bc90ed20de" stretchType="RelativeToBandHeight" x="433" y="0" width="53" height="14"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9" isBold="false" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sold}.divide($F{total}, new MathContext(100))]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+				<reportElement uuid="66a41781-b64a-46a3-8264-c215194ccf98" stretchType="RelativeToBandHeight" x="239" y="0" width="40" height="14"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9" isBold="false" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+				<reportElement uuid="66603893-f673-4fd3-939d-958b1c9fb33b" stretchType="RelativeToBandHeight" x="383" y="0" width="50" height="14"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9" isBold="false" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sold}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Auto" pattern="#,##0.00 %" isBlankWhenNull="true">
+				<reportElement uuid="2fa3b7f0-5f4b-463e-bdf4-45e60bec012f" stretchType="RelativeToBandHeight" x="536" y="0" width="56" height="14"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9" isBold="false" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total}.subtract($F{sold}).divide($F{total}, new MathContext(100))]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0" isBlankWhenNull="true">
+				<reportElement uuid="515416d7-bfab-4699-8d14-c55cd03674ee" stretchType="RelativeToBandHeight" x="486" y="0" width="50" height="14"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9" isBold="false" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total}.subtract($F{sold})]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" evaluationTime="Auto" pattern="#,##0.00 %" isBlankWhenNull="true">
+				<reportElement uuid="8e293b80-ac74-43b0-94c8-70764ce2b2aa" stretchType="RelativeToBandHeight" x="279" y="0" width="54" height="14"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9" isBold="false" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total}.divide($F{total_all}, new MathContext(100))]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="fb0e0d90-cd9f-404f-afaf-897b6aaaa0b5" stretchType="RelativeToBandHeight" x="333" y="0" width="50" height="14"/>
+				<box>
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9" isBold="false" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{area}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

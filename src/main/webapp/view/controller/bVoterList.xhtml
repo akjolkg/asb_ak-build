@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+		<h2>#{msgs.brokenVoterList} </h2><br/>
+			<ui:include src="/view/controller/filter/bVoter.xhtml"/> 
+       <div class="clear"></div>
+	   <h:form id="form">
+			<p:dataTable var="entity" value="#{brokenVoterListController.model}" paginator="true" rows="10" lazy="true" rowKey="#{entity.id}" rowIndexVar="index" tableStyleClass="display-table"
+	   			id="table" selectionMode="single" emptyMessage="#{msgs.noRecordsFound}" 
+	   			rowsPerPageTemplate="10,20,30,40,50" paginatorPosition="bottom" pageLinks="10"
+	                   currentPageReportTemplate="Всего : #{brokenVoterListController.model.rowCount} из #{brokenVoterListController.model.totalCount}  &#160;&#160;| #{msgs.amountPerPage}"
+	                   paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport} {RowsPerPageDropdown}"
+	                   selection="#{brokenVoterListController.brokenVoter}"
+	                   first="#{brokenVoterListController.first}" >
+				<p:ajax event="page" listener="#{brokenVoterListController.onPageChange}"/>  
+			    <p:column headerText="#{msgs.operator}">
+			        <h:outputText value="#{entity.user.fio}" />
+			    </p:column>
+			    <p:column headerText="#{msgs.agitator}">
+			        <h:outputText value="#{entity.agitator.fio}" />
+			    </p:column>
+			    <p:column headerText="#{msgs.pin}" style="background-color:rgb(252, 227, 227);">
+			        <h:outputText value="#{entity.pin}" />
+			    </p:column>
+			    <p:column headerText="#{msgs.surname}">
+			        <h:outputText value="#{entity.surname}" />
+			    </p:column>
+				<p:column headerText="#{msgs.firstname}">
+			        <h:outputText value="#{entity.firstname}" />
+			    </p:column>
+			    <p:column headerText="#{msgs.patronymic}">
+			        <h:outputText value="#{entity.patronymic}" />
+			    </p:column>
+			    <p:column headerText="#{msgs.birthdate}"> 
+			        <h:outputText value="#{entity.birthdate}">
+			        	<f:convertDateTime type="date" dateStyle="medium" />
+			        </h:outputText>
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.contacts}" style="background-color:rgb(252, 227, 227);">
+			        <h:outputText value="#{entity.contacts}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.address}" style="background-color:rgb(252, 227, 227);">
+			       	<h:outputText value="#{entity.address}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.passportNumber}" style="background-color:rgb(252, 227, 227);">
+			       	<h:outputText value="#{entity.passportNumber}" />
+			    </p:column>
+			     <p:column headerText="#{msgs.type}" >
+			       	<h:outputText value="#{enums[entity.type]}" />
+			    </p:column>
+			    
+			    
+			   
+			</p:dataTable>
+		</h:form>
+		<p:blockUI block="form:table" trigger="form:table" >
+			#{msgs.loading}<br />
+		    <p:graphicImage library="img" name="ajaxloadingbar.gif"/>
+		</p:blockUI>	
+
+		<div class="clear"></div>			
+				
+	</ui:define>	
+	
+</ui:composition>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+ 		
+		<h2>#{msgs.addResponsiblePerson} </h2> <br/><br/>	        
+		<h:form id="add-card-form" prependId="false">
+			<h:panelGroup id="messages">
+				<p:growl globalOnly="true" />
+			</h:panelGroup>
+		    <h:panelGrid styleClass="form-table" columns="3">
+		    	
+				<h:outputText value="#{msgs.fio}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{responsiblePersonCreator.responsiblePerson.fio}" id="fio"  style="width:300px;"  required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="fio" />
+				
+				<h:outputText value="#{msgs.contacts}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{responsiblePersonCreator.responsiblePerson.contacts}" id="contacts"  style="width:300px;"  required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="contacts" />
+				
+		    	<h:outputText value="#{msgs.firma}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{responsiblePersonCreator.responsiblePerson.firma}" id="firma"  style="width:300px;"  required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="firma" />
+		    	
+		    </h:panelGrid>	
+		   
+		    <div class="m-top">
+		    	<h:commandButton value="#{msgs.save}" action="#{responsiblePersonCreator.doSave()}" styleClass="button light-blue"/>
+		    	<h:commandButton value="#{msgs.cancel}" action="#{responsiblePersonCreator.cancel()}" immediate="true" styleClass="button red m-left"/>
+		   	</div>
+		    
+		</h:form>
+			
+		<div class="clear"></div>	
+				
+	</ui:define>	
+</ui:composition>

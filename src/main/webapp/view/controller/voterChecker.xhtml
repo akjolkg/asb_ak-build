@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+ 		<h2>#{msgs.checkVoter} </h2> <br/><br/>	        
+		<h:form id="add-card-form" prependId="false">
+			<h:panelGroup id="messages">
+				<p:growl globalOnly="true" />
+			</h:panelGroup>
+		    <h:panelGrid styleClass="form-table" columns="3">
+		    	<h:outputText value="#{msgs.pin}" styleClass="form-table-label disp-blc"/>
+				<p:inputText id="pin" value="#{voterChecker.voter.pin}" size="14" required="true"  binding="#{voterChecker.pinUi}"
+					requiredMessage="#{msgs.thisFieldIsRequired}" >
+					<p:ajax event="blur" process="@this" update="@form" listener="#{voterChecker.onPinComplete()}" />
+				</p:inputText>
+				<p:message for="pin"/>
+					
+				<h:outputText value="#{msgs.firstname}" styleClass="form-table-label disp-blc"/>
+				<h:inputText  disabled="true" value="#{voterChecker.voter.firstname}" id="firstname" required="true"
+					    	requiredMessage="#{msgs.thisFieldIsRequired}" />
+				<p:message for="firstname" />
+				
+				<h:outputText value="#{msgs.surname}" styleClass="form-table-label disp-blc"/>
+				<h:inputText disabled="true" value="#{voterChecker.voter.surname}" id="surname" required="true"
+					    	requiredMessage="#{msgs.thisFieldIsRequired}" />
+				<p:message for="surname" />
+				
+				<h:outputText value="#{msgs.patronymic}" styleClass="form-table-label disp-blc"/>
+				<h:inputText disabled="true" value="#{voterChecker.voter.patronymic}" id="patronymic" />
+				<p:message for="patronymic" />
+				
+				
+				<h:outputText value="#{msgs.birthdate}" styleClass="form-table-label disp-blc"/>
+				<h:inputText disabled="true" value="#{voterChecker.voter.birthdate}" id="birthdate">
+					<f:convertDateTime pattern="dd.MM.yyyy" />
+				</h:inputText>
+				<p:message for="patronymic" />
+				
+				<h:outputText value="#{msgs.uik}" styleClass="form-table-label disp-blc"/>
+				<h:inputText disabled="true" value="#{voterChecker.voter.uik.name}" id="uik" />
+				<p:message for="uik" />
+				
+				<h:outputText value="#{msgs.passportNumber}" styleClass="form-table-label disp-blc"/>
+				<h:inputText disabled="true" value="#{voterChecker.voter.passportNumber}" id="passportNumber"  required="true"
+					    	requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="passportNumber" />
+				
+				
+				
+				<h:outputText value="#{msgs.address}" styleClass="form-table-label disp-blc"/>
+				<h:inputTextarea disabled="true" value="#{voterChecker.voter.address}" id="address"  required="true"
+					    	requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="address" />
+						    	
+		    </h:panelGrid>
+		    
+		</h:form>
+			
+		<div class="clear"></div>	
+				
+	</ui:define>	
+</ui:composition>

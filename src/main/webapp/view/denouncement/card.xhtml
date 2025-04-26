@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+ 		
+		<h2>#{msgs.denouncementCard} </h2> <br/>
+		<h:form id="add-card-form" prependId="false">
+			<h:panelGroup id="messages">
+				<p:growl globalOnly="true" />
+			</h:panelGroup>
+		   	
+			<h:panelGrid styleClass="form-table f-left m-top m-left" columns="2"  style="width:400px;">
+				<h:outputText value="#{msgs.fio}" styleClass="form-table-label disp-blc"/>
+				<h:outputText value="#{denounceController.denounce.fio}" />				
+			
+				<h:outputText value="#{msgs.object}" styleClass="form-table-label disp-blc"/>
+		    	<h:outputText value="#{denounceController.denounce.headInfo}" />
+		    	
+			    <h:outputText value="#{msgs.denounceType}" styleClass="form-table-label disp-blc"/>
+				<h:outputText value="#{enums[denounceController.denounce.type]}" />
+				
+				<h:outputText value="#{msgs.note}" styleClass="form-table-label disp-blc"/>
+				<h:outputText value="#{denounceController.denounce.note}" />		
+				
+				<h:outputText value="#{msgs.denounceDate}" styleClass="form-table-label disp-blc"/>
+				<h:outputText rendered="#{denounceController.denounce.factDenounce eq null}" value="#{denounceController.denounce.dateDenounce}" >
+			    	<f:convertDateTime pattern="dd-MM-yyyy HH:mm:ss" />
+			    </h:outputText>
+			    <h:outputText rendered="#{denounceController.denounce.factDenounce ne null}" value="#{denounceController.denounce.factDenounce}" >
+			    	<f:convertDateTime pattern="dd-MM-yyyy HH:mm:ss" />
+			    </h:outputText>
+			    
+			    
+			    <h:outputText value="#{msgs.status}" styleClass="form-table-label disp-blc"/>
+				<h:outputText value="#{enums[denounceController.denounce.status]}" />
+				
+			</h:panelGrid>
+			<div class="clear"/>
+			<h:panelGrid styleClass="form-table m-top m-left" columns="1" >
+				<h:outputText value="#{denounceController.denounce.history}" escape="false"/>
+		    </h:panelGrid>	 
+		</h:form>
+		<div class="clear"></div>
+		
+		<h:panelGrid styleClass="form-table f-left m-top m-left" columns="3" rendered="#{denounceController.denounce.status ne 'APPROVED'}"  style="width:400px;">
+			<h:outputText value="#{msgs.print}" styleClass="form-table-label disp-blc"/>
+			<h:form>
+			
+				<p:commandButton value="#{msgs.denounceApplication}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrowthick-1-s">
+        			<p:fileDownload value="#{clientJasperController.generateDenounceApplication(denounceController.denounce)}" />
+   				</p:commandButton>	
+   				
+   				<p:commandButton value="#{msgs.denounceAgreement}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrowthick-1-s">
+        			<p:fileDownload value="#{clientJasperController.generateDenounceAgreement(denounceController.denounce)}" />
+   				</p:commandButton>	
+   				
+			</h:form>
+		
+		</h:panelGrid>
+		
+		<div class="clear"></div>
+		
+		<h:panelGrid styleClass="form-table f-left m-top m-left" columns="2"  style="width:400px;" rendered="#{denounceController.denounce.status eq 'NEW' and denounceController.denounce.sendBackReason ne null}">
+			
+			<h:outputText value="#{msgs.sendBackReason}" styleClass="form-table-label disp-blc" style="color:red; margin-top:20px; margin-bottom:20px;"/>	
+			<h:outputText value="#{denounceController.denounce.sendBackReason}" styleClass="form-table-label disp-blc" style="color:red; margin-top:20px; margin-bottom:20px;"/>
+			
+		</h:panelGrid>
+		
+		
+		<div class="clear"></div>
+		<br/>
+		
+		<h:form id="second-form" prependId="false">
+			<h:panelGroup id="messages2">
+				<p:growl globalOnly="true" />
+			</h:panelGroup>
+		    <h:panelGrid styleClass="form-table f-left m-top m-left" columns="1"  style="width:800px;" >
+				<f:facet name="header">
+			       <h:outputText value="#{msgs.documents}"  style="text-align: center; font-weight: 600;" styleClass="disp-blc m-top m-bottom"/>
+			    </f:facet>
+				<p:dataTable var="entity" value="#{denounceController.documents}" rowKey="#{entity.id}" rowIndexVar="index" tableStyleClass="display-table"
+		   			id="table2" emptyMessage="#{msgs.noRecordsFound}">
+		   			<p:column headerText="№">
+				        <h:outputText value="#{index+1}" />
+				    </p:column>
+				    
+				    <p:column headerText="#{msgs.date}">
+				    	<h:outputText value="#{entity.date}" >
+				        	<f:convertDateTime pattern="dd-MM-yyyy" />
+				        </h:outputText>
+				   	</p:column>
+				   	
+			       	<p:column headerText="#{msgs.documentType}">
+               		    <h:outputText value="#{enums[entity.documentType.toString()]}" />
+			     	</p:column>
+			     	
+			     	
+			     	<p:column headerText="#{msgs.name}">
+               		    <h:outputText value="#{entity.attachment.fileName}" />
+			     	</p:column>
+				    
+				    <p:column headerText="#{msgs.documents}">
+				    	<p:graphicImage rendered="#{entity.attachment.contentType.contains('image')}" id="img"  styleClass="off" width="auto" height="60px" value="#{utilController.getDownloadURL(utilController.generateKeyAliveCurrentSession(entity.attachment))}"/>
+						<p:overlayPanel rendered="#{entity.attachment.contentType.contains('image')}" id="imagePanel" for="img" hideEffect="fade">
+					        <p:graphicImage value="#{utilController.getDownloadURL(utilController.generateKeyAliveCurrentSession(entity.attachment))}" />
+					    </p:overlayPanel>	
+				    </p:column>
+				    
+				    <p:column headerText="#{msgs.download}">
+						<p:commandButton value="#{msgs.download}" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop);" icon="ui-icon-arrowthick-1-s">
+	        				<p:fileDownload value="#{downloadController.downloadFile(entity.attachment)}" />
+	   					</p:commandButton>
+   				    </p:column>
+			       
+				</p:dataTable>	 
+		    </h:panelGrid>	 
+		    
+		    
+		</h:form>
+		<div class="clear"></div>
+			
+		<h:form >
+			
+			<h:commandButton value="#{msgs.delete}" rendered="#{denounceController.denounce.status eq 'NEW'}"
+		    		style="width:387px;" 
+		    		action="#{denounceController.goToDelete()}" 
+		    		styleClass="button red"/>
+			<div class="clear"></div>
+			
+			<h:commandButton rendered="#{roleController.isAllowed('SUBADMIN,ADMIN,FIN_DIRECTOR,SUB_FIN_DIRECTOR') and denounceController.denounce.status eq 'NEW'}" 
+				value="#{msgs.sendToFinDirectorApprove}" action="#{denounceController.sendToFinDirectorApprove()}" styleClass="button light-blue"/>
+			<h:commandButton rendered="#{roleController.isAllowed('FIN_DIRECTOR,SUB_FIN_DIRECTOR') and denounceController.denounce.status eq 'WAITING_DIRECTOR_APPROVAL'}" 
+				value="#{msgs.approve}" action="#{denounceController.approve()}" styleClass="button light-blue"/>
+			
+			<p:commandButton rendered="#{(roleController.isAllowed('FIN_DIRECTOR,SUB_FIN_DIRECTOR') and denounceController.denounce.status eq 'WAITING_DIRECTOR_APPROVAL')}"
+				 styleClass="button red m-left m-top" value="#{msgs.sendForEdit}" oncomplete="PF('myDlg').show()" />
+				
+			<a style="width: 100px;" class="button blue m-left m-top" onclick="history.go(-1)">#{msgs.back}</a>
+		    <div class="clear"/>
+		    
+		    <p:confirmDialog id='myDialog' widgetVar="myDlg"  modal="true" resizable="false" header="При необходимости введите причину отправки на редактирование!">
+		       	 <f:facet name="message">
+			       	 <h:outputText value='Причина отправки на редактирование :'/>
+			       	 <br/>
+	                 <h:inputTextarea value="#{denounceController.sendBackReason}"/>
+                 </f:facet>
+		       
+		        <p:commandButton value="#{msgs.yes}" ajax="false" action="#{denounceController.sendToDecline()}" icon="ui-icon-check"  oncomplete="PF('myDlg').hide()"/>
+		        <p:commandButton value="#{msgs.no}" type="button"  icon="ui-icon-close" onclick="PF('myDlg').hide()" />
+		    </p:confirmDialog>
+		    
+		</h:form>	
+		
+		
+			
+			
+				
+	</ui:define>	
+</ui:composition>

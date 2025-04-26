@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+		<h2>#{msgs.scheduleTemplatementList} </h2> <br/> 
+		<br/>
+		
+		
+		<div class="clear"></div>
+		<h:form id ="filter-form" rendered="#{!roleController.isAllowed('JUNIOR')}">		
+			<h:panelGrid columns="5" styleClass="f-left">
+				<h:outputText value="#{msgs.searchString}" styleClass="label" />
+				<h:outputText value="#{msgs.curatorOrk}" styleClass="label" />
+				<h:outputText value="#{msgs.status}" styleClass="label" />	
+				<h:outputText value="" styleClass="label" />
+				<h:outputText value="" styleClass="label" /> 
+				
+				<h:inputText value="#{scheduleTemplateListController.searchString}" style="width:400px;" />
+				
+				<p:selectCheckboxMenu  value="#{scheduleTemplateListController.filterCuratorOrks}" id="curatorOrk" style="width:250px;" styleClass="m-right"  
+					multiple="true" converter="userConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{scheduleTemplateListController.curatorOrks}" var="entity" itemLabel="#{entity.fio}" itemValue="#{entity}"/>					
+		    	</p:selectCheckboxMenu>
+		    	
+		    	<p:selectCheckboxMenu  value="#{scheduleTemplateListController.filterStatuses}" id="filterStatus" style="width:250px;" styleClass="m-right m-left"  
+					multiple="true" converter="enumConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{scheduleTemplateListController.clientStatuses}" var="entity" itemLabel="#{enums[entity]}" itemValue="#{entity}"/>			
+		    	</p:selectCheckboxMenu>	
+		    	
+		    	<p:commandButton ajax="true" update="form" value="#{msgs.search}" actionListener="#{scheduleTemplateListController.filter}" styleClass="button green f-right" />
+			    <p:commandButton ajax="true" update="form filter-form" value="#{msgs.clearFilter}" actionListener="#{scheduleTemplateListController.clearFilter}" styleClass="button blue f-right" />
+			
+		    	
+		    	
+		    	
+			</h:panelGrid>
+		
+		</h:form>
+		
+		<div class="clear"></div>
+		
+		<h:form id ="form" rendered="#{!roleController.isAllowed('JUNIOR')}">
+			<p:dataTable var="entity" value="#{scheduleTemplateListController.model}"  paginator="true" rows="50" lazy="true" rowKey="#{entity.id}" rowIndexVar="index" tableStyleClass="display-table"
+	   			id="table" selectionMode="single" emptyMessage="#{msgs.noRecordsFound}" 
+	   			rowStyleClass="#{entity.status eq 'WAITING_HEAD_APPROVAL' ? 'admin-rows' : entity.status eq 'WAITING_DIRECTOR_APPROVAL' ? 'director-rows' : null}"
+	   			rowsPerPageTemplate="10,20,30,40,50,100000" paginatorPosition="bottom" pageLinks="10"
+	                   currentPageReportTemplate="Всего : #{scheduleTemplateListController.model.rowCount} из #{scheduleTemplateListController.model.totalCount}  &#160;&#160;| #{msgs.amountPerPage}"
+	               	   paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport} {RowsPerPageDropdown}"
+	                   selection="#{scheduleTemplateListController.scheduleTemplate}"
+	                   first="#{scheduleTemplateListController.first}" >
+				<p:ajax event="rowSelect" listener="#{scheduleTemplateController.onRowSelect}" disabled="#{not roleController.mobile}"  />
+				<p:ajax event="rowDblselect" listener="#{scheduleTemplateController.onRowSelect}"   />
+				<p:ajax event="page" listener="#{scheduleTemplateListController.onPageChange}"/>  			   
+			    <p:column headerText="№">
+			        <h:outputText value="#{index+1}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.fio}">
+			        <h:outputText value="#{entity.client.fio}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.note}">
+			        <h:outputText value="#{entity.note}" />
+			    </p:column>
+			    <p:column headerText="#{msgs.status}">
+			        <h:outputText value="#{enums[entity.status]}" />
+			    </p:column>
+			    
+			</p:dataTable>
+		</h:form>
+		<p:blockUI block="form:table" trigger="form:table" >
+			#{msgs.loading}<br />
+		    <p:graphicImage library="img" name="ajaxloadingbar.gif"/>
+		</p:blockUI>	
+		<p:dialog modal="true" widgetVar="statusDialog" header="#{msgs.loading}" draggable="false" closable="false" resizable="false">
+		    <p:graphicImage library="img" name="ajaxloadingbar.gif"/>
+		</p:dialog>
+		
+		<script type="text/javascript">
+			function start() {
+			    PF('statusDialog').show();
+			}			 
+			function stop() {
+			    PF('statusDialog').hide();
+			}
+		</script>
+		<div class="clear"></div>			
+				
+	</ui:define>	
+	
+</ui:composition>

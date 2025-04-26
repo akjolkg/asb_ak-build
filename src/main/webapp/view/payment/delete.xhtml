@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+ 		
+		<h2>#{msgs.delete} : #{msgs.payments} </h2> <br/>
+		<h:form id="add-card-form" prependId="false" autocomplete="off">
+			<h:panelGroup id="messages">
+				<p:growl globalOnly="true" />
+			</h:panelGroup>
+		   	
+			<h:panelGrid styleClass="form-table m-top m-left" columns="2"  style="width:400px;">
+				<f:facet name="header">
+			       <h:outputText value="#{msgs.client}"  style="text-align: center; font-weight: 600;" styleClass="disp-blc m-top m-bottom"/>
+			    </f:facet>
+				<h:outputText value="#{msgs.fio}" styleClass="form-table-label disp-blc"/>
+				<h:outputText value="#{paymentController.client.fio}" />
+			
+				<h:outputText value="#{msgs.construction}" styleClass="form-table-label disp-blc"/>
+		    	<h:outputText value="#{paymentController.client.appartment.construction.title}" />
+				
+				<h:outputText value="#{msgs.appartment}" styleClass="form-table-label disp-blc"/>
+		    	<h:outputText value="#{paymentController.client.appartment.title}" />
+				
+				<h:outputText value="#{msgs.clientType}" styleClass="form-table-label disp-blc"/>
+				<h:outputText value="#{enums[paymentController.client.type]}" />			
+			
+		    	<h:outputText value="#{msgs.datePayment}" styleClass="form-table-label disp-blc"/>
+		    	<h:outputText value="#{paymentController.payment.datePayment}" >
+			    	<f:convertDateTime pattern="dd-MM-yyyy HH:mm" />
+			    </h:outputText>
+		    	
+				<h:outputText value="#{msgs.pkoNumber}" styleClass="form-table-label disp-blc"/>
+				<h:outputText  value="#{paymentController.payment.checkNumber}"  style="width:100px;" />
+				<h:outputText value="#{msgs.sum}" styleClass="form-table-label disp-blc"/>
+				<h:outputText value="#{paymentController.payment.paymentAmount}"  style="width:100px;">
+			    	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2"/>
+			    </h:outputText>
+				
+				<h:outputText value="#{msgs.note}" styleClass="form-table-label disp-blc"/>
+				<h:outputText value="#{paymentController.payment.note}"  style="width:100px;"  />
+				
+					    	
+		    </h:panelGrid>	
+		    <br/>
+		    <h:outputText value="Платёж буден удалён без возможности восстановления. Вы действительно хотите удалить платёж?"  style="width:100px; color:red;"  />
+		    <br/>
+		    <h:panelGrid styleClass="form-table m-top m-left" columns="2"  style="width:400px;">
+		   		<h:outputText value="#{msgs.password}" styleClass="label psw"/>
+				<h:inputSecret value="#{paymentController.password}" style="position:relative;" id="password" autocomplete="off"/>
+		   	</h:panelGrid>
+		    <div class="m-top">
+		    	<h:commandButton value="#{msgs.delete}" action="#{paymentController.doDelete()}" styleClass="button light-blue"/>
+		    	<h:commandButton value="#{msgs.cancel}" action="#{paymentController.cancelDelete()}" immediate="true" styleClass="button red m-left"/>
+		   	</div>
+		
+		</h:form>
+		
+		
+		
+			
+		<div class="clear"></div>	
+				
+	</ui:define>	
+</ui:composition>

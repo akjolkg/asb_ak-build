@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	
+ 	<ui:define name="content">
+ 		<h:form>
+ 			<h:panelGrid columns="1">
+ 				<h:panelGrid id="country" columns="2">
+ 					<h:outputText value="#{msgs.country}" />
+ 					<p:selectOneMenu id="country-select" value="#{ateSelector.country}" requiredMessage="#{error.thisFieldIsRequired}" effect="none" converter="ateHistoryConverter"
+	            			styleClass="w-1-1">
+	            		<f:selectItem itemLabel="#{msgs.selectValue}"/>
+	            		<f:selectItems value="#{ateSelector.countries}" var="country" itemLabel="#{country.nameRu}" itemValue="#{country}"/>
+	            		<p:ajax event="change" update="oblast"/>	            
+	            	</p:selectOneMenu>
+		    		<h:message for="country-select" id="country-message" styleClass="error"/>
+ 				</h:panelGrid>
+ 			
+ 				<h:panelGrid id="oblast" columns="2">
+ 					<h:outputText value="#{msgs.oblast}" rendered="#{ateSelector.country != null}" />
+ 					<p:selectOneMenu id="oblast-select" value="#{ateSelector.oblast}" requiredMessage="#{error.thisFieldIsRequired}" effect="none" converter="ateHistoryConverter"
+	            			styleClass="w-1-1" rendered="#{ateSelector.country != null}">
+	            		<f:selectItem itemLabel="#{msgs.selectValue}"/>
+	            		<f:selectItems value="#{ateSelector.getChilds(ateSelector.country)}" var="oblast" itemLabel="#{oblast.nameRu}" itemValue="#{oblast}"/>
+	            		<p:ajax event="change" update="region"/>	            
+	            	</p:selectOneMenu>
+		    		<h:message for="oblast-select" id="oblast-message" styleClass="error"/>
+ 				</h:panelGrid>
+ 				
+ 				<h:panelGrid id="region" columns="2">
+ 					<h:outputText value="#{msgs.region}" rendered="#{ateSelector.oblast != null}" />
+ 					<p:selectOneMenu id="region-select" value="#{ateSelector.region}" requiredMessage="#{error.thisFieldIsRequired}" effect="none" converter="ateHistoryConverter"
+	            			styleClass="w-1-1" rendered="#{ateSelector.oblast != null}">
+	            		<f:selectItem itemLabel="#{msgs.selectValue}"/>
+	            		<f:selectItems value="#{ateSelector.getChilds(ateSelector.oblast)}" var="region" itemLabel="#{region.nameRu}" itemValue="#{region}"/>
+	            		<p:ajax event="change" update="ayilOkmoty"/>	            
+	            	</p:selectOneMenu>
+		    		<h:message for="region-select" id="region-message" styleClass="error"/>
+ 				</h:panelGrid>
+ 			
+ 				<h:panelGrid id="ayilOkmoty" columns="2">
+ 					<h:outputText value="#{msgs.ayilOkmoty}" rendered="#{ateSelector.region != null}" />
+ 					<p:selectOneMenu id="ayilOkmoty-select" value="#{ateSelector.ayilOkmoty}" requiredMessage="#{error.thisFieldIsRequired}" effect="none" converter="ateHistoryConverter"
+	            			styleClass="w-1-1" rendered="#{ateSelector.region != null}">
+	            		<f:selectItem itemLabel="#{msgs.selectValue}"/>
+	            		<f:selectItems value="#{ateSelector.getChilds(ateSelector.region)}" var="ayilOkmoty" itemLabel="#{ayilOkmoty.nameRu}" itemValue="#{ayilOkmoty}"/>
+	            		<p:ajax event="change" update="village"/>	            
+	            	</p:selectOneMenu>
+		    		<h:message for="ayilOkmoty-select" id="ayilOkmoty-message" styleClass="error"/>
+ 				</h:panelGrid>
+ 				
+ 				<h:panelGrid id="village" columns="2">
+ 					<h:outputText value="#{msgs.village}" rendered="#{ateSelector.ayilOkmoty != null}" />
+ 					<p:selectOneMenu id="village-select" value="#{ateSelector.village}" requiredMessage="#{error.thisFieldIsRequired}" effect="none" converter="ateHistoryConverter"
+	            			styleClass="w-1-1" rendered="#{ateSelector.ayilOkmoty != null}">
+	            		<f:selectItem itemLabel="#{msgs.selectValue}"/>
+	            		<f:selectItems value="#{ateSelector.getChilds(ateSelector.ayilOkmoty)}" var="village" itemLabel="#{village.nameRu}" itemValue="#{village}"/>	            
+	            	</p:selectOneMenu>
+		    		<h:message for="village-select" id="village-message" styleClass="error"/>
+ 				</h:panelGrid>
+ 			</h:panelGrid>
+ 		</h:form>
+	</ui:define>	
+</ui:composition>

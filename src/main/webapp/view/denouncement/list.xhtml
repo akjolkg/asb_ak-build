@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+		<h2>#{msgs.denouncementList} </h2> <br/> 
+		<br/>
+		
+		
+		<div class="clear"></div>
+		<h:form id ="filter-form">		
+			<h:panelGrid columns="2"  styleClass="f-left">
+			    <h:outputText value="#{msgs.dateFrom}" styleClass="label m-left" />
+				<h:outputText value="#{msgs.dateTo}" styleClass="label m-left" />
+				
+				<p:calendar showOtherMonths="true" selectOtherMonths="true"  value="#{denounceListController.filterDateFrom}"  showOn="button" locale="ru" styleClass="m-left"/>
+				<p:calendar showOtherMonths="true" selectOtherMonths="true"  value="#{denounceListController.filterDateTo}"  showOn="button" locale="ru" styleClass="m-left"/>
+						
+			
+			</h:panelGrid>
+			<h:panelGrid columns="4" styleClass="f-left">
+				<h:outputText value="#{msgs.searchString}" styleClass="label" />
+				<h:outputText value="#{msgs.status}" styleClass="label m-left" />
+				<h:outputText value="" styleClass="label" />
+				<h:outputText value="" styleClass="label" />
+				<h:inputText value="#{denounceListController.searchString}" style="width:400px;" />
+				<p:selectCheckboxMenu  value="#{denounceListController.filterStatus}" id="clientStatus" style="width:250px;" styleClass="m-right m-left"  
+					multiple="true" converter="enumConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{denounceListController.clientStatuses}" var="entity" itemLabel="#{enums[entity]}" itemValue="#{entity}"/>			
+		    	</p:selectCheckboxMenu>		
+				<p:commandButton ajax="true" update="form" value="#{msgs.search}" actionListener="#{denounceListController.filter}" styleClass="button green f-right" />
+			    <p:commandButton ajax="true" update="form filter-form" value="#{msgs.clearFilter}" actionListener="#{denounceListController.clearFilter}" styleClass="button blue f-right" />
+			</h:panelGrid>
+			
+		
+		</h:form>
+		
+		<div class="clear"></div>
+		
+		<h:form id ="form">
+			<p:dataTable var="entity" value="#{denounceListController.model}"  paginator="true" rows="50" lazy="true" rowKey="#{entity.id}" rowIndexVar="index" tableStyleClass="display-table"
+	   			id="table" selectionMode="single" emptyMessage="#{msgs.noRecordsFound}" 
+	   			rowStyleClass="#{entity.status eq 'WAITING_HEAD_APPROVAL' ? 'admin-rows' : entity.status eq 'WAITING_DIRECTOR_APPROVAL' ? 'director-rows' : null}"
+	   			rowsPerPageTemplate="10,20,30,40,50,100000" paginatorPosition="bottom" pageLinks="10"
+	                   currentPageReportTemplate="Всего : #{denounceListController.model.rowCount} из #{denounceListController.model.totalCount}  &#160;&#160;| #{msgs.amountPerPage}"
+	               	   paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport} {RowsPerPageDropdown} {Exporters}"
+	                   selection="#{denounceListController.denounce}"
+	                   first="#{denounceListController.first}" >
+				<p:ajax event="rowSelect" listener="#{denounceController.onRowSelect}" disabled="#{not roleController.mobile}"  />
+				<p:ajax event="rowDblselect" listener="#{denounceController.onRowSelect}"   />
+				<p:ajax event="page" listener="#{denounceListController.onPageChange}"/>  	
+				
+				<f:facet name="{Exporters}">
+            		<h:commandLink id="excel" styleClass="m-left" rendered="#{!roleController.isAllowed('JUNIOR')}">
+					    <p:graphicImage library="img" name="excel.png"  />
+					   	<p:dataExporter type="xls" target="table" fileName="export" postProcessor="#{dataExportController.postProcessXLS}" />
+					</h:commandLink>
+					
+					<p:commandButton id="toggler" type="button" value="#{msgs.columns}" style="float:right" icon="ui-icon-calculator" />
+			        <p:columnToggler datasource="table" trigger="toggler" >
+			        	<p:ajax event="toggle" listener="#{userController.onToggle}" />
+					</p:columnToggler>
+					
+						
+				</f:facet>   		   
+			    <p:column headerText="№">
+			        <h:outputText value="#{index+1}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.object}" sortBy="#{entity.headInfo}">
+			        <h:outputText value="#{entity.headInfo}" />
+			    </p:column>
+			    
+			     
+			    <p:column headerText="#{msgs.appartmentType}" sortBy="#{entity.appartment.type}" >
+			        <h:outputText value="#{enums[entity.appartment.type]}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.fio}" sortBy="#{entity.fio}">
+			        <h:outputText value="#{entity.fio}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.denounceDate}" sortBy="#{entity.dateDenounce}">
+			        <h:outputText value="#{entity.dateDenounce}" >
+			        	<f:convertDateTime pattern="dd-MM-yyyy" />
+			        </h:outputText>
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.denounceType}" sortBy="#{entity.type}">
+			        <h:outputText value="#{enums[entity.type]}" />
+			    </p:column>
+		
+			    <p:column headerText="#{msgs.note}" sortBy="#{entity.note}">
+			        <h:outputText value="#{entity.note}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.contactDate}"  sortBy="#{entity.contractDate}">
+			        <h:outputText value="#{entity.contractDate}" >
+			        	<f:convertDateTime pattern="dd-MM-yyyy" />
+			        </h:outputText>
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.contractSum}" sortBy="#{entity.totalSum}">
+			        <h:outputText value="#{entity.totalSum}" >
+			        	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+			        </h:outputText>
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.alreadyPayed}" sortBy="#{entity.payedAmount}">
+			        <h:outputText value="#{entity.payedAmount}" >
+			        	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+			        </h:outputText>
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.leftSum}" >
+			        <h:outputText value="#{entity.totalSum-entity.payedAmount}" >
+			        	<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+			        </h:outputText>
+			    </p:column>
+			    <p:column headerText="#{msgs.clientFrom}" sortBy="#{entity.contractType}" >
+			        <h:outputText value="#{enums[entity.contractType]}" />
+			    </p:column>
+			     
+			    <p:column headerText="#{msgs.clientType}" sortBy="#{entity.clientType}" >
+			        <h:outputText value="#{enums[entity.clientType]}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.curator}" >
+			        <h:outputText value="#{denounceListController.getCurator(entity)}" />
+			    </p:column>
+			    <p:column headerText="#{msgs.curatorOrk}" >
+			        <h:outputText value="#{denounceListController.getCuratorOrk(entity)}" />
+			    </p:column>
+			    
+			    
+			    <p:column headerText="#{msgs.status}">
+			        <h:outputText value="#{enums[entity.status]}" />
+			    </p:column>
+			    
+			</p:dataTable>
+		</h:form>
+		<p:blockUI block="form:table" trigger="form:table" >
+			#{msgs.loading}<br />
+		    <p:graphicImage library="img" name="ajaxloadingbar.gif"/>
+		</p:blockUI>	
+		<p:dialog modal="true" widgetVar="statusDialog" header="#{msgs.loading}" draggable="false" closable="false" resizable="false">
+		    <p:graphicImage library="img" name="ajaxloadingbar.gif"/>
+		</p:dialog>
+		
+		<script type="text/javascript">
+			function start() {
+			    PF('statusDialog').show();
+			}			 
+			function stop() {
+			    PF('statusDialog').hide();
+			}
+		</script>
+		<div class="clear"></div>			
+				
+	</ui:define>	
+	
+</ui:composition>

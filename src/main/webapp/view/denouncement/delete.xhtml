@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+		<h2>#{msgs.delete} </h2> <br/> 
+		<br/>
+		<div class="clear"></div>
+		<h2>#{msgs.denouncementCard} </h2> <br/>
+		<h:form id="add-card-form" prependId="false">
+			<h:panelGroup id="messages">
+				<p:growl globalOnly="true" />
+			</h:panelGroup>
+		   	
+			<h:panelGrid styleClass="form-table f-left m-top m-left" columns="2"  style="width:400px;">
+				<h:outputText value="#{msgs.fio}" styleClass="form-table-label disp-blc"/>
+				<h:outputText value="#{denounceController.denounce.fio}" />				
+			
+				<h:outputText value="#{msgs.object}" styleClass="form-table-label disp-blc"/>
+		    	<h:outputText value="#{denounceController.denounce.headInfo}" />
+		    	
+			    <h:outputText value="#{msgs.denounceType}" styleClass="form-table-label disp-blc"/>
+				<h:outputText value="#{enums[denounceController.denounce.type]}" />
+				
+				<h:outputText value="#{msgs.note}" styleClass="form-table-label disp-blc"/>
+				<h:outputText value="#{denounceController.denounce.note}" />		
+	
+			</h:panelGrid>
+		</h:form>
+		
+		<div class="clear"></div>
+		<br/>
+		
+		<h:form id ="main-form">
+			<h:panelGroup id="messages">
+				<p:growl globalOnly="true" />
+			</h:panelGroup>
+			<h:outputText value="#{msgs.areYouSureToDeleteDenounce}" styleClass="form-table-label disp-blc" style="color:red;"/>
+			<div class="clear"></div>
+			<br/>
+			
+			
+			<h:commandButton value="#{msgs.delete}" action="#{denounceController.delete()}" styleClass="button red"/>
+			<h:commandButton value="#{msgs.cancel}" action="#{denounceController.cancel()}" immediate="true" styleClass="button light-blue m-left"/>
+			
+		
+		
+		
+		</h:form>
+		
+			</ui:define>	
+	
+</ui:composition>

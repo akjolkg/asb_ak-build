@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+ 		
+		<h2>Карточка удаленной брони </h2> <br/>
+		<h:form id="add-card-form" prependId="false">
+			<h:panelGroup id="messages">
+				<p:growl globalOnly="true" />
+			</h:panelGroup>
+		   	
+			<h:panelGrid styleClass="form-table f-left m-top m-left" columns="2"  style="width:400px;">
+				<h:outputText value="#{msgs.fio}" styleClass="form-table-label disp-blc"/>
+				<h:outputText value="#{deletedReserveController.deletedReserve.fio}" />				
+			
+				<h:outputText value="#{msgs.object}" styleClass="form-table-label disp-blc"/>
+		    	<h:outputText value="#{deletedReserveController.deletedReserve.headInfo}" />
+		    	
+			    <h:outputText value="Дата удаления" styleClass="form-table-label disp-blc"/>
+				<h:outputText value="#{deletedReserveController.deletedReserve.dateCreated}" >
+			    	<f:convertDateTime pattern="dd-MM-yyyy HH:mm:ss" />
+			    </h:outputText>
+			    
+			    	
+			</h:panelGrid>
+			<div class="clear"/>
+			<h:panelGrid styleClass="form-table m-top m-left" columns="1" >
+				<h:outputText value="#{deletedReserveController.deletedReserve.history}" escape="false"/>
+		    </h:panelGrid>	 
+		</h:form>
+		<div class="clear"></div>
+		<br/>
+			
+		<h:form >			
+			<a style="width: 100px;" class="button blue m-left m-top" onclick="history.go(-1)">#{msgs.back}</a>
+		    <div class="clear"/>
+		    
+		    
+		</h:form>	
+		
+		
+			
+			
+				
+	</ui:define>	
+</ui:composition>

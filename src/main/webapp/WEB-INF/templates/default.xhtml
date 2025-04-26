@@ -1,0 +1,129 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets" lang="ru">
+
+<ui:insert name="metadata" />
+
+<h:head>
+	<meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8"/>
+    <meta http-equiv="pragma" content="no-cache"/>
+     
+	<title>
+		<ui:insert name="title">
+			<h:outputText value="#{msgs.title}" />
+		</ui:insert>
+	</title>
+	
+	<ui:insert name="favicon">
+		 <link rel="shortcut icon" type="image/x-icon" href="#{request.contextPath}/faces_resources?folder=icons&amp;name=favicon.ico"/>
+	</ui:insert>
+		
+	<h:outputStylesheet library="css" name="reset.css" />	
+	<h:outputStylesheet library="css" name="text.css" />
+	<h:outputStylesheet library="css" name="ui-util.css" />
+	<h:outputStylesheet library="css" name="grid.css" />
+	
+	<ui:insert name="head">
+		<h:outputStylesheet library="css" name="styles.css" />
+	</ui:insert>
+	
+	<ui:insert name="additional-head" />
+</h:head> 
+<h:body> 
+
+	<ui:insert name="wrap-container">
+	
+		<div id="container">
+		
+			<ui:insert name="container">
+			
+				<ui:insert name="outer-wrap-header">					
+					
+					<div id="wrap-header">					
+						
+					<ui:insert name="wrap-header">						
+					
+						<div id="header" class="grid">								
+							<ui:insert name="header" />														
+						</div>							
+						<div class="clear"></div>
+													
+					</ui:insert>
+											
+					</div>
+										
+				</ui:insert>
+				
+				
+				<ui:insert name="outer-wrap-nav">
+						
+					<div id="wrap-nav">
+
+                        <ui:insert name="wrap-nav">
+
+                            <div id="nav" class="grid">
+                                <div class="ornament ornament-left"></div>
+                                <ui:insert name="nav" />
+                                <div class="ornament ornament-right"></div>
+                            </div>
+
+                        </ui:insert>
+
+					</div>
+
+                    <div class="clear"></div>
+					
+				</ui:insert>
+				
+				
+				<ui:insert name="outer-wrap-content">
+				
+					<div id="wrap-content">
+						
+						<ui:insert name="wrap-content">
+							
+							<div id="content" class="grid">
+								
+								<ui:insert name="content" />
+														
+							</div>					
+							
+						</ui:insert>
+						
+					</div>
+					
+				</ui:insert>
+				
+								
+				<ui:insert name="outer-wrap-footer">
+				
+					<div id="wrap-footer">
+				
+						<ui:insert name="wrap-footer">
+								
+							<div id="footer" class="grid">
+								
+								<ui:insert name="footer">
+									<ui:include src="footer.xhtml" />
+								</ui:insert>
+														
+							</div>					
+							
+						</ui:insert>
+						
+					</div>
+					
+				</ui:insert>
+				
+			</ui:insert>
+			
+		</div>
+	
+	</ui:insert>
+	
+	<ui:insert name="js"/>
+	
+	<ui:insert name="add-js"/>
+	
+</h:body>
+</html>

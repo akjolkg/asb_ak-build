@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+ 		<h2>#{msgs.printPayments} </h2> <br/><br/>	        
+		<h:form id="add-card-form" prependId="false">
+			<h:panelGroup id="messages">
+				<p:growl globalOnly="true" />
+			</h:panelGroup>
+		    <h:panelGrid styleClass="form-table" columns="3">
+		    	<h:outputText value="#{msgs.dateFrom}" styleClass="form-table-label disp-blc"/>
+				<p:calendar showOtherMonths="true" selectOtherMonths="true" id="dateFrom" value="#{reportController.dateFrom}" pattern="dd.MM.yyyy HH:mm" required="true" requiredMessage="#{msgs.thisFieldIsRequired}" />				
+				<p:message for="dateFrom"/>	
+				<h:outputText value="#{msgs.dateTo}" styleClass="form-table-label disp-blc"/>
+				<p:calendar showOtherMonths="true" selectOtherMonths="true" id="dateTo" value="#{reportController.dateTo}" pattern="dd.MM.yyyy HH:mm" required="true" requiredMessage="#{msgs.thisFieldIsRequired}" />				
+				<p:message for="dateTo"/>
+				<h:outputLabel value="#{msgs.region}" style="width:200px;display:inline-block" styleClass="form-table-label disp-blc"/>		   		
+				<h:selectOneMenu value="#{reportController.region}" id="region">
+					<f:selectItem noSelectionOption="true" itemLabel="#{msgs.allRegions}"/>
+				    <f:selectItems value="#{reportController.regionList}" var="region" />
+				</h:selectOneMenu>	
+				<p:message for="region"/>	
+				<h:outputLabel value="#{msgs.agitator}" style="width:200px;display:inline-block" styleClass="form-table-label disp-blc"/>		   		
+				<p:autoComplete size="60" id="agitator" dropdown="true" style="width:560px;"
+				    	var="c"
+						itemValue="#{c}" itemLabel="#{c.fio}" 
+						value="#{reportController.agitator}" 
+						converter="agitatorConverter"  
+						completeMethod="#{reportController.findAgitator}" >
+					<p:column>
+					    <h:outputText value="#{c.pin}" />
+				    </p:column>
+				    <p:column>
+				 	   <h:outputText value="#{c.fio}" />
+				    </p:column>
+				</p:autoComplete>
+				<p:message for="agitator"/>	    	
+					
+						    	
+		    </h:panelGrid>	
+		   
+		    <div class="m-top">
+		    	<p:commandButton  id="reportButton" value="#{msgs.generate}" onclick="PrimeFaces.monitorDownload(start, stop);" ajax="false"  icon="ui-icon-arrowthick-1-s">
+				    <p:fileDownload value="#{reportController.reportKassir()}" />			    
+			    </p:commandButton>
+		    	
+		    </div>
+		    
+		</h:form>
+			
+		<div class="clear"></div>	
+				
+	</ui:define>	
+</ui:composition>

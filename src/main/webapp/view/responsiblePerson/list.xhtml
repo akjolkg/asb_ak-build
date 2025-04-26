@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+		<h2>#{msgs.responsiblePersons} </h2> <br/> 
+		<div class="clear"></div>
+		<h:form rendered="#{roleController.isAllowed('ADMIN')}">
+			<h:commandLink value="#{msgs.addResponsiblePerson}" action="#{responsiblePersonCreator.add()}" styleClass="button green f-right" />
+		</h:form>
+		<br/>
+		<div class="clear"></div>
+		<h:form id ="filter-form">		
+			<h:panelGrid columns="1"  styleClass="f-left">
+			    <h:outputText value="#{msgs.searchString}" styleClass="label m-right " />
+			    <p:inputText value="#{responsiblePersonListController.searchString}"  styleClass="m-right"/>
+			</h:panelGrid>
+			
+			
+			<h:panelGrid columns="2"  styleClass="f-left">
+			   <h:outputText value="" styleClass="label" />
+				<h:outputText value="" styleClass="label" />
+				
+				<p:commandButton ajax="true" update="form" value="#{msgs.search}" actionListener="#{responsiblePersonListController.filterData()}" styleClass="button green f-right" />
+			    <p:commandButton ajax="true" update="form filter-form" value="#{msgs.clearFilter}" actionListener="#{responsiblePersonListController.clearFilter()}" styleClass="button blue f-right" />
+			</h:panelGrid>
+		
+		</h:form>
+		
+		<div class="clear"></div>
+		<h:form id ="form">
+			<p:dataTable var="entity" value="#{responsiblePersonListController.model}" paginator="true" rows="50" lazy="true" rowKey="#{entity.id}" rowIndexVar="index" tableStyleClass="display-table"
+	   			id="table" selectionMode="single" emptyMessage="#{msgs.noRecordsFound}" 
+	   			rowsPerPageTemplate="10,20,30,40,50" paginatorPosition="bottom" pageLinks="10"
+	   			currentPageReportTemplate="Всего : #{responsiblePersonListController.model.rowCount} из #{responsiblePersonListController.model.totalCount}  &#160;&#160;| #{msgs.amountPerPage}"
+	            paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport} {RowsPerPageDropdown} {Exporters}"
+	            selection="#{responsiblePersonListController.responsiblePerson}"
+	            first="#{responsiblePersonListController.first}" >
+				<p:ajax event="page" listener="#{responsiblePersonListController.onPageChange}"/>  
+			    <f:facet name="{Exporters}">
+            		<h:commandLink id="excel" styleClass="m-left">
+					    <p:graphicImage library="img" name="excel.png"  />
+					   	<p:dataExporter type="xls" target="table" fileName="export" postProcessor="#{dataExportController.postProcessXLS}" />
+					</h:commandLink>	
+				</f:facet>   
+			    <p:column headerText="№">
+			        <h:outputText value="#{index+1}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.fio}">
+			        <h:outputText value="#{entity.fio}" />
+			    </p:column>
+			    
+			    
+			    <p:column headerText="#{msgs.contacts}">
+			        <h:outputText value="#{entity.contacts}" />
+			    </p:column>
+			    <p:column headerText="#{msgs.firma}">
+			        <h:outputText value="#{entity.firma}" />
+			    </p:column>
+			    
+				<p:column headerText="#{msgs.date}">
+			        <h:outputText value="#{entity.dateCreated}" >
+			          <f:convertDateTime type="date" pattern="dd-MM-yyyy HH:mm" timeZone="GMT+6"/>
+	             	</h:outputText>
+			    </p:column>
+			    
+			    
+			    <p:column headerText="#{msgs.operation}" rendered="#{roleController.isAllowed('ADMIN')}">
+			    	<h:commandButton action="#{responsiblePersonCreator.edit(entity)}" value="#{msgs.edit}" styleClass="btn-icon edit" title="#{msgs.edit}" />
+			    </p:column>
+			</p:dataTable>
+		</h:form>
+		<p:blockUI block="form:table" trigger="form:table" >
+			#{msgs.loading}<br />
+		    <p:graphicImage library="img" name="ajaxloadingbar.gif"/>
+		</p:blockUI>	
+
+		<div class="clear"></div>			
+				
+	</ui:define>	
+	
+</ui:composition>

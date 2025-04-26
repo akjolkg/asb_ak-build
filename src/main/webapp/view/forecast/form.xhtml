@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+ 		
+		<h2>#{msgs.addForecast} </h2> <br/><br/>	        
+		<h:form id="add-card-form" prependId="false">
+			<h:panelGroup id="messages">
+				<p:growl globalOnly="true" />
+			</h:panelGroup>
+		    <h:panelGrid styleClass="form-table" columns="3">
+		    	<h:outputText value="#{msgs.company}" styleClass="form-table-label disp-blc"/>
+		    	<p:selectOneMenu disabled="true" value="#{constructionCreator.construction.company}" id="company" style="width:600px;" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}" converter="companyConverter">
+					<f:selectItem  itemLabel="#{msgs.selectValue}" noSelectionOption="true"/>
+					<f:selectItems value="#{constructionListController.companies}" var="company" itemLabel="#{company.title}" itemValue="#{company}"/>
+		    	</p:selectOneMenu>
+				<p:message for="company" />
+				
+				<h:outputText value="#{msgs.developer}" styleClass="form-table-label disp-blc"/>
+		    	<p:selectOneMenu disabled="true" value="#{constructionCreator.construction.developer}" id="developer" style="width:600px;" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}" converter="companyConverter">
+					<f:selectItem  itemLabel="#{msgs.selectValue}" noSelectionOption="true"/>
+					<f:selectItems value="#{constructionListController.companies}" var="company" itemLabel="#{company.title}" itemValue="#{company}"/>
+		    	</p:selectOneMenu>
+				<p:message for="developer" />
+				
+				<h:outputText value="#{msgs.name}" styleClass="form-table-label disp-blc"/>
+				<h:inputText disabled="true" value="#{constructionCreator.construction.title}" id="name"  style="width:300px;"  required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="name" />
+				
+				<h:outputText value="#{msgs.idCode}" styleClass="form-table-label disp-blc"/>
+				<h:inputText  disabled="true" value="#{constructionCreator.construction.code}" id="code"  style="width:300px;" />
+				<p:message for="code" />
+				
+				<h:outputText value="#{msgs.plannedAddress}" styleClass="form-table-label disp-blc"/>
+				<h:inputTextarea disabled="true" value="#{constructionCreator.construction.plannedAddress}" id="address"  style="width:300px;"  required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="address" />
+				
+				<h:outputText value="#{msgs.installmentDate}" styleClass="form-table-label disp-blc"/>
+			    <p:calendar showOtherMonths="true" selectOtherMonths="true" id="installmentDate" value="#{constructionCreator.construction.installmentDate}"  showOn="button" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}" locale="ru" pattern="dd.MM.yyyy"/>
+				<p:message for="installmentDate" />
+				
+				<h:outputText value="#{msgs.salesStartDate}" styleClass="form-table-label disp-blc"/>
+			    <p:calendar showOtherMonths="true" selectOtherMonths="true" id="salesStartDate" value="#{constructionCreator.construction.salesStartDate}"  showOn="button" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}" locale="ru" pattern="dd.MM.yyyy"/>
+				<p:message for="salesStartDate" />
+				
+				<h:outputText value="#{msgs.notSaleArea}" styleClass="form-table-label disp-blc"/>
+				<p:inputNumber decimalPlaces="2" value="#{constructionCreator.construction.notSaleArea}" id="notSaleArea" style="width:100px;"  required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="notSaleArea" />
+				
+				
+					    	
+		    </h:panelGrid>	
+		   
+		    <div class="m-top">
+		    	<h:commandButton value="#{msgs.save}" action="#{constructionCreator.doSave()}" styleClass="button light-blue"/>
+		    	<h:commandButton value="#{msgs.cancel}" action="#{constructionCreator.cancel()}" immediate="true" styleClass="button red m-left"/>
+		   	</div>
+		    
+		</h:form>
+			
+		<div class="clear"></div>	
+				
+	</ui:define>	
+</ui:composition>

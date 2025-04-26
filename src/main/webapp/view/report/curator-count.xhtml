@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+		<h2>#{msgs.curatorCount} </h2> <br/> 
+		<br/>
+		<div class="clear"></div>
+		<h:form id ="form">
+			<h:panelGroup id="messages">
+				<p:growl globalOnly="true" />
+			</h:panelGroup>		
+			<h:panelGrid columns="1" styleClass="f-left">
+				<h:outputText value="#{msgs.developer}" styleClass="label" />
+				
+				<p:selectCheckboxMenu  value="#{reportController.filterDevelopers}" id="developer" style="width:250px;" styleClass="m-right"  
+					multiple="true" converter="companyConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{reportController.developers}" var="entity" itemLabel="#{entity.title}" itemValue="#{entity}"/>
+					<p:ajax event="change" update="construction"  listener="#{reportController.onCompanyChange}" />
+		    	</p:selectCheckboxMenu>
+		    </h:panelGrid>
+			<h:panelGrid columns="2" styleClass="f-left">
+				<h:outputText value="#{msgs.company}" styleClass="label" />
+				<h:outputText value="#{msgs.construction}" styleClass="label" />
+				<p:selectCheckboxMenu  value="#{reportController.filterCompanies}" id="company" style="width:250px;" styleClass="m-right"  
+					multiple="true" converter="companyConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{reportController.companies}" var="entity" itemLabel="#{entity.title}" itemValue="#{entity}"/>
+					<p:ajax event="change" update="construction"  listener="#{reportController.onCompanyChange}" />
+		    	</p:selectCheckboxMenu>
+				<p:selectCheckboxMenu  value="#{reportController.filterConstructions}"  
+						multiple="true" id="construction" style="width:250px;"  styleClass="m-right"
+						filter="true" filterMatchMode="contains" converter="constructionConverter">
+					<f:selectItems value="#{reportController.constructions}" var="entity" itemLabel="#{entity.title}" itemValue="#{entity}"/>
+		    	</p:selectCheckboxMenu>		    	
+		    </h:panelGrid>
+		    <div class="clear"></div>
+			<h:panelGrid columns="2" styleClass="f-left">
+				<h:outputText value="#{msgs.dateFrom}" styleClass="label" />
+				<h:outputText value="#{msgs.dateTo}" styleClass="label" />
+				<p:calendar showOtherMonths="true" selectOtherMonths="true" value="#{reportController.dateFrom}"  showOn="button" locale="ru" pattern="dd.MM.yyyy"/>
+				<p:calendar showOtherMonths="true" selectOtherMonths="true" value="#{reportController.dateTo}"  showOn="button" locale="ru" pattern="dd.MM.yyyy"/>
+						    	
+		    </h:panelGrid>
+			<h:panelGrid columns="2"  styleClass="f-left">
+			   <h:outputText value="" styleClass="label" />
+				<h:outputText value="" styleClass="label" />
+				<p:commandButton id="generate" ajax="false" icon="fa fa-print" value="#{msgs.generate}" actionListener="#{reportController.generateCuratorCount()}" />
+			</h:panelGrid>
+		
+		</h:form>
+		
+		<div class="clear"></div>
+	</ui:define>	
+	
+</ui:composition>

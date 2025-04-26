@@ -1,0 +1,186 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets"> 
+
+<ui:composition>
+	<h:form class="clearfix">
+	    <div class="user clearfix">
+	        <div class="user-icon f-left"></div>
+	        <div class="user-name f-left">
+	        	#{sessionScope['org.infosystema.projects.votingsystem.current_user_fio']}	
+	        </div>
+	        <div class="menu-arrow f-right"></div>
+	        <div class="user-menu">
+	            <div class="menu">
+	              	<ul>				        
+					     <li>
+					         <h:commandLink action="#{passwordChanger.change()}" value="#{msgs.changePassword}" />
+					     </li>
+					     <li>
+					         <h:commandLink value="#{msgs.logout}" action="#{userController.logout()}">
+					             
+					         </h:commandLink>
+					     </li>
+					     <li>
+					         <h:commandLink value="#{msgs.settings}" action="#{userController.settings()}">
+					             
+					         </h:commandLink>
+					     </li>
+					   </ul>
+	            </div>
+	        </div>	       
+	    </div>
+	    
+	    <br/><br/>
+	    <br/>	 
+	    <h:panelGroup >   	
+	    
+	    	
+			<div class="seperator"></div>
+			<div style="text-align:center;">
+				<h:outputText value="#{msgs.logoffSoon1}" style="font-style: italic; color:white"/>
+			           <span id="dialog-countdown2" style="font-style: italic;font-weight: bold; color: red;">ssss</span>
+			    <h:outputText value=" #{msgs.logoffSoon2}" style="font-style: italic;color:white"/>
+			</div>
+			<div class="seperator"></div>
+			<br/>
+			<p:panelMenu style="width:160px" styleClass="m-left menu-header"  >
+		    	<p:submenu label="Глобальные настройки" expanded="false"   styleClass="menu-submenu" rendered="#{roleController.isAllowed('ADMIN,AUDIT,CONTROLLER,FIN_DIRECTOR,SUB_FIN_DIRECTOR')}">
+		       		<p:menuitem value="Организации" outcome="/view/company/list.xhtml"  icon="fa fa-bank" styleClass="menu-item" />
+		       		<p:menuitem value="#{msgs.users}" outcome="/view/user/list.xhtml"  icon="fa fa-users" styleClass="menu-item" />
+		       		<p:menuitem rendered="#{roleController.isAllowed('CONTROLLER')}" value="#{msgs.garants}" outcome="/view/garant/list.xhtml"  icon="fa fa-users" styleClass="menu-item" />
+		        	<p:menuitem  value="#{msgs.responsiblePersons}" outcome="/view/responsiblePerson/list.xhtml"  icon="fa fa-users" styleClass="menu-item" />
+		        	<p:menuitem  value="#{msgs.contractTemplateList}" rendered="#{roleController.isAllowed('ADMIN')}" outcome="/view/contractTemplate/list.xhtml"  icon="fa fa-paperclip" styleClass="menu-item" />
+		        	<p:menuitem value="Заставки" rendered="#{roleController.isAllowed('ADMIN')}" outcome="/view/admin/background-images.xhtml" icon="fa fa-cubes" styleClass="menu-item" />
+		           
+		        </p:submenu>
+		        <p:submenu label="Строительные объекты"  expanded="false" styleClass="menu-submenu" >
+		       		<p:menuitem value="Дома" outcome="/view/construction/list.xhtml"  icon="fa fa-building" styleClass="menu-item" />		            
+		            <p:menuitem value="Квартиры" outcome="/view/appartment/list.xhtml" icon="fa fa-cube" styleClass="menu-item" />
+		            <p:menuitem value="Помещения" outcome="/view/offices/list.xhtml" icon="fa fa-cubes" styleClass="menu-item" />
+		            <p:menuitem value="Подз. машиноместа" outcome="/view/garages/list.xhtml" icon="fa fa-automobile" styleClass="menu-item" />
+		        </p:submenu>
+		        <p:submenu label="Клиенты" expanded="false" styleClass="menu-submenu" rendered="#{!roleController.isAllowed('RIELTOR')}" >
+		            <p:menuitem value="Список клиентов" outcome="/view/client/list.xhtml" icon="fa fa-users" styleClass="menu-item" />
+		            <p:menuitem value="Ожидаемые поступления" outcome="/view/schedules/list.xhtml" icon="fa fa-clock-o" styleClass="menu-item" />
+		            <p:menuitem value="Список просрочников" outcome="/view/debtors/list.xhtml" icon="fa fa-calendar" styleClass="menu-item" />
+		            <p:menuitem value="#{msgs.paymentList}"  outcome="/view/payment/list.xhtml" icon="fa fa-money" styleClass="menu-item" />
+		            <p:menuitem value="Список расторжений"  outcome="/view/denouncement/list.xhtml" icon="fa fa-history" styleClass="menu-item" />
+		            <p:menuitem value="Список изменений графика"  outcome="/view/scheduleTemplate/list.xhtml" icon="fa fa-history" styleClass="menu-item" />
+		            <p:menuitem value="Список удалённых броней"  outcome="/view/deletedReserve/list.xhtml" icon="fa fa-history" styleClass="menu-item" />
+		        </p:submenu>
+		        <p:submenu label="Отчёты" expanded="false" styleClass="menu-submenu" rendered="#{roleController.isAllowed('SUBADMIN,ADMIN,FIN_DIRECTOR,SUB_FIN_DIRECTOR,AUDIT,CONTROLLER')}">
+		            <p:menuitem value="Отчёт по строительным объектам" outcome="/view/report/global-count.xhtml" icon="fa fa-file-archive-o" styleClass="menu-item" />
+		            <p:menuitem value="#{msgs.soldCount}" outcome="/view/report/sold-count.xhtml" icon="fa fa-file-archive-o" styleClass="menu-item" />
+		            <p:menuitem value="#{msgs.periodCount}" outcome="/view/report/period-count.xhtml" icon="fa fa-file-archive-o" styleClass="menu-item" />
+		            <p:menuitem value="#{msgs.averageCount}" outcome="/view/report/average-count.xhtml" icon="fa fa-file-archive-o" styleClass="menu-item" />
+		            <p:menuitem value="#{msgs.curatorCount}" outcome="/view/report/curator-count.xhtml" icon="fa fa-file-archive-o" styleClass="menu-item" />		            
+		            <p:menuitem value="#{msgs.logList}" rendered="#{roleController.isAllowed('ADMIN,FIN_DIRECTOR,SUB_FIN_DIRECTOR')}" outcome="/view/log/list.xhtml" icon="fa fa-yelp" styleClass="menu-item" />
+		        	<p:menuitem value="#{msgs.commentLog}" rendered="#{roleController.isAllowed('ADMIN,FIN_DIRECTOR,SUB_FIN_DIRECTOR')}" outcome="/view/log/comment-log.xhtml" icon="fa fa-yelp" styleClass="menu-item" />
+		        </p:submenu>
+		        
+		    </p:panelMenu>	
+	     </h:panelGroup>
+	    
+	     
+	    
+	    
+	</h:form>
+	<br/>
+	<div class="seperator"></div>
+	
+	<!-- 
+	<ul class="nav-menu">
+		<li>
+            <h:link value="Меню"/>
+        </li>
+		<li>
+			<h:link value="Меню"/>
+        </li>
+        <li>
+            <h:link value="Меню"/>
+        </li>
+	</ul>
+	 -->
+	<h:form prependId="false">
+
+      <p:dialog id="timeoutSession"
+     header="#{msgs.sessionExpire}"
+     widgetVar="timeoutDialog"
+     message="#{msgs.yourSessionExpiresSoon}"
+     position="center center"
+     showEffect="fade" 
+     hideEffect="fade"
+     modal="true"
+     width="520"
+     closable="false"
+     draggable="true"
+     resizable="false"     
+     onHide="stopCount()"
+     appendTo="@(body)"
+     onShow="doTimer()">
+     <p>
+        <span class="ui-icon ui-icon-alert" style="float: left; margin: 8px 8px 0;"/>
+        <p:panel>
+           #{msgs.logoffSoon1}
+           <span id="dialog-countdown" style="font-weight: bold"></span>
+           #{msgs.logoffSoon2}
+        </p:panel>
+     </p>
+     <br />
+      
+     <p:commandButton value="#{msgs.keepSessionAlive}" styleClass="button blue" action="#{clientController.refresh()}" oncomplete="location.reload();"/>     
+     </p:dialog>
+      
+   </h:form>
+   <script type="text/javascript">
+      var TIME = #{session.maxInactiveInterval}; // in seconds
+      var countTimer = TIME;
+      var countTimer2 = TIME;
+      var processTimer;
+      var timer_is_on = 0;   
+      var start=null;   
+      var globalStart=null;  
+      var redirectPage = "#{request.contextPath}/view/user/login.xhtml";
+
+      var countDownDiv = "dialog-countdown";
+      var countDownDiv2 = "dialog-countdown2";      
+      
+      var txtCountDown = null;
+      if (!txtCountDown)
+        txtCountDown = document.getElementById(countDownDiv);     
+      var txtCountDown2 = document.getElementById(countDownDiv2);
+      
+      function globalCount() {
+    	if(countTimer2 &lt; 0){
+      		 countTimer2=0;
+      		 txtCountDown2.innerHTML = countTimer2;    
+             txtCountDown.innerHTML = countTimer2;  
+      		 return;
+      	}
+    	if(globalStart==null)
+  			globalStart=new Date();
+      	let current2 = new Date();    	
+        txtCountDown2.innerHTML = countTimer2;    
+        txtCountDown.innerHTML = countTimer2;            
+          
+        let count2 = +current2 - +globalStart;      
+      	let s2 = Math.floor((count2 /  1000));	
+      	countTimer2 = TIME-s2;
+      	if(countTimer2 &lt; 120){
+      		 PF('timeoutDialog').show();
+      	}
+        processTimer = setTimeout("globalCount()", 1000);
+        
+      }
+      document.onload = globalCount();
+      </script>
+	 
+	 
+	 
+</ui:composition>
+
+</html>

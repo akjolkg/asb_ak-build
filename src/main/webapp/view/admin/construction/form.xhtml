@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+ 		
+		<h2>#{msgs.addUser} </h2> <br/><br/>	        
+		<h:form id="add-card-form" prependId="false">
+			<h:panelGroup id="messages">
+				<p:growl globalOnly="true" />
+			</h:panelGroup>
+		    <h:panelGrid styleClass="form-table">
+		    	<h:panelGroup>
+			    	<input type="text" class="visuallyhidden"/>
+	            	<input type="password" class="visuallyhidden"/>
+			    	<h:panelGroup styleClass="f-left m-right" id="pinGroup">
+				    	<h:outputText value="#{msgs.pin}" styleClass="form-table-label disp-blc"/>
+				    	<p:inputText id="pin" value="#{userCreator.pin}"  required="true"
+					    	requiredMessage="#{msgs.thisFieldIsRequired}">
+					    	<p:ajax event="blur" process="@this " update="fio" listener="#{userCreator.onPinComplete()}" />
+					    </p:inputText>
+				    	<p:message for="pin" />
+			    	</h:panelGroup>
+			    	<h:panelGroup styleClass="f-left m-right">
+				    	<h:outputText value="#{msgs.fullname}" styleClass="form-table-label disp-blc"/>
+				    	<h:inputText value="#{userCreator.fio}" id="fio" style="width:300px;" required="true"
+					    	requiredMessage="#{msgs.thisFieldIsRequired}"/>
+					    <p:message for="fio" />
+				   	</h:panelGroup>
+				   	<h:panelGroup styleClass="f-left m-right">
+				    	<h:outputText value="#{msgs.contacts}" styleClass="form-table-label disp-blc"/>
+				    	<h:inputText value="#{userCreator.contacts}" id="contacts" required="true"
+					    	requiredMessage="#{msgs.thisFieldIsRequired}"/>
+					    <p:message for="contacts" />
+			    	</h:panelGroup>	
+				   	
+				   	
+				   	<h:panelGroup styleClass="f-left m-right">
+				    	<h:outputText value="#{msgs.username}" styleClass="form-table-label disp-blc"/>
+				    	<h:inputText value="#{userCreator.username}"  id="username" required="true"
+					    	requiredMessage="#{msgs.thisFieldIsRequired}"/>
+					    <p:message for="username" />
+			    	</h:panelGroup>			    	
+			    	
+				    <h:panelGroup styleClass="f-left m-right">
+				    	<h:outputText value="#{msgs.password}" styleClass="form-table-label disp-blc"/>
+				    	<h:inputText value="#{userCreator.password}" required="true" id="password"
+					    	requiredMessage="#{msgs.thisFieldIsRequired}"/>
+					    <p:message for="password" />
+				    </h:panelGroup>
+				    <h:panelGroup styleClass="f-left m-right">
+				    	<h:outputText value="#{msgs.role}" styleClass="form-table-label disp-blc"/>
+					    <p:selectOneMenu id="role-select" value="#{userCreator.role}" required="true" requiredMessage="Необходимо заполнить данное поле!" effect="none" converter="roleConverter">
+				        	<f:selectItems value="#{userCreator.getRoles()}" var="role" itemLabel="#{role.title}" itemValue="#{role}"/>
+				        </p:selectOneMenu>
+				        <p:message for="role-select" />
+				    </h:panelGroup>
+			    	
+				    
+				    
+				 </h:panelGroup>		    	
+		    </h:panelGrid>	
+		   
+		    <div class="m-top">
+		    	<h:commandButton value="#{msgs.save}" action="#{userCreator.doSave()}" styleClass="button light-blue"/>
+		    	<h:commandButton value="#{msgs.cancel}" action="#{userCreator.cancel()}" immediate="true" styleClass="button red m-left"/>
+		   		<p:commandButton rendered="#{userCreator.selectedUser.id ne null}" style="width:200px; background-color:rgb(249, 179, 179);"   styleClass="button red  f-right" value="#{msgs.deleteUser}" oncomplete="PF('myDlg').show()" />
+		    </div>
+		    <p:confirmDialog id='myDialog' widgetVar="myDlg"  modal="true" resizable="false" header="Вы дейстительно хотите удалить!">
+			       	 <f:facet name="message">
+				       	 <h:outputText value='Вы дейстительно хотите удалить! #{userCreator.selectedUser}'/>
+	                 </f:facet>
+			       
+			        <p:commandButton value="#{msgs.yes}"  onclick="PrimeFaces.monitorDownload(start, stop);" immediate="true" action="#{userCreator.delete(userCreator.selectedUser)}" icon="ui-icon-check"  oncomplete="PF('myDlg').hide()"/>
+			        <p:commandButton value="#{msgs.no}" type="button"  icon="ui-icon-close" onclick="PF('myDlg').hide()" />
+			 </p:confirmDialog>
+		    
+		</h:form>
+			
+		<div class="clear"></div>	
+				
+	</ui:define>	
+</ui:composition>

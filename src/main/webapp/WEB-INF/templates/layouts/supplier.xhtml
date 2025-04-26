@@ -1,0 +1,19 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                template="private.xhtml">
+
+    <ui:define name="sidebar-menu">
+        <ui:include src="../private/sidebar-menu/sidebar-menu.xhtml"/>
+    </ui:define>
+
+    <ui:define name="private-room-services">
+        <ui:include src="../private/services/services-supp.xhtml"/>
+    </ui:define>
+    
+    <ui:define name="private-room-logout">
+        <ui:include src="../private/logout/logout-supplier.xhtml"/>
+    </ui:define>
+
+</ui:composition>

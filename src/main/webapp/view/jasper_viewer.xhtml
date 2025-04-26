@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Просмотр</title>
+        <style type="text/css">
+            .ui-widget {
+                font-size: 90%;
+            }
+        </style> 
+    </h:head>
+     
+    <h:body>
+    	<a href="#{jasperViewerController.contextPath}/jasper?type=xls">EXCEL</a>
+    	<a href="#{jasperViewerController.contextPath}/jasper?type=pdf">PDF</a>
+    	<a href="#{jasperViewerController.contextPath}/jasper?type=doc">DOC</a>
+    	<object type="application/pdf" data="#{jasperViewerController.contextPath}/jasper?type=pdf&amp;k=inline" height="600" width="1100" >
+            Your browser can't display pdf, <a href="#{jasperViewerController.contextPath}/jasper?type=pdf">click</a> to download pdf instead.
+        </object>
+	</h:body>
+</html>

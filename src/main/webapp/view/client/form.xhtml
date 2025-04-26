@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+ 		
+		<h2>#{msgs.addClient} </h2> <br/>
+		<h:form id="add-card-form" prependId="false">
+			<h:panelGroup id="messages">
+				<p:growl globalOnly="true" />
+			</h:panelGroup>
+		    <h:panelGrid styleClass="form-table" columns="3">
+		    
+		    	<h:outputText value="" />
+				<h:outputText value="#{msgs.contract}" styleClass="form-table-label disp-blc  m-top m-bottom"/>
+				<h:outputText value="" />
+		    	
+		    	<h:outputText value="#{msgs.construction}" styleClass="form-table-label disp-blc"/>
+		    	<h:inputText disabled="true" id="construction" value="#{clientController.client.appartment.construction.title}" />
+				<p:message for="construction" />
+				
+				<h:outputText value="#{msgs.appartment}" styleClass="form-table-label disp-blc"/>
+		    	<h:inputText disabled="true" id="appartment" value="#{clientController.client.appartment.title}" />
+				<p:message for="appartment" />
+				
+				<h:outputText value="#{msgs.clientType}" styleClass="form-table-label disp-blc"/>
+				<p:selectOneMenu  value="#{clientController.client.type}" id="clientType" style="width:300px;" 
+					height="400"
+					filter="true" filterMatchMode="contains"
+					required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}" converter="enumConverter">
+					<f:selectItem  itemLabel="#{msgs.selectValue}" noSelectionOption="true"/>
+					<f:selectItems value="#{clientController.clientTypes}" var="enum" itemLabel="#{enums[enum]}" itemValue="#{enum}"/>
+					<p:ajax update="add-card-form" />
+		    	</p:selectOneMenu>
+				<p:message for="clientType" />
+				
+					
+				<h:outputText value="#{msgs.fizYur}" styleClass="form-table-label disp-blc"/>
+				<p:selectOneMenu  value="#{clientController.client.fizYur}" id="fizYur" style="width:300px;" 
+					height="400"
+					required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}" converter="enumConverter">
+					<f:selectItems value="#{clientController.fizYurs}" var="enum" itemLabel="#{enums[enum]}" itemValue="#{enum}"/>
+					<p:ajax update="add-card-form" />
+		    	</p:selectOneMenu>
+				<p:message for="fizYur" />	
+				
+				<h:outputText value="#{msgs.contractType}" styleClass="form-table-label disp-blc"/>
+				<p:selectOneMenu  value="#{clientController.client.contractType}" id="contractType" style="width:300px;" 
+					height="400"
+					required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}" converter="enumConverter" disabled="#{clientController.client.status eq 'APPROVED' and not roleController.isAllowed('ADMIN')}">
+					<f:selectItems value="#{clientController.contractTypes}" var="enum" itemLabel="#{enums[enum]}" itemValue="#{enum}"/>					
+		    	</p:selectOneMenu>
+				<p:message for="contractType" />
+				
+				
+				
+				<h:outputText rendered="#{clientController.client.type eq 'RESERVE' 
+						or clientController.client.type eq 'RESERVE_FOR_EXCHANGE' 
+						or clientController.client.type eq 'RESERVE_FOR_PRESENT'}" 
+						value="#{msgs.withPrepay}" styleClass="form-table-label disp-blc m-top m-bottom"/>
+				<p:selectBooleanCheckbox rendered="#{clientController.client.type eq 'RESERVE' 
+						or clientController.client.type eq 'RESERVE_FOR_EXCHANGE' 
+						or clientController.client.type eq 'RESERVE_FOR_PRESENT'}" 
+						value="#{clientController.client.prepay}" id="prepay">
+            		<p:ajax update="add-card-form" event="change" />
+        		</p:selectBooleanCheckbox>
+				<p:message for="prepay" rendered="#{clientController.client.type eq 'RESERVE' 
+						or clientController.client.type eq 'RESERVE_FOR_EXCHANGE' 
+						or clientController.client.type eq 'RESERVE_FOR_PRESENT'}" />				
+				
+				<h:outputText value="#{msgs.clientFrom}" styleClass="form-table-label disp-blc"/>
+				<p:selectOneMenu  value="#{clientController.client.clientFrom}" id="clientFrom" style="width:300px;" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}" converter="enumConverter" >
+					<f:selectItem  itemLabel="#{msgs.selectValue}" noSelectionOption="true"/>
+					<f:selectItems value="#{clientController.clientFroms}" var="enum" itemLabel="#{enums[enum]}" itemValue="#{enum}"/>
+					<p:ajax update="fromLabel fromFio" event="change" />
+		    	</p:selectOneMenu>
+				<p:message for="clientFrom" />
+				<h:panelGroup id="fromLabel" >
+					<h:outputText rendered="#{clientController.client.clientFrom eq 'OTHERS'}" value="#{msgs.fromWho}" styleClass="form-table-label disp-blc"/>
+				</h:panelGroup>
+				<h:panelGrid id="fromFio"  columns="2">
+					<p:autoComplete  rendered="#{clientController.client.clientFrom eq 'OTHERS'}" value="#{clientController.client.fromPerson}" 
+						id="responsible" style="width:300px;" required="true"
+						requiredMessage="#{msgs.thisFieldIsRequired}" converter="rpConverter" 
+						dropdown="true" completeMethod="#{clientController.findResponsiblePerson}" 
+						 var="rp" itemLabel="#{rp.fio}" itemValue="#{rp}"
+						 >					
+					</p:autoComplete>
+					<p:message for="responsible" />
+				</h:panelGrid>
+				<h:outputText value="" />
+				
+				
+				
+				<h:outputText value="#{msgs.curator}" styleClass="form-table-label disp-blc"/>
+				<p:selectOneMenu  value="#{clientController.client.curator}" filter="true" filterMatchMode="contains" id="curator" style="width:300px;" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}" converter="userConverter">
+					<f:selectItem  itemLabel="#{msgs.selectValue}" noSelectionOption="true"/>
+					<f:selectItems value="#{clientController.curators}" var="user" itemLabel="#{user.fio}" itemValue="#{user}"/>
+		    	</p:selectOneMenu>
+				<p:message for="curator" />	
+				
+				<h:outputText value="#{msgs.curatorOrk}" styleClass="form-table-label disp-blc"/>
+				<p:selectOneMenu  value="#{clientController.client.curatorOrk}" filter="true" filterMatchMode="contains" id="curatorOrk" style="width:300px;" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}" converter="userConverter">
+					<f:selectItem  itemLabel="#{msgs.selectValue}" noSelectionOption="true"/>
+					<f:selectItems value="#{clientController.curatorOrks}" var="user" itemLabel="#{user.fio}" itemValue="#{user}"/>
+		    	</p:selectOneMenu>
+				<p:message for="curatorOrk" />	
+				
+				<h:outputText value="#{msgs.clientloyality}" styleClass="form-table-label disp-blc"/>
+				<p:selectOneMenu  value="#{clientController.client.loyality}" id="loyality" style="width:300px;" 
+					height="400"
+					filter="true" filterMatchMode="contains"
+					required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}" converter="enumConverter">
+					<f:selectItem  itemLabel="#{msgs.selectValue}" noSelectionOption="true"/>
+					<f:selectItems value="#{clientController.clientLoyalities}" var="enum" itemLabel="#{enums[enum]}" itemValue="#{enum}"/>
+		    	</p:selectOneMenu>
+				<p:message for="loyality" />
+							
+			</h:panelGrid>
+			
+			<h:panelGrid styleClass="form-table" columns="3">
+				<h:outputText value="" />
+				<h:outputText value="#{msgs.client}" styleClass="form-table-label disp-blc m-top m-bottom"/>
+				<h:outputText value="" />
+				
+				<h:outputText value="#{msgs.birthdate}" styleClass="form-table-label disp-blc" rendered="#{clientController.client.fizYur eq 'FIZ'}"/>
+				<h:outputText value="#{msgs.formdate}" styleClass="form-table-label disp-blc" rendered="#{clientController.client.fizYur eq 'YUR'}"/>
+			    <p:calendar  yearRange="c-100:c+100" navigator="true" showOtherMonths="true" selectOtherMonths="true" id="birthdate" value="#{clientController.client.birthdate}"  showOn="button" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}" locale="ru" pattern="dd.MM.yyyy"/>
+				<p:message  for="birthdate" />
+				
+				
+				<h:outputText value="#{msgs.pin}" styleClass="form-table-label disp-blc" rendered="#{clientController.client.fizYur eq 'FIZ'}"/>
+				<h:outputText value="#{msgs.inn}" styleClass="form-table-label disp-blc" rendered="#{clientController.client.fizYur eq 'YUR'}"/>
+				
+				<h:inputText value="#{clientController.client.pin}" id="pin"  style="width:300px;"  required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="pin" />
+				
+				<h:outputText value="#{msgs.fio}" styleClass="form-table-label disp-blc" rendered="#{clientController.client.fizYur eq 'FIZ'}"/>
+				<h:outputText value="#{msgs.name}" styleClass="form-table-label disp-blc" rendered="#{clientController.client.fizYur eq 'YUR'}"/>
+				<h:inputText disabled="#{clientController.client.status eq 'APPROVED'}"  value="#{clientController.client.fio}" id="fio"  style="width:300px;"  required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="fio" />
+				
+				
+				<h:outputText value="#{msgs.extraContractText}" styleClass="form-table-label disp-blc" rendered="#{clientController.client.fizYur eq 'YUR'}"/>
+				<p:inputTextarea value="#{clientController.client.extraContractText}" id="extraContractText" placeholder="в лице президента/представителя Аманова Амана Амановича, действующего на основании устава/доверенности " style="width:300px;"  required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}" rendered="#{clientController.client.fizYur eq 'YUR'}"/>
+				<p:message for="extraContractText" rendered="#{clientController.client.fizYur eq 'YUR'}"/>
+				
+				<h:outputText value="#{msgs.uptStatus}" styleClass="form-table-label disp-blc m-top m-bottom" rendered="#{clientController.client.status eq 'APPROVED'}"/>
+				<p:selectBooleanCheckbox value="#{clientController.client.uptStatus}" id="uptStatus" rendered="#{clientController.client.status eq 'APPROVED'}">
+            		<p:ajax update="uptLabel upt" event="change" />
+        		</p:selectBooleanCheckbox>
+				<p:message for="uptStatus" rendered="#{clientController.client.status eq 'APPROVED'}"/>
+				<h:panelGroup id="uptLabel" >
+					<h:outputText rendered="#{clientController.client.uptStatus}" value="#{msgs.uptFio}" styleClass="form-table-label disp-blc"/>
+				</h:panelGroup>
+				<h:panelGroup id="upt" >
+					<h:inputText rendered="#{clientController.client.uptStatus}" value="#{clientController.client.uptFio}" id="uptFio"  style="width:300px;" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}" />
+					<p:message for="uptFio" />
+				</h:panelGroup>
+				<h:outputText value="" />
+				
+				
+				
+				<h:outputText value="#{msgs.crmNumber}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{clientController.client.crmNumber}" id="crm"  style="width:300px;"  required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="crm" />
+				
+				<h:outputText value="#{msgs.passportNumber}" styleClass="form-table-label disp-blc" rendered="#{clientController.client.fizYur eq 'FIZ'}"/>
+				<h:outputText value="#{msgs.registrationNumber}" styleClass="form-table-label disp-blc" rendered="#{clientController.client.fizYur eq 'YUR'}"/>
+				<h:inputText value="#{clientController.client.passportNumber}" id="passportNumber"  style="width:300px;" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}" />
+				<p:message for="passportNumber" />
+				
+				<h:outputText value="#{msgs.passportAddress}" styleClass="form-table-label disp-blc" rendered="#{clientController.client.fizYur eq 'FIZ'}"/>
+				<h:outputText value="#{msgs.legalAddress}" styleClass="form-table-label disp-blc" rendered="#{clientController.client.fizYur eq 'YUR'}"/>
+				<h:inputTextarea value="#{clientController.client.passportAddress}" id="passportAddress"  style="width:300px;"  required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="passportAddress" />
+				
+				<h:outputText value="#{msgs.factAddress}" styleClass="form-table-label disp-blc" rendered="#{clientController.client.fizYur eq 'FIZ'}"/>
+				<h:outputText value="#{msgs.okpo}" styleClass="form-table-label disp-blc" rendered="#{clientController.client.fizYur eq 'YUR'}"/>
+				<h:inputTextarea value="#{clientController.client.factAddress}" id="factAddress"  style="width:300px;"  required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="factAddress" />
+				
+				<h:outputText value="#{msgs.whatsappNumber}" styleClass="form-table-label disp-blc" rendered="#{clientController.client.fizYur eq 'FIZ'}"/>
+				<h:outputText value="#{msgs.position}" styleClass="form-table-label disp-blc" rendered="#{clientController.client.fizYur eq 'YUR'}"/>
+				<p:inputMask  rendered="#{clientController.client.whatsappNumber eq null and clientController.client.fizYur eq 'FIZ'}" id="whatsappNumber2" value="#{clientController.client.whatsappNumber}" mask="+999(999)999-999" style="width:300px;"  required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>				
+				<h:inputText rendered="#{clientController.client.whatsappNumber ne null or clientController.client.fizYur ne 'FIZ'}" value="#{clientController.client.whatsappNumber}" id="whatsappNumber"  style="width:300px;" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}" />
+				<h:panelGroup>
+					<p:message for="whatsappNumber" />
+					<p:message for="whatsappNumber2" />
+				</h:panelGroup>
+				<h:outputText value="#{msgs.contacts}" styleClass="form-table-label disp-blc"/>
+				<p:inputMask  rendered="#{clientController.client.contacts eq null}" id="contacts2" value="#{clientController.client.contacts}" mask="+999(999)999-999" style="width:300px;"  required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>				
+				
+				<h:inputText rendered="#{clientController.client.contacts ne null}" value="#{clientController.client.contacts}" id="contacts"  style="width:300px;"  required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<h:panelGroup>	
+					<p:message for="contacts" />
+					<p:message for="contacts2" />
+				</h:panelGroup>
+				<h:outputText value="#{msgs.note}" styleClass="form-table-label disp-blc"/>
+				<h:inputTextarea value="#{clientController.client.note}" id="note"  style="width:300px;"  required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="note" />
+				
+				<h:outputText value="#{msgs.curatorNote}" styleClass="form-table-label disp-blc"/>
+				<h:inputTextarea value="#{clientController.client.curatorNote}" id="cnote"  style="width:300px;"/>
+				<p:message for="cnote" />
+								
+				
+				
+				
+				<h:outputText value="#{msgs.maritalStatus}" styleClass="form-table-label disp-blc m-top m-bottom"/>
+				<p:selectBooleanCheckbox value="#{clientController.client.maritalStatus}" id="maritalStatus" disabled="#{clientController.client.fizYur eq 'YUR'}">
+            		<p:ajax update="spouseLabel spouse" event="change" />
+        		</p:selectBooleanCheckbox>
+				<p:message for="maritalStatus" />
+				<h:panelGroup id="spouseLabel" >
+					<h:outputText rendered="#{clientController.client.maritalStatus}" value="#{msgs.spouseFio}" styleClass="form-table-label disp-blc"/>
+				</h:panelGroup>
+				<h:panelGroup id="spouse" >
+					<h:inputText rendered="#{clientController.client.maritalStatus}" value="#{clientController.client.spouseFio}" id="spouseFio"  style="width:300px;" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}" />
+					<p:message for="spouseFio" />
+				</h:panelGroup>
+				<h:outputText value="" />
+								
+			</h:panelGrid>
+			
+			<h:panelGrid styleClass="form-table" columns="3" rendered="#{clientController.client.type.ordinal() eq 1 or
+				clientController.client.type.ordinal() eq 2 or
+				clientController.client.type.ordinal() eq 5 or
+				clientController.client.type.ordinal() eq 6 or
+				clientController.client.type.ordinal() eq 7
+				or clientController.client.prepay eq true}">
+				<h:outputText value="" />
+				<h:outputText value="#{msgs.contract}" styleClass="form-table-label disp-blc  m-top m-bottom"/>
+				<h:outputText value="" />
+				
+				<h:outputText value="#{msgs.contractNumber}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{clientController.client.contractNumber}" id="contractNumber"  style="width:300px;" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}" />
+				<p:message for="contractNumber" />
+				
+				<h:outputText value="#{msgs.prepayDate}" rendered="#{clientController.client.prepay eq true
+				and (clientController.client.type eq 'RESERVE' 
+						or clientController.client.type eq 'RESERVE_FOR_EXCHANGE' 
+						or clientController.client.type eq 'RESERVE_FOR_PRESENT')}" styleClass="form-table-label disp-blc"/>
+			    <p:calendar rendered="#{clientController.client.prepay eq true and (clientController.client.type eq 'RESERVE' 
+						or clientController.client.type eq 'RESERVE_FOR_EXCHANGE' 
+						or clientController.client.type eq 'RESERVE_FOR_PRESENT')}"  showOtherMonths="true" selectOtherMonths="true" id="prepayDate" value="#{clientController.client.reserveDate}"  showOn="button" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}" locale="ru" pattern="dd.MM.yyyy"/>
+				<p:message rendered="#{clientController.client.prepay eq true and (clientController.client.type eq 'RESERVE' 
+						or clientController.client.type eq 'RESERVE_FOR_EXCHANGE' 
+						or clientController.client.type eq 'RESERVE_FOR_PRESENT')}" for="prepayDate" />
+				
+				<h:outputText value="#{msgs.contactDate}" styleClass="form-table-label disp-blc"/>
+			    <p:calendar rendered="#{!(clientController.client.prepay eq true
+				and (clientController.client.type eq 'RESERVE' 
+						or clientController.client.type eq 'RESERVE_FOR_EXCHANGE' 
+						or clientController.client.type eq 'RESERVE_FOR_PRESENT'))}" disabled="#{!roleController.isAllowed('ADMIN') and clientController.client.prepay ne true}" showOtherMonths="true" selectOtherMonths="true" id="contractDate" value="#{clientController.client.dateContract}"  showOn="button" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}" locale="ru" pattern="dd.MM.yyyy"/>
+				<p:calendar rendered="#{clientController.client.prepay eq true
+				and (clientController.client.type eq 'RESERVE' 
+						or clientController.client.type eq 'RESERVE_FOR_EXCHANGE' 
+						or clientController.client.type eq 'RESERVE_FOR_PRESENT')}" disabled="#{!roleController.isAllowed('ADMIN') and clientController.client.prepay ne true}" maxdate="#{clientController.contractMaxDate}" showOtherMonths="true" selectOtherMonths="true" id="contractDate2" value="#{clientController.client.dateContract}"  showOn="button" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}" locale="ru" pattern="dd.MM.yyyy"/>
+				<p:message for="contractDate2" rendered="#{!(clientController.client.prepay eq true
+				and (clientController.client.type eq 'RESERVE' 
+						or clientController.client.type eq 'RESERVE_FOR_EXCHANGE' 
+						or clientController.client.type eq 'RESERVE_FOR_PRESENT'))}" />
+				<p:message for="contractDate" rendered="#{(clientController.client.prepay eq true
+				and (clientController.client.type eq 'RESERVE' 
+						or clientController.client.type eq 'RESERVE_FOR_EXCHANGE' 
+						or clientController.client.type eq 'RESERVE_FOR_PRESENT'))}" />
+				
+				
+				
+				
+				
+				
+				<h:outputText rendered="#{clientController.client.appartment.type ne 'PARKING'}" value="#{msgs.priceForSquare}" styleClass="form-table-label disp-blc"/>
+				<p:inputNumber disabled="#{clientController.client.status ne 'NEW'}" rendered="#{clientController.client.appartment.type ne 'PARKING'}" decimalPlaces="2" value="#{clientController.client.priceForSquare}" id="priceForSquare" style="width:100px;"  required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}">
+					<p:ajax update="totalSum" listener="#{clientController.calculateSum()}"/>
+				</p:inputNumber>
+				<p:message for="priceForSquare" rendered="#{clientController.client.appartment.type ne 'PARKING'}"/>
+				
+				<h:outputText value="#{msgs.contractSum}" styleClass="form-table-label disp-blc"/>
+				<p:inputNumber disabled="#{clientController.client.appartment.type ne 'PARKING' or clientController.client.status ne 'NEW'}" decimalPlaces="2" value="#{clientController.client.totalSum}" id="totalSum" style="width:100px;"  required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="totalSum"/>
+				
+				
+				
+				<h:outputText value="#{msgs.firstPayment}" styleClass="form-table-label disp-blc"/>
+				<p:inputNumber decimalPlaces="2" value="#{clientController.client.firstPayment}" id="firstPayment" style="width:100px;"  required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="firstPayment"/>
+				
+				<h:outputText value="#{msgs.reservePayment}" rendered="#{clientController.client.prepay eq true and (clientController.client.type eq 'RESERVE' 
+						or clientController.client.type eq 'RESERVE_FOR_EXCHANGE' 
+						or clientController.client.type eq 'RESERVE_FOR_PRESENT')}" styleClass="form-table-label disp-blc"/>
+				<p:inputNumber decimalPlaces="2"  value="#{clientController.client.reserveAmount}" id="reservePayment" rendered="#{clientController.client.prepay eq true and (clientController.client.type eq 'RESERVE' 
+						or clientController.client.type eq 'RESERVE_FOR_EXCHANGE' 
+						or clientController.client.type eq 'RESERVE_FOR_PRESENT')}" style="width:100px;"  required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="reservePayment" rendered="#{clientController.client.prepay eq true and (clientController.client.type eq 'RESERVE' 
+						or clientController.client.type eq 'RESERVE_FOR_EXCHANGE' 
+						or clientController.client.type eq 'RESERVE_FOR_PRESENT')}"/>
+				
+				<h:outputText value="#{msgs.extralow}" styleClass="form-table-label disp-blc m-top m-bottom"/>
+				<p:selectBooleanCheckbox disabled="#{!roleController.isAllowed('ADMIN')}" value="#{clientController.client.extralow}" id="extralow"/>            		
+				<p:message for="extralow" />
+				
+				<h:outputText value="#{msgs.gotKeys}" styleClass="form-table-label disp-blc m-top m-bottom"/>
+				<p:selectBooleanCheckbox disabled="#{!roleController.isAllowed('ADMIN')}" value="#{clientController.client.keys}" id="keys"/>            		
+				<p:message for="keys" />
+				
+				<h:outputText value="#{msgs.signed}" styleClass="form-table-label disp-blc m-top m-bottom"/>
+				<p:selectBooleanCheckbox disabled="#{!roleController.isAllowed('ADMIN')}" value="#{clientController.client.signed}" id="signed"/>            		
+				<p:message for="signed" />
+				
+				
+				 
+		    </h:panelGrid>	 
+		    <div class="clear"/>
+		   
+		    <div class="m-top">
+		    	<h:commandButton value="#{msgs.delete}" rendered="#{clientController.client.status eq 'NEW' and clientController.client.id ne null}"
+		    		style="width:387px;" 
+		    		action="#{clientController.goToDelete()}" 
+		    		styleClass="button red m-left"/>
+		    	
+		    	<h:commandButton value="#{msgs.denouncement}" rendered="#{clientController.client.status eq 'APPROVED' and (roleController.isAllowed('ADMIN') or roleController.isAllowed('SUBADMIN'))}"
+		    		style="width:387px;" 
+		    		action="#{clientController.goToDenounce()}" 
+		    		styleClass="button red m-left"/>
+		    	
+		   	</div>
+		    <div class="clear"/>
+		   
+		    <div class="m-top">
+		    	<h:commandButton disabled="#{clientController.client.status eq 'APPROVED' and !roleController.isAllowed('ADMIN')}" value="#{msgs.schedule}" action="#{clientController.goToSchedules()}" styleClass="button light-blue m-left"/>
+		    	<h:commandButton disabled="#{clientController.client.status eq 'APPROVED' and !roleController.isAllowed('ADMIN,SUBADMIN')}" value="#{msgs.documents}" action="#{clientController.goToDocuments()}" styleClass="button light-blue m-left"/>
+		    	<h:commandButton disabled="#{clientController.client.status eq 'APPROVED' and !roleController.isAllowed('ADMIN')}" id="save" value="#{msgs.save}" action="#{clientController.doSave()}" styleClass="button light-blue m-left"/>
+		    	<a style="width: 100px;" class="button blue m-left m-top" onclick="history.go(-1)">#{msgs.back}</a>
+			</div>
+		     
+		</h:form>
+		
+		<div class="clear"></div>	
+				
+	</ui:define>	
+</ui:composition>

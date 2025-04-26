@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/base.xhtml">
+ 	<ui:define name="wrap-container">
+		
+		<div class="full-height p-padding login-page">					
+			    
+			<div class="logo-block">
+				<h:link outcome="home">
+					<h1 class="title">#{msgs.title}</h1>
+				</h:link>
+			</div>
+			    
+			<h:form id="login-form" prependId="false" >
+				<p:messages/>
+				<h:outputText value="username" styleClass="label"/>
+				<h:inputText value="#{userController.username}" style="position:relative;" id="username"/>				
+				<p:watermark value="#{msgs.username}" for="username"/>
+		
+				
+				<h:outputText value="password" styleClass="label psw"/>
+				<h:inputSecret value="#{userController.password}" style="position:relative;" id="password"/>
+				<p:watermark value="#{msgs.password}" for="password"/>
+				
+				<h:message for="username" styleClass="error"/>
+				<h:message for="password" styleClass="error"/>
+				<h:message for="login-form" styleClass="error"/>
+				
+				<h:commandButton value="#{msgs.login}" style="position:relative;" styleClass="button blue" action="#{userController.login()}"/>
+					
+			</h:form>
+				
+	
+			<div class="clear"></div>
+			
+			<script type="text/javascript">
+	
+				$(window).load(function() {
+					var element = $('.focus');
+					element.focus();
+				});
+				
+			
+			</script>
+		</div>
+			
+			
+		
+				
+	</ui:define>	
+	
+</ui:composition>

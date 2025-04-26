@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+		<h2>#{msgs.voterList} </h2><br/>
+			<ui:include src="/view/kassir/filter/voter.xhtml"/>
+        <div class="clear"></div>
+		<h:form rendered="false">
+			<h:commandLink value="#{msgs.addVoter}" action="#{voterCreator.add()}" styleClass="button green f-right" />
+		</h:form>
+		<br/>
+		<div class="clear"></div>
+		<h:form id="form">
+			<p:dataTable var="entity" value="#{voterListController.model}" paginator="true" rows="10" lazy="true" rowKey="#{entity.id}" rowIndexVar="index" tableStyleClass="display-table"
+	   			id="table" selectionMode="single" emptyMessage="#{msgs.noRecordsFound}" 
+	   			rowsPerPageTemplate="10,20,30,40,50" paginatorPosition="bottom" pageLinks="10"
+	                   currentPageReportTemplate="Всего : #{voterListController.model.rowCount} из #{voterListController.model.totalCount}  &#160;&#160;| #{msgs.amountPerPage}"
+	                   paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport} {RowsPerPageDropdown}"
+	                   selection="#{voterListController.voter}"
+	                   first="#{voterListController.first}" >
+				<p:ajax event="page" listener="#{voterListController.onPageChange}"/>  
+			    <p:column headerText="#{msgs.operator}">
+			        <h:outputText value="#{entity.user.fio}" />
+			    </p:column>
+			   	<p:column headerText="#{msgs.linkedList}">
+			        <h:outputText value="#{enums[entity.agitator.parent.parent.gtype]} | #{entity.agitator.parent.parent.fio} | #{entity.agitator.parent.fio} | #{entity.agitator.fio}" />
+			    </p:column>
+			    <p:column headerText="#{msgs.pin}">
+			        <h:outputText value="#{entity.pin}" />
+			    </p:column>
+			    <p:column headerText="#{msgs.surname}">
+			        <h:outputText value="#{entity.surname}" />
+			    </p:column>
+				<p:column headerText="#{msgs.firstname}">
+			        <h:outputText value="#{entity.firstname}" />
+			    </p:column>
+			    <p:column headerText="#{msgs.patronymic}">
+			        <h:outputText value="#{entity.patronymic}" />
+			    </p:column>			    
+			    
+			    <p:column headerText="#{msgs.contacts}">
+			        <h:outputText value="#{entity.contacts}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.address}" >
+			       	<h:outputText value="#{entity.address}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.passportNumber}">
+			       	<h:outputText value="#{entity.passportNumber}" />
+			    </p:column>
+			    
+			     <p:column headerText="#{msgs.uik}">
+			        <h:outputText value="#{entity.uik.name}" />
+			    </p:column>
+			    
+			     <p:column headerText="#{msgs.tik}">
+			        <h:outputText value="#{entity.uik.tik.name}" />
+			    </p:column>
+			    <p:column headerText="#{msgs.status}">
+			        <h:graphicImage id="notFilled" library="images" name="error.png" height="20"
+						width="20" rendered="#{entity.status eq 'DECLINED'}" />
+					<p:tooltip for="notFilled" value="#{enums[entity.status]}" />
+					<h:graphicImage id="filled" library="images" name="valid.png" height="20"
+						width="20" rendered="#{entity.status eq 'ACCEPTED'}" />
+					<p:tooltip for="filled" value="#{enums[entity.status]}" />
+			    </p:column>
+			    <p:column headerText="#{msgs.operation}">
+			    	<p:commandButton rendered="#{entity.user.id eq sessionScope['org.asb.current_user_session_key'].id}" value="#{msgs.edit}" style="width:100px; background-color:rgb(84, 141, 190);"  styleClass="button blue  f-right"  title="#{msgs.edit}" action="#{voterCreator.edit(entity)}" ajax="false" />
+			    	<p:commandButton update=":myDialog" rendered="#{entity.user.id eq sessionScope['org.asb.current_user_session_key'].id}" style="width:100px; background-color:rgb(249, 179, 179);"   styleClass="button red  f-right" value="#{msgs.delete}" oncomplete="PF('myDlg').show()" >
+			    		<f:setPropertyActionListener value="#{entity}" target="#{voterListController.voter}" />
+			    	</p:commandButton>
+			    	
+			    </p:column>
+			</p:dataTable>
+		</h:form>
+		
+		<p:dialog id='myDialog' widgetVar="myDlg"  modal="true" resizable="false" header="Вы дейстительно хотите удалить избирателя!">
+			<h:form>
+				<h:panelGroup id="voterDetail">
+			    	<h:outputText value='Вы дейстительно хотите удалить избирателя #{voterListController.voter.surname} #{voterListController.voter.firstname}  #{voterListController.voter.patronymic}?'/>
+			    	<br/>
+			    	<p:commandButton value="#{msgs.yes}"  onclick="PrimeFaces.monitorDownload(start, stop);" action="#{voterCreator.delete(voterListController.voter)}" icon="ui-icon-check"  oncomplete="PF('myDlg').hide()">
+					</p:commandButton>
+					<p:commandButton value="#{msgs.no}" type="button"  icon="ui-icon-close" onclick="PF('myDlg').hide()" />
+				</h:panelGroup>
+			</h:form>
+		</p:dialog>
+		
+		<p:blockUI block="form:table" trigger="form:table" >
+			#{msgs.loading}<br />
+		    <p:graphicImage library="img" name="ajaxloadingbar.gif"/>
+		</p:blockUI>	
+
+		<div class="clear"></div>			
+				
+	</ui:define>	
+	
+</ui:composition>

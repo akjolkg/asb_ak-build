@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+		<h2>#{msgs.addUser} </h2> <br/><br/>	        
+		<h:form id="add-card-form" prependId="false">
+			<h:panelGroup id="messages">
+				<p:growl globalOnly="true" />
+			</h:panelGroup>
+		    <h:panelGrid styleClass="form-table">
+		    	<h:panelGroup>
+			    	<h:panelGroup styleClass="f-left m-right" id="pinGroup">
+				    	<h:outputText value="#{msgs.surname}" styleClass="form-table-label disp-blc"/>
+				    	<p:inputText id="pin" value="#{tempUserCreator.lastName}" size="12" required="true" />
+				    	<p:message for="pin" />
+			    	</h:panelGroup>
+			    	<h:panelGroup styleClass="f-left m-right">
+				    	<h:outputText value="#{msgs.firstname}" styleClass="form-table-label disp-blc"/>
+				    	<h:inputText value="#{tempUserCreator.firstName}" />
+				   	</h:panelGroup>
+				   	<h:panelGroup styleClass="f-left m-right">
+				    	<h:outputText value="#{msgs.username}" styleClass="form-table-label disp-blc"/>
+				    	<h:inputText value="#{tempUserCreator.username}" />
+			    	</h:panelGroup>
+				    <h:panelGroup styleClass="f-left m-right">
+				    	<h:outputText value="#{msgs.password}" styleClass="form-table-label disp-blc"/>
+				    	<h:inputSecret value="#{tempUserCreator.password}" />
+				    </h:panelGroup>
+				 </h:panelGroup>		    	
+		    </h:panelGrid>	
+		    
+		   <ui:include src="/view/select/uik-temp.xhtml" />
+		    
+		    <div class="m-top">
+		    	<h:commandButton value="#{msgs.cancel}" action="#{tempUserCreator.cancel()}" immediate="true" styleClass="button red"/>
+		    	<h:commandButton value="#{msgs.save}" action="#{tempUserCreator.doSave()}" styleClass="button light-blue m-left"/>
+		    </div>
+		    
+		</h:form>
+			
+		<div class="clear"></div>	
+				
+	</ui:define>	
+</ui:composition>

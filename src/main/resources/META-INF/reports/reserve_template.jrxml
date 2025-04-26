@@ -1,0 +1,970 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reserve_template" pageWidth="612" pageHeight="792" whenNoDataType="AllSectionsNoDetail" columnWidth="542" leftMargin="50" rightMargin="20" topMargin="20" bottomMargin="20" isSummaryNewPage="true" isSummaryWithPageHeaderAndFooter="true" uuid="53900af5-bd24-4eb4-b561-f8a8187c0831">
+	<property name="ireport.zoom" value="2.1435888100000016"/>
+	<property name="ireport.x" value="178"/>
+	<property name="ireport.y" value="101"/>
+	<property name="net.sf.jasperreports.export.pdf.force.linebreak.policy" value="true"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="2table" uuid="26106b89-a32a-4428-9028-93aa16b90154">
+		<queryString language="SQL">
+			<![CDATA[select 1 as num,'2.1.' as num1,	 'Сторона-1 гарантирует, что:' as num2
+union
+select 2 as num,'2.1.1.' as num1, 'вправе  распоряжаться строящимся  объектом  и имеет все полномочия на  заключение  настоящего  Предварительного  договора.' as num2
+union
+select 3 as num,'2.1.2.' as num1,	'квартира будет оборудована инфраструктурой, согласно Приложению 2, являющегося неотъемлемой частью настоящего Договора.' as num2
+union
+select 4 as num,'2.2.' as num1,	 'Жилой дом будет оборудован:' as num2
+union
+select 5 as num,'2.2.1.' as num1,	'наружной отделкой с благоустройством прилегающей территории;' as num2
+union
+select 6 as num,'2.2.2. ' as num1,	'бесшумным лифтом; ' as num2
+union
+select 7 as num,'2.2.3.' as num1,	'чистовой отделкой подъезда. ' as num2
+union
+select 8 as num,'  ' as num1,   'Вышеуказанные работы будут выполнены в соответствии с Проектно-сметной документацией.  ' as num2
+ORDER BY num asc]]>
+		</queryString>
+		<field name="num" class="java.lang.Integer"/>
+		<field name="num1" class="java.lang.String"/>
+		<field name="num2" class="java.lang.String"/>
+	</subDataset>
+	<parameter name="client_id" class="java.lang.Integer"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["/opt/jasper/asb/"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+	com.title AS company,
+	com.title AS company_fn,
+ 	com.city as city,
+	com.procuration procuration,
+	com.responsiblepersonis,
+	c.contract_number contract_number,
+	c.date_contract AS date_contract,
+	c.reserve_date AS date_reserve,
+	c.fio as fio,
+	ap.type,
+	c.contract_type,
+	cc.code,
+	cc.planned_address AS obj_address,
+	case when ap.doc_number is null then ap.title else ap.title||' (После инвент.:'||ap.doc_number||')' end AS ap_number,
+	ap.block_number,
+	ap.entrance_number,
+	ap.appartment_entrance_number AS ap_entrance,
+	ap.flat flat,
+	ap.room_quantity room_quantity,
+	ap.total_area total_area,
+	c.price_for_square price_for_square,
+	amount_as_string(c.price_for_square::numeric,com.currency,com.sub_currency) AS price_for_square_text,
+	amount_as_string(c.first_payment::numeric,
+	com.currency,com.sub_currency) AS first_payment_text,
+	c.first_payment first_payment,
+	amount_as_string(c.reserve_amount::numeric,
+	com.currency,com.sub_currency) AS reserve_amount_text,
+	c.reserve_amount reserve_amount,
+	c.passport_address  passport_address,
+	c.fact_address fact_address,
+	c.contacts contacts,
+	c.whatsapp_number, com.bik,com.inn,com.phone,
+c.passport_number,
+com.okpo,
+com.address,
+com.post_address,
+com.bank_name,
+com.account_number,
+
+
+	'field 1' as feild1,
+	'field 2' as feild2
+from
+	client c
+	inner join appartment ap on ap.id=c.appartment_id
+	inner join construction cc on cc.id=ap.construction
+	inner join company com on com.id=cc.company_id
+
+where c.id=$P{client_id}]]>
+	</queryString>
+	<field name="company" class="java.lang.String"/>
+	<field name="company_fn" class="java.lang.String"/>
+	<field name="city" class="java.lang.String"/>
+	<field name="procuration" class="java.lang.String"/>
+	<field name="responsiblepersonis" class="java.lang.String"/>
+	<field name="contract_number" class="java.lang.String"/>
+	<field name="date_contract" class="java.sql.Timestamp"/>
+	<field name="date_reserve" class="java.sql.Timestamp"/>
+	<field name="fio" class="java.lang.String"/>
+	<field name="type" class="java.lang.Integer"/>
+	<field name="contract_type" class="java.lang.Integer"/>
+	<field name="code" class="java.lang.String"/>
+	<field name="obj_address" class="java.lang.String"/>
+	<field name="ap_number" class="java.lang.String"/>
+	<field name="block_number" class="java.lang.String"/>
+	<field name="entrance_number" class="java.lang.Integer"/>
+	<field name="ap_entrance" class="java.lang.Integer"/>
+	<field name="flat" class="java.lang.Integer"/>
+	<field name="room_quantity" class="java.lang.Integer"/>
+	<field name="total_area" class="java.math.BigDecimal"/>
+	<field name="price_for_square" class="java.math.BigDecimal"/>
+	<field name="price_for_square_text" class="java.lang.String"/>
+	<field name="first_payment_text" class="java.lang.String"/>
+	<field name="first_payment" class="java.math.BigDecimal"/>
+	<field name="reserve_amount_text" class="java.lang.String"/>
+	<field name="reserve_amount" class="java.math.BigDecimal"/>
+	<field name="passport_address" class="java.lang.String"/>
+	<field name="fact_address" class="java.lang.String"/>
+	<field name="contacts" class="java.lang.String"/>
+	<field name="whatsapp_number" class="java.lang.String"/>
+	<field name="bik" class="java.lang.String"/>
+	<field name="inn" class="java.lang.String"/>
+	<field name="phone" class="java.lang.String"/>
+	<field name="passport_number" class="java.lang.String"/>
+	<field name="okpo" class="java.lang.String"/>
+	<field name="address" class="java.lang.String"/>
+	<field name="post_address" class="java.lang.String"/>
+	<field name="bank_name" class="java.lang.String"/>
+	<field name="account_number" class="java.lang.String"/>
+	<field name="feild1" class="java.lang.String"/>
+	<field name="feild2" class="java.lang.String"/>
+	<variable name="totalPages" class="java.lang.Integer" resetType="None" incrementType="Report">
+		<variableExpression><![CDATA[$V{PAGE_NUMBER}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="25" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="70" splitType="Stretch">
+			<textField pattern="dd.MM.yyyy">
+				<reportElement uuid="74cd71a0-14dd-40f6-bf26-fe7d67b6ea91" x="419" y="53" width="120" height="14"/>
+				<textElement textAlignment="Right">
+					<font fontName="DejaVu Sans" size="10" isBold="true" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{date_reserve}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd.MM.yyyy">
+				<reportElement uuid="45d9b578-ea56-4d1d-a641-3615b3a09fd1" x="42" y="53" width="120" height="14"/>
+				<textElement>
+					<font fontName="DejaVu Sans" size="10" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["г."+(($F{city} == null) ? "Бишкек" : $F{city})]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd.MM.yyyy">
+				<reportElement uuid="c1a415da-dfec-49d4-8b85-3b4304f1c619" x="152" y="5" width="246" height="33"/>
+				<textElement textAlignment="Center">
+					<font fontName="DejaVu Sans" size="10" isBold="true" isItalic="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Соглашение о задатке при покупке "+(($F{type} == 0) ? "Квартиры": ($F{type} == 1) ? "Помещения" : "Подземного машиноместа")]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="17">
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="9e66ca02-70d4-4ff6-8fcc-c06e1821ce67" stretchType="RelativeToTallestObject" x="42" y="0" width="500" height="16"/>
+				<box leftPadding="0" rightPadding="0"/>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="DejaVu Sans"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["&#09;<b>"+$F{company_fn}+"</b> в лице представителя "+$F{responsiblepersonis}+", действующего на основании "+$F{procuration}+ ", именуемый в дальнейшем Продавец, и <br/>"+"&#09;<b>"+$F{fio}+"</b> , именуемый в дальнейшем Покупатель, с другой стороны, заключили настоящий договор о нижеследующем:"]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="28">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="233571a9-102a-4b59-8807-a1e36f6ede79" stretchType="RelativeToTallestObject" x="0" y="9" width="542" height="14"/>
+				<box leftPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="html">
+					<font fontName="DejaVu Sans"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="14">
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="e6e437bb-ca30-41f5-9508-7c1418f46355" stretchType="RelativeToTallestObject" x="42" y="0" width="500" height="14"/>
+				<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement markup="html">
+					<font fontName="DejaVu Sans"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" Настоящим стороны договорились о том, что Продавец обязуется продать, а Покупатель обязуется купить в будущем "+(($F{type} == 0) ? "Квартиру": ($F{type} == 1) ? "Помещение" : "Подземное машиноместо")+ " по нижеуказанным условиям: "]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="8e322f64-39f2-4b7e-8fdb-6278d5ee985f" stretchType="RelativeToTallestObject" x="0" y="0" width="42" height="14"/>
+				<box leftPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Right" markup="html">
+					<font fontName="DejaVu Sans" isBold="true"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["1."]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="30">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="aff3f330-30eb-47d5-92e6-7b04095bd343" stretchType="RelativeToBandHeight" x="42" y="16" width="230" height="14"/>
+				<box leftPadding="2" rightPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Адрес строящегося жилого дома :"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="a106340c-d6b9-402b-a982-9ed6cc36afa2" stretchType="RelativeToBandHeight" x="272" y="16" width="250" height="14"/>
+				<box leftPadding="5" rightPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="DejaVu Sans" size="10"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{obj_address}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="14">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="369fb445-37e6-4945-870d-63987eab5593" stretchType="RelativeToBandHeight" x="42" y="0" width="230" height="14"/>
+				<box leftPadding="2" rightPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Идентификационный код: "]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="4042191f-59ee-4e74-9e85-e6fbb6eb21e5" stretchType="RelativeToBandHeight" x="272" y="0" width="250" height="14"/>
+				<box leftPadding="5" rightPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="DejaVu Sans" size="10"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{code}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="14">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="f6df7b2e-f2c1-4f26-abf0-1602be0b1d1c" stretchType="RelativeToBandHeight" x="42" y="0" width="230" height="14"/>
+				<box leftPadding="2" rightPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Предварительный номер  квартиры: "]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="18f2cabe-addb-4193-9f37-790923e54780" stretchType="RelativeToBandHeight" x="272" y="0" width="250" height="14"/>
+				<box leftPadding="5" rightPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="DejaVu Sans" size="10"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ap_number}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="28">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="0aa4e8a1-44e5-4cd4-8359-b107d0d04a52" stretchType="RelativeToBandHeight" x="272" y="14" width="250" height="14"/>
+				<box leftPadding="5" rightPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="DejaVu Sans" size="10"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{entrance_number}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="df1e5364-e8a0-42fe-a64a-538b2a0831f8" stretchType="RelativeToBandHeight" x="42" y="14" width="230" height="14"/>
+				<box leftPadding="2" rightPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Подъезд:"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="ddb349bf-7900-43ff-941e-5bc18f3a4e12" stretchType="RelativeToBandHeight" x="272" y="0" width="250" height="14"/>
+				<box leftPadding="5" rightPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="DejaVu Sans" size="10"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{block_number}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="952a03e9-43f4-416a-8c2b-52a886e352ad" stretchType="RelativeToBandHeight" x="42" y="0" width="230" height="14"/>
+				<box leftPadding="2" rightPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Блок:"]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="14">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="43e46d6a-e21d-49ea-a721-1b07240ca9b0" stretchType="RelativeToBandHeight" x="272" y="0" width="250" height="14"/>
+				<box leftPadding="5" rightPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="DejaVu Sans" size="10"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{flat}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="5a93849b-2606-4f0d-962e-8bcc42f9493c" stretchType="RelativeToBandHeight" x="42" y="0" width="230" height="14"/>
+				<box leftPadding="2" rightPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Этаж: "]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="24">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="b07ffd7c-428a-416d-ba78-c357712cef8f" stretchType="RelativeToBandHeight" x="272" y="0" width="250" height="24"/>
+				<box leftPadding="5" rightPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="DejaVu Sans" size="10"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ap_entrance}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="7b5f3ec7-6f68-4df6-8bb0-9f3b36e0496d" stretchType="RelativeToBandHeight" x="42" y="0" width="230" height="24"/>
+				<box leftPadding="2" rightPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Квартира на площадке по счету               (слева направо):"]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="14">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="402205c4-0413-4840-a5ad-6903cd13d1f6" stretchType="RelativeToBandHeight" x="272" y="0" width="250" height="14"/>
+				<box leftPadding="5" rightPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="DejaVu Sans" size="10"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{room_quantity}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="9eb81dd4-cc24-4cf1-85c7-aab75f413a4a" stretchType="RelativeToBandHeight" x="42" y="0" width="230" height="14"/>
+				<box leftPadding="2" rightPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="none">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Количество комнат: "]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="14">
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="df84d3c1-5ae3-4c5f-8e74-32d612d1129a" stretchType="RelativeToBandHeight" x="272" y="0" width="250" height="14"/>
+				<box leftPadding="5" rightPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="DejaVu Sans" size="10"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_area}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="4e54005b-ef07-43bc-b945-c78b7fa8824b" stretchType="RelativeToBandHeight" x="42" y="0" width="230" height="14"/>
+				<box leftPadding="2" rightPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Общая площадь ориентировочно: "]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="28">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="c2969f80-a1fe-4480-a644-790ef19cc500" stretchType="RelativeToBandHeight" x="42" y="0" width="230" height="28"/>
+				<box leftPadding="2" rightPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Дата заключения Договора(Срок бронирования до…):"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="dd.MM.yyyy" isBlankWhenNull="true">
+				<reportElement uuid="4060dfa7-1182-4302-abb2-0c61e2c1699e" stretchType="RelativeToBandHeight" x="272" y="0" width="250" height="28"/>
+				<box leftPadding="5" rightPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="DejaVu Sans" size="10"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{date_contract}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="14">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="b3abe243-5511-4701-8144-d551778e16f3" stretchType="RelativeToBandHeight" x="42" y="0" width="230" height="14"/>
+				<box leftPadding="2" rightPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{type} == 2) ? "Цена цифрами: ": "Цена за 1м.кв. цифрами: "]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="a988df39-dc45-43f9-ac79-a206bf03132a" stretchType="RelativeToBandHeight" x="272" y="0" width="250" height="14"/>
+				<box leftPadding="5" rightPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="DejaVu Sans" size="10"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{price_for_square}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="14">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="5ea5fd68-8d91-46c9-81c9-a9ca022b8fa1" stretchType="RelativeToBandHeight" x="42" y="0" width="230" height="14"/>
+				<box leftPadding="2" rightPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{type} == 2) ? "Цена прописью: ": "Цена за 1м.кв. прописью: "]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="c5ce190c-f71c-43a9-a192-846b0b2734cb" stretchType="RelativeToBandHeight" x="272" y="0" width="250" height="14"/>
+				<box leftPadding="5" rightPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="DejaVu Sans" size="10"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{price_for_square_text}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="28">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="82c6070a-0527-422d-9e04-421172df8334" x="42" y="0" width="230" height="28"/>
+				<box leftPadding="2" rightPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Сумма ожидаемого первого взноса по заключаемому Договору цифрами: "]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="05c4dc83-9618-4a33-a77f-6b389cfb1c1a" x="272" y="0" width="250" height="28"/>
+				<box leftPadding="5" rightPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="DejaVu Sans" size="10"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{first_payment}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="26">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="b16df53a-6f00-4a46-98b4-62bd229ab4ec" stretchType="RelativeToBandHeight" x="42" y="0" width="230" height="25"/>
+				<box leftPadding="2" rightPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Сумма ожидаемого первого взноса по заключаемому Договору прописью : "]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="9a18f337-6071-4db9-b256-a4b6f8912771" stretchType="RelativeToBandHeight" x="272" y="0" width="250" height="25"/>
+				<box leftPadding="5" rightPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="DejaVu Sans" size="10"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{first_payment_text}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="34">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="c9c02c3d-5a81-4491-8d40-508f8e5bac69" x="42" y="20" width="230" height="14"/>
+				<box leftPadding="2" rightPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Сумма задатка цифрами: "]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="94f350f1-51d1-4407-8b3b-9f347e55c039" x="272" y="20" width="250" height="14"/>
+				<box leftPadding="5" rightPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="DejaVu Sans" size="10"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{reserve_amount}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="28">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="616aa90d-4499-4e15-be4c-1edb643c3ff7" x="42" y="0" width="230" height="25"/>
+				<box leftPadding="2" rightPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="DejaVu Sans" size="10" isBold="true"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Сумма задатка прописью: "]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement uuid="0a795c4b-6331-4cf4-a0f5-09fd82efb04b" stretchType="RelativeToBandHeight" x="272" y="0" width="250" height="25"/>
+				<box leftPadding="5" rightPadding="0">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="DejaVu Sans" size="10"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{reserve_amount_text}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="72">
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="1d5c372c-bf95-4f14-aac7-bc07822efe81" stretchType="RelativeToTallestObject" x="42" y="58" width="500" height="14"/>
+				<box leftPadding="0" rightPadding="0"/>
+				<textElement markup="html">
+					<font fontName="DejaVu Sans"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["В счет обеспечения исполнения взятого на себя обязательств Покупатель вносит Продавцу Задаток за приобретаем"+(($F{type} == 0) ? "ую Квартиру": ($F{type} == 1) ? "ое Помещение" : "ое Подземное машиноместо")+" в сумме, указанной выше."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="9dc87401-5ad0-4d47-91d9-1a2af82e536f" stretchType="RelativeToTallestObject" x="0" y="58" width="42" height="14"/>
+				<box leftPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Right" markup="html">
+					<font fontName="DejaVu Sans" isBold="true"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["2."]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="22">
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="b260be49-44a7-4a60-8a04-16708d53894f" stretchType="RelativeToTallestObject" x="42" y="8" width="500" height="14"/>
+				<box leftPadding="0" rightPadding="0"/>
+				<textElement markup="html">
+					<font fontName="DejaVu Sans"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Покупатель и продавец обязуются заключить Договор купли – продажи вышеназванн"+(($F{type} == 0) ? "ой Квартиры": ($F{type} == 1) ? "ого Помещения" : "ого Подземного машиноместа")+" в срок, указанный выше. "]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="2522feef-7c0e-487b-842a-76114e7757aa" stretchType="RelativeToTallestObject" x="0" y="8" width="42" height="14"/>
+				<box leftPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Right" markup="html">
+					<font fontName="DejaVu Sans" isBold="true"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["3."]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="22">
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="1c55af26-a97a-49a3-a373-848718023f75" stretchType="RelativeToTallestObject" x="0" y="8" width="42" height="14"/>
+				<box leftPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Right" markup="html">
+					<font fontName="DejaVu Sans" isBold="true"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["4."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="6e15a70b-ab77-4fc1-8c3b-223b046542f7" stretchType="RelativeToTallestObject" x="42" y="8" width="500" height="14"/>
+				<box leftPadding="0" rightPadding="0"/>
+				<textElement markup="html">
+					<font fontName="DejaVu Sans"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Вышеуказанная стоимость "+(($F{type} == 0) ? "Квартиры": ($F{type} == 1) ? "Помещения" : "Подземного машиноместа")+" является окончательной и изменению не подлежит."]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="24">
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="244ce185-06fe-4004-851f-051f9c910e57" stretchType="RelativeToTallestObject" x="42" y="10" width="500" height="14"/>
+				<box leftPadding="0" rightPadding="0"/>
+				<textElement markup="html">
+					<font fontName="DejaVu Sans"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Сторонам известно, что в соответствии с пунктом 2 статьи 355 Гражданского кодекса Кыргызской Республики, <b>если за неисполнение договора ответственна сторона, давшая задаток, он остается у другой стороны. Если за неисполнение договора ответственна сторона, получившая задаток, она обязана уплатить другой стороне двойную сумму задатка.</b>"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="17bfa8bf-a9eb-47d4-8c98-bf41285d839a" stretchType="RelativeToTallestObject" x="0" y="10" width="42" height="14"/>
+				<box leftPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Right" markup="html">
+					<font fontName="DejaVu Sans" isBold="true"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["5."]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="22">
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="7b32e001-14ed-486f-9c1d-05a2c5ffbe16" stretchType="RelativeToTallestObject" x="42" y="6" width="500" height="14"/>
+				<box leftPadding="0" rightPadding="0">
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement markup="html">
+					<font fontName="DejaVu Sans"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Сверх того, что указано в пункте 5 настоящего Соглашения, не предусмотрены какие-либо возмещения."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="3fb942ab-a6f6-44ba-b4fe-a544d09fe583" stretchType="RelativeToTallestObject" x="0" y="6" width="42" height="14"/>
+				<box leftPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Right" markup="html">
+					<font fontName="DejaVu Sans" isBold="true"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["6."]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="27">
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="ea5843cb-b732-4f03-90a2-5a5f76850278" stretchType="RelativeToTallestObject" x="0" y="5" width="42" height="14"/>
+				<box leftPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Right" markup="html">
+					<font fontName="DejaVu Sans" isBold="true"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["7."]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement uuid="3d547a52-da3c-43d1-9945-fb7971d27806" stretchType="RelativeToTallestObject" x="42" y="5" width="500" height="14"/>
+				<box leftPadding="0" rightPadding="0">
+					<pen lineWidth="0.0"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement markup="html">
+					<font fontName="DejaVu Sans"/>
+					<paragraph lineSpacing="1_1_2" lineSpacingSize="2.0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Настоящий договор составлен в двух экземплярах, один их которых вручается Покупателю, второй – Продавцу."]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="29">
+			<subreport>
+				<reportElement uuid="a849ca00-8441-44b7-a75f-8e9bf8396871" x="0" y="2" width="542" height="27"/>
+				<subreportParameter name="client_id">
+					<subreportParameterExpression><![CDATA[$P{client_id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "rekvisit_extra.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band/>
+		<band/>
+		<band/>
+		<band/>
+		<band/>
+		<band/>
+		<band/>
+		<band/>
+		<band/>
+		<band/>
+		<band/>
+		<band/>
+		<band/>
+		<band/>
+		<band/>
+		<band/>
+		<band/>
+		<band/>
+		<band/>
+		<band/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="10" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

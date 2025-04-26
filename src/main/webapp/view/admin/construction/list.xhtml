@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+		<h2>#{msgs.constructionList} </h2> <br/> 
+		<div class="clear"></div>
+		<h:form>
+			<h:commandLink value="#{msgs.addConstruction}" action="#{userCreator.add()}" styleClass="button green f-right" />
+		</h:form>
+		<br/>
+		<div class="clear"></div>
+		<h:form id ="form">
+			<p:dataTable var="entity" value="#{userListController.model}" paginator="true" rows="50" lazy="true" rowKey="#{entity.id}" rowIndexVar="index" tableStyleClass="display-table"
+	   			id="table" selectionMode="single" emptyMessage="#{msgs.noRecordsFound}" 
+	   			rowsPerPageTemplate="10,20,30,40,50" paginatorPosition="bottom" pageLinks="10"
+	                   currentPageReportTemplate="Всего : #{userListController.model.rowCount} из #{userListController.model.totalCount}  &#160;&#160;| #{msgs.amountPerPage}"
+	               	   paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport} {RowsPerPageDropdown}"
+	                   selection="#{userListController.user}"
+	                   first="#{userListController.first}" >
+				<p:ajax event="page" listener="#{userListController.onPageChange}"/>  
+			    
+			    <p:column headerText="#{msgs.pin}">
+			        <h:outputText value="#{entity.pin}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.fullname}">
+			        <h:outputText value="#{entity.fio}" />
+			    </p:column>
+			    
+				<p:column headerText="#{msgs.username}">
+			        <h:outputText value="#{entity.username}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.role}">
+			        <h:outputText value="#{entity.role.title}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.username}">
+			        <h:outputText value="#{entity.username}" />
+			    </p:column>
+			    <p:column headerText="#{msgs.password}">
+			        <h:outputText value="#{entity.password}" />
+			    </p:column>
+			    
+			    
+			    <p:column headerText="#{msgs.status}">
+			        <h:graphicImage id="notFilled" library="images" name="error.png" height="20"
+						width="20" rendered="#{entity.status=='INACTIVE'}" />
+					<p:tooltip for="notFilled" value="#{msgs.inactive}" />
+					<h:graphicImage id="filled" library="images" name="valid.png" height="20"
+						width="20" rendered="#{entity.status=='ACTIVE'}" />
+					<p:tooltip for="filled" value="#{msgs.active}" />
+			    </p:column>
+			    <p:column headerText="#{msgs.operation}">
+			    	<p:menuButton value="#{msgs.action}">
+					    <p:menuitem value="#{msgs.edit}" action="#{userCreator.edit(entity)}" ajax="false" /> 
+					    <p:menuitem rendered="#{entity.status=='ACTIVE'}" value="#{msgs.block}" action="#{userCreator.block(entity)}" ajax="false" />
+						<p:menuitem rendered="#{entity.status=='INACTIVE'}" value="#{msgs.unblock}" action="#{userCreator.unblock(entity)}" ajax="false" />
+					</p:menuButton>	
+			    		    
+			    </p:column>
+			</p:dataTable>
+		</h:form>
+		<p:blockUI block="form:table" trigger="form:table" >
+			#{msgs.loading}<br />
+		    <p:graphicImage library="img" name="ajaxloadingbar.gif"/>
+		</p:blockUI>	
+
+		<div class="clear"></div>			
+				
+	</ui:define>	
+	
+</ui:composition>

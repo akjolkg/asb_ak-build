@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+		<h2>#{msgs.constructionList} </h2> <br/> 
+		<div class="clear"></div>
+		<h:form rendered="#{roleController.isAllowed('ADMIN')}">
+			<h:commandLink value="#{msgs.addConstruction}" action="#{constructionCreator.add()}" styleClass="button green f-right" />
+		</h:form>
+		<br/>
+		<div class="clear"></div>
+		<h:form id ="filter-form">		
+			<h:panelGrid columns="2" styleClass="f-left">
+				<h:outputText value="#{msgs.developer}" styleClass="label" />
+				<h:outputText value="#{msgs.company}" styleClass="label" />
+				
+				<p:selectCheckboxMenu  value="#{constructionListController.filterDevelopers}" id="developer" style="width:250px;" styleClass="m-right"  
+					multiple="true" converter="companyConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{constructionListController.developers}" var="entity" itemLabel="#{entity.title}" itemValue="#{entity}"/>
+		    	</p:selectCheckboxMenu>
+		    	<p:selectCheckboxMenu  value="#{constructionListController.filterCompanies}" id="company" style="width:250px;" styleClass="m-right"  
+					multiple="true" converter="companyConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{constructionListController.companies}" var="entity" itemLabel="#{entity.title}" itemValue="#{entity}"/>
+				</p:selectCheckboxMenu>
+		    </h:panelGrid>
+		    <div class="clear"></div>
+			
+			<h:panelGrid columns="1"  styleClass="f-left">
+			    <h:outputText value="#{msgs.searchString}" styleClass="label m-right " />
+			    <p:inputText value="#{constructionListController.searchString}"  styleClass="m-right"/>
+			</h:panelGrid>
+			
+			<h:panelGrid columns="2"  styleClass="f-left">
+			    <h:outputText value="#{msgs.rehubDate} #{msgs.dateFrom}" styleClass="label m-left" />
+				<h:outputText value="#{msgs.rehubDate} #{msgs.dateTo}" styleClass="label m-left" />
+				
+				<p:calendar showOtherMonths="true" selectOtherMonths="true" value="#{constructionListController.filterDateFrom}" pagedate="true" showOn="button" locale="ru" styleClass="m-left"/>
+				<p:calendar showOtherMonths="true" selectOtherMonths="true" value="#{constructionListController.filterDateTo}"  showOn="button" locale="ru" styleClass="m-left"/>
+			</h:panelGrid>
+			
+			<h:panelGrid columns="2"  styleClass="f-left">
+			    <h:outputText value="#{msgs.exploitationDate} #{msgs.dateFrom}" styleClass="label m-left" />
+				<h:outputText value="#{msgs.exploitationDate} #{msgs.dateTo}" styleClass="label m-left" />
+				
+				<p:calendar showOtherMonths="true" selectOtherMonths="true" value="#{constructionListController.filterDateFrom2}" pagedate="true" showOn="button" locale="ru" styleClass="m-left"/>
+				<p:calendar showOtherMonths="true" selectOtherMonths="true" value="#{constructionListController.filterDateTo2}"  showOn="button" locale="ru" styleClass="m-left"/>
+			</h:panelGrid>
+			
+			
+			<h:panelGrid columns="2"  styleClass="f-left">
+			   <h:outputText value="" styleClass="label" />
+				<h:outputText value="" styleClass="label" />
+				
+				<p:commandButton ajax="true" update="form" value="#{msgs.search}" actionListener="#{constructionListController.filterData()}" styleClass="button green f-right" />
+			    <p:commandButton ajax="true" update="form filter-form" value="#{msgs.clearFilter}" actionListener="#{constructionListController.clearFilter()}" styleClass="button blue f-right" />
+			</h:panelGrid>
+		
+		</h:form>
+		
+		<div class="clear"></div>
+		<h:form id ="form">
+			<p:dataTable var="entity" value="#{constructionListController.model}" paginator="true" rows="50" lazy="true" rowKey="#{entity.id}" rowIndexVar="index" tableStyleClass="display-table"
+	   			id="table" selectionMode="single" emptyMessage="#{msgs.noRecordsFound}" 
+	   			rowsPerPageTemplate="10,20,30,40,50,1000" paginatorPosition="bottom" pageLinks="10"
+	                   currentPageReportTemplate="Всего : #{constructionListController.model.rowCount} из #{constructionListController.model.totalCount}  &#160;&#160;| #{msgs.amountPerPage}"
+	               	   paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport} {RowsPerPageDropdown} {Exporters}"
+	                   selection="#{constructionListController.construction}"
+	                   first="#{constructionListController.first}" >
+				<p:ajax event="page" listener="#{constructionListController.onPageChange}"/> 
+				<f:facet name="{Exporters}">
+            		<h:commandLink id="excel" styleClass="m-left">
+					    <p:graphicImage library="img" name="excel.png"  />
+					   	<p:dataExporter type="xls" target="table" fileName="export" postProcessor="#{dataExportController.postProcessXLS}" />
+					</h:commandLink>	
+				</f:facet>   
+			 
+			    
+			    <p:column headerText="№">
+			        <h:outputText value="#{index+1}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.company}" sortBy="#{entity.company.title}">
+			        <h:outputText value="#{entity.company.title}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.developer}" sortBy="#{entity.developer.title}">
+			        <h:outputText value="#{entity.developer.title}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.name}" sortBy="#{entity.title}">
+			        <h:outputText value="#{entity.title}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.idCode}" sortBy="#{entity.code}">
+			        <h:outputText value="#{entity.code}" />
+			    </p:column>
+			    
+				<p:column headerText="#{msgs.plannedAddress}" sortBy="#{entity.plannedAddress}">
+			        <h:outputText value="#{entity.plannedAddress}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.rehubDate} &lt;hr/&gt; #{msgs.exploitationDate} &lt;hr/&gt; #{msgs.installmentDate}" >
+			        <h:outputText value="#{entity.plannedDate}" >
+			        	<f:convertDateTime pattern="dd-MM-yyyy" />
+			        </h:outputText>
+			        <hr class="hr-in-data-table"/>
+			        <h:outputText value="#{entity.realDate}" >
+			        	<f:convertDateTime pattern="dd-MM-yyyy" />
+			        </h:outputText>
+			         <hr class="hr-in-data-table"/>
+			        <h:outputText value="#{entity.installmentDate}" >
+			        	<f:convertDateTime pattern="dd-MM-yyyy" />
+			        </h:outputText>
+			        
+			    </p:column>
+			    
+			   
+			    
+			    
+			  	<p:column rendered="#{roleController.isAllowed('ADMIN')}" headerText="#{msgs.minApPrice} &lt;hr/&gt; #{msgs.minOfPrice} &lt;hr/&gt;  #{msgs.minOfPrice} 2-й этаж и выше &lt;hr/&gt;  #{msgs.minPaPrice} &lt;hr/&gt;  #{msgs.minBaPrice}">
+		          	<h:outputText value="#{entity.minApPrice}" >
+		          		<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+		          	</h:outputText>
+		          	<hr class="hr-in-data-table"/>
+		          	<h:outputText value="#{entity.minOfPrice}" >
+		          		<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+		          	</h:outputText>
+		          	<hr class="hr-in-data-table"/>
+		          	<h:outputText value="#{entity.minOfPriced}" >
+		          		<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+		          	</h:outputText>
+		          	<hr class="hr-in-data-table"/>
+		          	<h:outputText value="#{entity.minPaPrice}" >
+		          		<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+		          	</h:outputText>
+		          	<hr class="hr-in-data-table"/>
+		          	<h:outputText value="#{entity.minBaPrice}" >
+		          		<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+		          	</h:outputText>
+		        </p:column>
+		        <p:column rendered="#{roleController.isAllowed('ADMIN')}" headerText="#{msgs.minApPrice2} &lt;hr/&gt; #{msgs.minOfPrice2} &lt;hr/&gt; #{msgs.minOfPrice2} 2-й этаж и выше  &lt;hr/&gt;  #{msgs.minPaPrice2} &lt;hr/&gt;  #{msgs.minBaPrice2}">
+		          	<h:outputText value="#{entity.minApPrice2}" >
+		          		<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+		          	</h:outputText>
+		          	<hr class="hr-in-data-table"/>
+		          	<h:outputText value="#{entity.minOfPrice2}" >
+		          		<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+		          	</h:outputText>
+		          	<hr class="hr-in-data-table"/>
+		          	<h:outputText value="#{entity.minOfPriced2}" >
+		          		<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+		          	</h:outputText>
+		          	<hr class="hr-in-data-table"/>
+		          	<h:outputText value="#{entity.minPaPrice2}" >
+		          		<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+		          	</h:outputText>
+		          	<hr class="hr-in-data-table"/>
+		          	<h:outputText value="#{entity.minBaPrice2}" >
+		          		<f:convertNumber type="number" groupingUsed="true" minFractionDigits="2" />
+		          	</h:outputText>
+		        </p:column>
+			    
+			    
+			    <p:column headerText="#{msgs.note}" sortBy="#{entity.note}">
+			        <h:outputText value="#{entity.note}" />
+			    </p:column>
+			    
+			    
+			    <p:column headerText="#{msgs.operation}" rendered="#{roleController.isAllowed('ADMIN')}" exportable="false">
+			    	<h:commandButton action="#{constructionCreator.edit(entity)}" value="#{msgs.edit}" styleClass="btn-icon edit" title="#{msgs.edit}" />	    
+			    </p:column>
+			</p:dataTable>
+		</h:form>
+		<p:blockUI block="form:table" trigger="form:table" >
+			#{msgs.loading}<br />
+		    <p:graphicImage library="img" name="ajaxloadingbar.gif"/>
+		</p:blockUI>	
+
+		<div class="clear"></div>			
+				
+	</ui:define>	
+	
+</ui:composition>

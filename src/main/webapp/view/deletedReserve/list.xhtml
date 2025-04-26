@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+		<h2>Список удалённых броней </h2> <br/> 
+		<br/>
+		
+		
+		<div class="clear"></div>
+		<h:form id ="filter-form">		
+			<h:panelGrid columns="2"  styleClass="f-left">
+			    <h:outputText value="#{msgs.dateFrom}" styleClass="label m-left" />
+				<h:outputText value="#{msgs.dateTo}" styleClass="label m-left" />
+				
+				<p:calendar showOtherMonths="true" selectOtherMonths="true"  value="#{deletedReserveListController.filterDateFrom}"  showOn="button" locale="ru" styleClass="m-left"/>
+				<p:calendar showOtherMonths="true" selectOtherMonths="true"  value="#{deletedReserveListController.filterDateTo}"  showOn="button" locale="ru" styleClass="m-left"/>
+			</h:panelGrid>
+			<h:panelGrid columns="3" styleClass="f-left">
+				<h:outputText value="#{msgs.searchString}" styleClass="label" />
+				<h:outputText value="" styleClass="label" />
+				<h:outputText value="" styleClass="label" />
+				<h:inputText value="#{deletedReserveListController.searchString}" style="width:400px;" />
+				<p:commandButton ajax="true" update="form" value="#{msgs.search}" actionListener="#{deletedReserveListController.filter}" styleClass="button green f-right" />
+			    <p:commandButton ajax="true" update="form filter-form" value="#{msgs.clearFilter}" actionListener="#{deletedReserveListController.clearFilter}" styleClass="button blue f-right" />
+			</h:panelGrid>
+			
+		
+		</h:form>
+		
+		<div class="clear"></div>
+		
+		<h:form id ="form">
+			<p:dataTable var="entity" value="#{deletedReserveListController.model}"  paginator="true" rows="50" lazy="true" rowKey="#{entity.id}" rowIndexVar="index" tableStyleClass="display-table"
+	   			id="table" selectionMode="single" emptyMessage="#{msgs.noRecordsFound}" 
+	   			rowsPerPageTemplate="10,20,30,40,50,100000" paginatorPosition="bottom" pageLinks="10"
+	                   currentPageReportTemplate="Всего : #{deletedReserveListController.model.rowCount} из #{deletedReserveListController.model.totalCount}  &#160;&#160;| #{msgs.amountPerPage}"
+	               	   paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport} {RowsPerPageDropdown} {Exporters}"
+	                   selection="#{deletedReserveListController.deletedReserve}"
+	                   first="#{deletedReserveListController.first}" >
+				<p:ajax event="rowDblselect" listener="#{deletedReserveController.onRowSelect}"  />
+				<p:ajax event="page" listener="#{deletedReserveListController.onPageChange}"/>  	
+				<f:facet name="{Exporters}">
+            		<h:commandLink id="excel" styleClass="m-left">
+					    <p:graphicImage library="img" name="excel.png"  />
+					   	<p:dataExporter type="xls" target="table" fileName="export" postProcessor="#{dataExportController.postProcessXLS}" />
+					</h:commandLink>
+					
+					<p:commandButton id="toggler" type="button" value="#{msgs.columns}" style="float:right" icon="ui-icon-calculator" />
+			        <p:columnToggler datasource="table" trigger="toggler" >
+			        	<p:ajax event="toggle" listener="#{userController.onToggle}" />
+					</p:columnToggler>
+					
+						
+				</f:facet>   		   
+			    <p:column headerText="№">
+			        <h:outputText value="#{index+1}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.object}">
+			        <h:outputText value="#{entity.headInfo}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.fio}">
+			        <h:outputText value="#{entity.fio}" />
+			    </p:column>
+			    
+			    <p:column headerText="Дата удаления">
+			        <h:outputText value="#{entity.dateCreated}" >
+			        	<f:convertDateTime pattern="dd-MM-yyyy" />
+			        </h:outputText>
+			    </p:column>
+			    
+			</p:dataTable>
+		</h:form>
+		<p:blockUI block="form:table" trigger="form:table" >
+			#{msgs.loading}<br />
+		    <p:graphicImage library="img" name="ajaxloadingbar.gif"/>
+		</p:blockUI>	
+		<p:dialog modal="true" widgetVar="statusDialog" header="#{msgs.loading}" draggable="false" closable="false" resizable="false">
+		    <p:graphicImage library="img" name="ajaxloadingbar.gif"/>
+		</p:dialog>
+		
+		<script type="text/javascript">
+			function start() {
+			    PF('statusDialog').show();
+			}			 
+			function stop() {
+			    PF('statusDialog').hide();
+			}
+		</script>
+		<div class="clear"></div>			
+				
+	</ui:define>	
+	
+</ui:composition>

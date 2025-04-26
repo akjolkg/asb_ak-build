@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"> 		
+ 		
+	<h:panelGrid styleClass="form-table" columns="2">
+		<h:panelGroup id="uik" styleClass="f-left">
+			<h:outputText value="#{msgs.uik}" styleClass="form-table-label disp-blc"/>
+				<p:selectOneMenu id="uik-select" value="#{uikSelector.uik}" requiredMessage="#{error.thisFieldIsRequired}" effect="none" converter="uikConverter"
+				        		styleClass="w-1-1">
+			        	<f:selectItems value="#{uikSelector.tempUiks}" var="uik" itemLabel="#{uik.name}" itemValue="#{uik}"/>
+		        </p:selectOneMenu>
+		        <h:message for="uik-select" id="uik-message" styleClass="error"/>
+			</h:panelGroup>
+	</h:panelGrid>
+	
+</ui:composition>

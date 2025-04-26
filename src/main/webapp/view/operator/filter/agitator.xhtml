@@ -1,0 +1,63 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:ui="http://java.sun.com/jsf/facelets">
+	<h:form id="filterForm">			
+			<h:panelGrid columns="5" style="float:left;">
+				<h:outputLabel value="#{msgs.garantType} :" style="width:130px;display:inline-block"/>
+				<h:outputLabel value="#{msgs.garant} :" style="width:240px;display:inline-block"/>
+				<h:outputLabel value="#{msgs.curator} :" style="width:240px;display:inline-block"/>
+				<h:outputLabel value="#{msgs.search} :" style="width:250px;display:inline-block"/>
+		   		<h:outputLabel value="" />		
+				
+				<h:selectOneMenu style="width:120px;" id="grantType" value="#{agitatorList.filterGarantType}" layout="grid" columns="3" converter="enumConverter">
+					   <f:selectItem itemLabel="#{msgs.selectValue}" />
+                       <f:selectItems value="#{agitatorList.types}" var="type"
+                                       itemLabel="#{enums[type]}" itemValue="#{type}"/>
+                       <p:ajax process="filterForm" update="filterForm :form" listener="#{agitatorList.filterData()}"  event="change" />  
+                </h:selectOneMenu>
+                <p:autoComplete id="garant" size="27" dropdown="true" 
+					    	var="c"
+							itemValue="#{c}" itemLabel="#{c.fio}" 
+							value="#{agitatorList.filterGarant}" 
+							converter="garantConverter"  
+							completeMethod="#{agitatorList.findGarant}" >
+							<p:column>
+				                <h:outputText value="#{c.pin}" />
+				            </p:column>
+				 
+				            <p:column>
+				                <h:outputText value="#{c.fio}" />
+				            </p:column>
+							<p:ajax process="filterForm" update="filterForm :form" listener="#{agitatorList.filterData()}"  event="itemSelect" />
+						</p:autoComplete>
+				<p:autoComplete size="27" id="curator" dropdown="true" 
+							var="c"
+							itemValue="#{c}" itemLabel="#{c.fio}" 
+							value="#{agitatorList.filterCurator}" 
+							converter="curatorConverter"  
+							completeMethod="#{agitatorList.findCurator}" >
+							<p:column>
+				                <h:outputText value="#{c.pin}" />
+				            </p:column>
+				 
+				            <p:column>
+				                <h:outputText value="#{c.fio}" />
+				            </p:column>
+							<p:ajax process="filterForm" update="filterForm :form" listener="#{agitatorList.filterData()}"  event="itemSelect" />
+						</p:autoComplete>
+			   	<h:inputText value="#{agitatorList.searchString}" style="width:250px;"/>
+				<p:commandButton style="margin-left:20px;" value="#{msgs.applyFilter}" action="#{agitatorList.filterData()}" update=":form"></p:commandButton>
+		
+		   	
+		   	
+		   	</h:panelGrid>
+		   	
+		   	
+		   
+		   				
+	</h:form>
+	<br/>
+</ui:composition>

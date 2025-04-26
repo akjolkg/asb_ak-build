@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+ 		
+		<h2>#{msgs.addCompany} </h2> <br/><br/>	        
+		<h:form id="add-card-form" prependId="false">
+			<h:panelGroup id="messages">
+				<p:growl globalOnly="true" />
+			</h:panelGroup>
+		    <h:panelGrid styleClass="form-table" columns="3">
+		    	<h:outputText value="#{msgs.inn}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{companyCreator.company.inn}" id="inn" style="width:150px;" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="inn" />
+				
+				<h:outputText value="#{msgs.name}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{companyCreator.company.title}" id="name"  style="width:300px;"  required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="name" />
+				
+				<h:outputText value="#{msgs.nameLong}" styleClass="form-table-label disp-blc"/>
+				<h:inputTextarea value="#{companyCreator.company.titleLong}" id="nameLong"  style="width:300px;"  required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="nameLong" />
+				
+				
+				<h:outputText value="#{msgs.legalInfo}" styleClass="form-table-label disp-blc"/>
+				<h:inputTextarea value="#{companyCreator.company.legalInfo}" id="legalInfo"  style="width:300px;"  required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="legalInfo" />
+				
+				<h:outputText value="#{msgs.shortName}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{companyCreator.company.shortName}"  style="width:300px;"  id="shortName" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="shortName" />
+				
+				<h:outputText value="#{msgs.okpo}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{companyCreator.company.okpo}" id="okpo" style="width:150px;" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="okpo" />
+				
+				<h:outputText value="#{msgs.legalAddress}" styleClass="form-table-label disp-blc"/>
+				<h:inputTextarea value="#{companyCreator.company.address}" id="address"  style="width:300px;"  required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="address" />
+				
+				<h:outputText value="#{msgs.postalAddress}" styleClass="form-table-label disp-blc"/>
+				<h:inputTextarea value="#{companyCreator.company.postAddress}" id="postalAddress"  style="width:300px;"  required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="postalAddress" />
+				    
+			    <h:outputText value="#{msgs.bik}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{companyCreator.company.bik}"  style="width:100px;"  id="bik" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="bik" />
+				
+				<h:outputText value="#{msgs.bank}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{companyCreator.company.bankName}"  style="width:300px;"  id="bank" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="bank" />
+				
+				<h:outputText value="#{msgs.accountNumber}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{companyCreator.company.accountNumber}"  style="width:150px;"  id="accountNumber" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="accountNumber" />
+				
+				<h:outputText value="#{msgs.phone}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{companyCreator.company.phone}"  style="width:300px;"  id="phone" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="phone" />
+				
+				<h:outputText value="#{msgs.webSite}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{companyCreator.company.webSite}"  style="width:300px;"  id="webSite" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="webSite" />
+				 
+			    <h:outputText value="#{msgs.director}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{companyCreator.company.director}" style="width:300px;"  id="director" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="director" />
+				
+				<h:outputText value="#{msgs.director} #{msgs.toStyle}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{companyCreator.company.toDirector}" style="width:300px;"  id="toDirector" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="toDirector" />
+				
+				<h:outputText value="#{msgs.finDirector}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{companyCreator.company.finDirector}" style="width:300px;"  id="finDirector" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="finDirector" />
+				
+				<h:outputText value="#{msgs.finDirector} #{msgs.isStyle}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{companyCreator.company.finDirectorIs}" style="width:300px;"  id="finDirectorIs" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="finDirectorIs" />
+				
+				<h:outputText value="#{msgs.lawyer}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{companyCreator.company.lawyer}" style="width:300px;"  id="lawyer" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="lawyer" />
+				
+				<h:outputText value="#{msgs.lawyer} #{msgs.toStyle}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{companyCreator.company.toLawyer}" style="width:300px;"  id="toLawyer" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="toLawyer" />
+				
+				<h:outputText value="#{msgs.responsiblePerson} #{msgs.short}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{companyCreator.company.responsiblePerson}" style="width:300px;"  id="responsible-person" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="responsible-person" />
+				
+				<h:outputText value="#{msgs.responsiblePerson} #{msgs.long}" styleClass="form-table-label disp-blc"/>
+				<h:inputTextarea value="#{companyCreator.company.responsiblePersonLong}" style="width:300px;"  id="responsible-person-long" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="responsible-person-long" />
+				
+				<h:outputText value="#{msgs.responsiblePerson} #{msgs.long} #{msgs.isStyle}" styleClass="form-table-label disp-blc"/>
+				<h:inputTextarea value="#{companyCreator.company.responsiblePersonIs}" style="width:300px;"  id="responsible-person-is" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="responsible-person-is" />
+				
+				<h:outputText value="#{msgs.contractPassport}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{companyCreator.company.psdFio}" style="width:300px;"  id="psd" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="psd" />
+				
+				<h:outputText value="#{msgs.procurationText}" styleClass="form-table-label disp-blc"/>
+				<h:inputTextarea value="#{companyCreator.company.procuration}" style="width:300px;"  id="procuration" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="procuration" />
+				
+				<h:outputText value="#{msgs.currency}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{companyCreator.company.currency}"  style="width:100px;"  id="currency" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="currency" />
+				
+				<h:outputText value="#{msgs.subCurrency}" styleClass="form-table-label disp-blc"/>
+				<h:inputText value="#{companyCreator.company.subCurrency}"  style="width:100px;"  id="subCurrency" required="true"
+					requiredMessage="#{msgs.thisFieldIsRequired}"/>
+				<p:message for="subCurrency" />
+				
+				<h:outputText value="#{msgs.company}" styleClass="form-table-label disp-blc"/>
+				<p:selectBooleanCheckbox  value="#{companyCreator.company.main}" id="main"/>            		
+				<p:message for="main" />
+				
+				<h:outputText value="#{msgs.developer}" styleClass="form-table-label disp-blc"/>
+				<p:selectBooleanCheckbox  value="#{companyCreator.company.developer}" id="developer"/>            		
+				<p:message for="developer" />
+			    	    	
+		    </h:panelGrid>	
+		   
+		    <div class="m-top">
+		    	<h:commandButton value="#{msgs.save}" action="#{companyCreator.doSave()}" styleClass="button light-blue"/>
+		    	<h:commandButton value="#{msgs.cancel}" action="#{companyCreator.cancel()}" immediate="true" styleClass="button red m-left"/>
+		   	</div>
+		    
+		</h:form>
+			
+		<div class="clear"></div>	
+				
+	</ui:define>	
+</ui:composition>

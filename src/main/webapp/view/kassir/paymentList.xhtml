@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+		<h2>#{msgs.paymentList} </h2><br/>
+			<ui:include src="/view/kassir/filter/payment.xhtml"/>
+        <div class="clear"></div>
+		<h:form>
+			<h:commandLink value="#{msgs.addPayment}" action="#{paymentCreator.add()}" styleClass="button green f-right" />
+		</h:form>
+		<br/>
+		<div class="clear"></div>
+		<h:form id="form">
+			<p:dataTable var="entity" value="#{paymentListController.model}" paginator="true" rows="10" lazy="true" rowKey="#{entity.id}" rowIndexVar="index" tableStyleClass="display-table"
+	   			id="table" selectionMode="single" emptyMessage="#{msgs.noRecordsFound}" 
+	   			rowsPerPageTemplate="10,20,30,40,50" paginatorPosition="bottom" pageLinks="10"
+	                   currentPageReportTemplate="Всего : #{paymentListController.model.rowCount} из #{paymentListController.model.totalCount}  &#160;&#160;| #{msgs.amountPerPage}"
+	                   paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport} {RowsPerPageDropdown}"
+	                   selection="#{paymentListController.payment}"
+	                   first="#{paymentListController.first}" >
+				<p:ajax event="page" listener="#{paymentListController.onPageChange}"/>  
+			    <p:column headerText="#{msgs.kassir}">
+			        <h:outputText value="#{entity.kassir.fio}" />
+			    </p:column>
+			    <p:column headerText="#{msgs.passportOnHands}">
+			        <h:outputText value="#{entity.passport.fio}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.linkedList}">
+			        <h:outputText value="#{enums[entity.voter.agitator.parent.parent.gtype]} | #{entity.voter.agitator.parent.parent.fio} | #{entity.voter.agitator.parent.fio} | #{entity.voter.agitator.fio}" />
+			    </p:column>
+			    <p:column headerText="#{msgs.pin}">
+			        <h:outputText value="#{entity.voter.pin}" />
+			    </p:column>
+			    <p:column headerText="#{msgs.surname}">
+			        <h:outputText value="#{entity.voter.surname}" />
+			    </p:column>
+				<p:column headerText="#{msgs.firstname}">
+			        <h:outputText value="#{entity.voter.firstname}" />
+			    </p:column>
+			    <p:column headerText="#{msgs.patronymic}">
+			        <h:outputText value="#{entity.voter.patronymic}" />
+			    </p:column>			    
+			    
+			    <p:column headerText="#{msgs.contacts}">
+			        <h:outputText value="#{entity.voter.contacts}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.voterAmount}">
+			       	<h:outputText value="#{entity.amountVoter}" />
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.getterAmount}">
+			        <h:outputText value="#{entity.amountGetter}" />
+			    </p:column>
+			    <p:column headerText="#{msgs.date}">
+			        <h:outputText value="#{entity.dateCreated}" >
+			        	<f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss" />
+			        </h:outputText>
+			    </p:column>
+			    
+			    <p:column headerText="#{msgs.operation}">
+			    	<p:commandButton rendered="#{entity.kassir.id eq sessionScope['org.asb.current_user_session_key'].id}" value="#{msgs.edit}" style="width:100px; background-color:rgb(84, 141, 190);"  styleClass="button blue  f-right"  title="#{msgs.edit}" action="#{paymentCreator.edit(entity)}" ajax="false" />
+			    	<p:commandButton update=":myDialog" rendered="#{entity.kassir.id eq sessionScope['org.asb.current_user_session_key'].id}" style="width:100px; background-color:rgb(249, 179, 179);"   styleClass="button red  f-right" value="#{msgs.delete}" oncomplete="PF('myDlg').show()" >
+			    		<f:setPropertyActionListener value="#{entity}" target="#{paymentListController.payment}" />
+			    	</p:commandButton>
+			    	
+			    </p:column>
+			</p:dataTable>
+		</h:form>
+		
+		<p:dialog id='myDialog' widgetVar="myDlg"  modal="true" resizable="false" header="Вы дейстительно хотите удалить избирателя!">
+			<h:form>
+				<h:panelGroup id="paymentDetail">
+			    	<h:outputText value='Вы дейстительно хотите удалить Платеж #{paymentListController.payment.voter.surname} #{paymentListController.payment.voter.firstname}  #{paymentListController.payment.voter.patronymic}?'/>
+			    	<br/>
+			    	<p:commandButton value="#{msgs.yes}"  onclick="PrimeFaces.monitorDownload(start, stop);" action="#{paymentCreator.delete(paymentListController.payment)}" icon="ui-icon-check"  oncomplete="PF('myDlg').hide()">
+					</p:commandButton>
+					<p:commandButton value="#{msgs.no}" type="button"  icon="ui-icon-close" onclick="PF('myDlg').hide()" />
+				</h:panelGroup>
+			</h:form>
+		</p:dialog>
+		
+		<p:blockUI block="form:table" trigger="form:table" >
+			#{msgs.loading}<br />
+		    <p:graphicImage library="img" name="ajaxloadingbar.gif"/>
+		</p:blockUI>	
+
+		<div class="clear"></div>			
+				
+	</ui:define>	
+	
+</ui:composition>

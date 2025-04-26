@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:p="http://primefaces.org/ui"
+    template="/WEB-INF/templates/layouts/private.xhtml">
+ 	<ui:define name="content">
+ 		
+		<h2>#{msgs.addDocument} </h2> <br/>
+		<h:form id="add-card-form" prependId="false">
+			<h:panelGroup id="messages">
+				<p:growl globalOnly="true" />
+			</h:panelGroup>
+		    
+			
+			<h:panelGrid styleClass="form-table" columns="3">
+				
+				<h:outputLabel for="docType" value="#{msgs.screenSaverText}" />
+				<h:inputTextarea value="#{docController.document.headerText}" cols="60" rows="10" />
+				<h:message for="docType" display="icon" style="color:red;" />
+				
+			</h:panelGrid>
+			
+		   
+		    <div class="m-top" style="display: none;">
+		    	<h:commandButton id="save" value="#{msgs.save}" action="#{docController.doSaveDocument()}" styleClass="button light-blue m-left"/>
+		   	</div>
+		     
+		</h:form>
+		<h:panelGrid columns="2" styleClass="field-groups" columnClasses="field-group-label,field-group-content" rowClasses="field-group" style="min-width: 650px;">
+
+			<h:outputText styleClass="label label-group" value="#{msgs.upload}"/>
+            <h:panelGroup>
+                <h:panelGroup>
+                    <h:form id="fileUploadForm">
+                        <p:fileUpload id="upLoad" mode="advanced" fileUploadListener="#{fileUploadController.handleFileUpload}"
+                                    update="messages, :filesForm:files" sizeLimit="10000000" fileLimit="10" auto="true" fileLimitMessage="#{msgs.fileLimitMessage}"
+                                    uploadLabel="#{msgs.upload}" cancelLabel="#{msgs.cancel}" label="#{msgs.choose}" />
+                        <p:growl id="messages" showDetail="true" />
+                    </h:form>
+                </h:panelGroup> 
+
+                <h:panelGroup>
+                    <h:form id="filesForm">
+                        <p:dataList value="#{fileUploadController.files}" var="file" id="files" type="ordered" emptyMessage="#{msgs.noRecordsFound}">
+                            <h:outputText id="name" value="#{file.fileName}" />
+                            <h:commandLink id="remove" value="#{forming.name}" action="#{fileUploadController.remove(file)}" immediate="true">
+                                <h:graphicImage alt="#{msgs.delete}" library="images" name="delete.png" height="20" width="20" />
+                            </h:commandLink>
+                            <p:tooltip for="remove" value="#{msgs.delete}" showEffect="slide" hideEffect="slide" />
+                        </p:dataList>
+                    </h:form>
+                </h:panelGroup>
+            </h:panelGroup>
+		</h:panelGrid>
+			
+		<h:form id="control" styleClass="m-top">
+			<h:panelGrid columns="2">
+				<a class="button" onclick="history.go(-1)">#{msgs.back}</a>
+				<p:commandButton id="save" onclick="document.getElementById('save').click();" value="#{msgs.save}" styleClass="button light-blue m-left"/>
+			</h:panelGrid>
+		</h:form>
+			
+		<div class="clear"></div>	
+				
+	</ui:define>	
+</ui:composition>
