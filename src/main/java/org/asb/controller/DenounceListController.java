@@ -110,16 +110,11 @@ public class DenounceListController implements Serializable {
 			if(d!=null && d.getHistory()!=null) {
 				Integer start=d.getHistory().indexOf("<span class=\"form-table-label disp-blc\">Куратор</span>");
 				k=d.getHistory().substring(start,start+200);
-				System.out.println("1--"+k+"--1");
 				start=k.indexOf("<td>")+4;
-				System.out.println("1--"+start+"--1");
 				k=k.substring(start);
-				System.out.println("1--"+k+"--1");
 				Integer end=k.indexOf("</td>");
-				
 				k=k.substring(0,end);
 				
-				System.out.println("--"+k+"--");
 			}
 		}catch (Exception e) {
 		
