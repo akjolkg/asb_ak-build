@@ -54,6 +54,7 @@
 		       		<p:menuitem rendered="#{roleController.isAllowed('CONTROLLER')}" value="#{msgs.garants}" outcome="/view/garant/list.xhtml"  icon="fa fa-users" styleClass="menu-item" />
 		        	<p:menuitem  value="#{msgs.responsiblePersons}" outcome="/view/responsiblePerson/list.xhtml"  icon="fa fa-users" styleClass="menu-item" />
 		        	<p:menuitem  value="#{msgs.contractTemplateList}" rendered="#{roleController.isAllowed('ADMIN')}" outcome="/view/contractTemplate/list.xhtml"  icon="fa fa-paperclip" styleClass="menu-item" />
+		        	<p:menuitem  value="#{msgs.documentTemplateList}" rendered="#{roleController.isAllowed('ADMIN')}" outcome="/view/contractTemplate/doc-list.xhtml"  icon="fa fa-paperclip" styleClass="menu-item" />
 		        	<p:menuitem value="Заставки" rendered="#{roleController.isAllowed('ADMIN')}" outcome="/view/admin/background-images.xhtml" icon="fa fa-cubes" styleClass="menu-item" />
 		           
 		        </p:submenu>

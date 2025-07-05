@@ -16,6 +16,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -28,6 +29,7 @@ import javax.inject.Inject;
 import org.apache.commons.io.FileUtils;
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.apache.poi.poifs.crypt.HashAlgorithm;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -36,18 +38,26 @@ import org.asb.beans.InequalityConstants;
 import org.asb.beans.Message;
 import org.asb.beans.SortEnum;
 import org.asb.enums.AppartmentType;
+import org.asb.enums.ClientFrom;
 import org.asb.enums.ClientType;
 import org.asb.enums.ContractTemplateType;
 import org.asb.enums.ContractType;
+import org.asb.enums.DocumentTemplateType;
 import org.asb.enums.OfficeType;
+import org.asb.enums.PaymentType;
 import org.asb.model.Client;
 import org.asb.model.ContractTemplate;
 import org.asb.model.Denounce;
+import org.asb.model.DocumentTemplate;
+import org.asb.model.Payment;
 import org.asb.model.Schedule;
 import org.asb.model.ScheduleTemplate;
 import org.asb.service.ClientService;
 import org.asb.service.ContractTemplateService;
+import org.asb.service.DocumentTemplateService;
+import org.asb.service.PaymentService;
 import org.asb.service.ScheduleService;
+import org.asb.service.ScheduleTemplateService;
 import org.asb.util.Translit;
 import org.asb.util.web.Messages;
 import org.primefaces.model.DefaultStreamedContent;
@@ -79,9 +89,16 @@ public class ClientJasperController extends BaseReportController {
 	@EJB
 	private ScheduleService sService;
 	@EJB
+	private ScheduleTemplateService stService;
+	@EJB
+	private PaymentService pService;
+	@EJB
 	private ContractTemplateService ctService;
 	@Inject
 	private ContractDocController docController;
+	
+	@EJB
+	private DocumentTemplateService dtService;
 
 	private boolean value1;
 
@@ -110,7 +127,11 @@ public class ClientJasperController extends BaseReportController {
 		map.put("longCompanyTitle", client.getAppartment().getConstruction().getCompany().getTitleLong());
 		map.put("shortCompanyTitle", client.getAppartment().getConstruction().getCompany().getShortName());
 		map.put("companyAddress", client.getAppartment().getConstruction().getCompany().getAddress());
-
+		
+		Long count=stService.countByProperty("client",client);
+		if(count == null)count=0L;
+		count++;
+		map.put("contractModificationNumber",count.toString());
 		map.put("procuration", client.getAppartment().getConstruction().getCompany().getProcuration());
 
 		map.put("companyPostalAddress", client.getAppartment().getConstruction().getCompany().getPostAddress());
@@ -133,6 +154,27 @@ public class ClientJasperController extends BaseReportController {
 
 		map.put("clientPin", client.getPin());
 		map.put("clientPhone", client.getContacts());
+		map.put("toForeman", client.getAppartment().getConstruction().getToForeman() == null ? ""
+				: client.getAppartment().getConstruction().getToForeman());
+		map.put("finDira", client.getAppartment().getConstruction().getCompany().getFinDirectorIs() == null ? ""
+				: client.getAppartment().getConstruction().getCompany().getFinDirectorIs());
+		switch (client.getAppartment().getType()) {
+		case APPARTMENT:
+			map.put("appartmentTypeR", "квартиры");
+			break;
+		case OFFICE:
+			map.put("appartmentTypeR", "помещения");
+			break;
+		case PARKING:
+			map.put("appartmentTypeR", "подземного машиноместа");
+			break;		
+		default:
+			map.put("appartmentType", "");
+		}
+		map.put("today",simpleDateFormat.format(new Date()));
+		map.put("finDir", client.getAppartment().getConstruction().getCompany().getFinDirector() == null ? ""
+				: client.getAppartment().getConstruction().getCompany().getFinDirector());
+		
 		map.put("clientWhatsapp", client.getWhatsappNumber());
 
 		if (client.getMaritalStatus() != true) {
@@ -210,6 +252,33 @@ public class ClientJasperController extends BaseReportController {
 			map.put("2TextZayavleniya", "");
 		}
 		map.put("clientPassport", client.getPassportNumber());
+		map.put("crmNumber", client.getCrmNumber() == null ? "" : client.getCrmNumber());
+		map.put("extraLow", (client.getExtralow()==true)?"Ниже сетки!!!":"");
+		
+		List<FilterExample> exs = new ArrayList<FilterExample>();
+		exs.add(new FilterExample("client", client, InequalityConstants.EQUAL));
+		Date mx=new Date();
+		for(Schedule s:sService.findByExample(0, 1, SortEnum.DESCENDING, exs, "datePayment")) {
+            if(s.getDatePayment() != null) {
+                mx= s.getDatePayment();
+            }
+        }
+		long daysDifference = getDaysDifference(client.getAppartment().getConstruction().getInstallmentDate(), mx);
+		map.put("installmentNote", (daysDifference>0)?"Продлено на "+daysDifference+" день/дней/дня":"");
+		map.put("contractType",Messages.getEnumMessage(client.getType().toString()));
+		map.put("clientType",Messages.getEnumMessage(client.getClientFrom().toString()));
+		map.put("clientFrom", client.getClientFrom().equals(ClientFrom.OTHERS)?client.getFromPerson().getFio():"-");
+		map.put("curatorOp", client.getCurator() == null ? "-" : client.getCurator().getFio());
+		map.put("curatorOrk", client.getCuratorOrk() == null ? "-" : client.getCuratorOrk().getFio());
+		//map.put("curator", client.getCurator() == null ? "-" : client.getCurator().getFio());
+		
+		map.put("installmentDate",simpleDateFormat.format(mx));
+		map.put("contractDate",simpleDateFormat.format(client.getDateContract()));
+		map.put("note",client.getNote() == null ? "" : client.getNote());
+		
+		map.put("signPerson", client.getAppartment().getConstruction().getCompany().getPsdFio());
+		map.put("responsibleFrom", client.getClientFrom().equals(ClientFrom.OTHERS) ? client.getFromPerson().getFio()+" _________________________"
+				:"");
 		map.put("constructionAddress", client.getAppartment().getConstruction().getPlannedAddress());
 		map.put("constructionDocs", client.getAppartment().getConstruction().getLegalDocuments());
 		map.put("constructionEni", client.getAppartment().getConstruction().getCode());
@@ -219,11 +288,11 @@ public class ClientJasperController extends BaseReportController {
 		map.put("constructionSve", simpleDateFormat.format(client.getAppartment().getConstruction().getRealDate()));
 		map.put("appartmentNumber", client.getAppartment().getTitle());
 		if (client.getAppartment().getDocNumber() != null && client.getAppartment().getDocNumber().length() > 0)
-			map.put("appartmentNumber", client.getAppartment().getTitle() + " (После инвент.:"
+			map.put("appartmentNumber", client.getAppartment().getTitle() + " (После инвент.: "
 					+ client.getAppartment().getDocNumber() + ")");
 		map.put("appartmentTotalArea", client.getAppartment().getTotalArea() + "");
 		if (client.getAppartment().getDocTotalArea() != null)
-			map.put("appartmentTotalArea", client.getAppartment().getTotalArea() + " (После инвент.:"
+			map.put("appartmentTotalArea", client.getAppartment().getTotalArea() + " (После инвент.: "
 					+ client.getAppartment().getDocTotalArea() + ")");
 		map.put("appartmentFlat", client.getAppartment().getFlat() + "");
 		map.put("appartmentBlock", client.getAppartment().getBlockNumber() + "");
@@ -239,6 +308,10 @@ public class ClientJasperController extends BaseReportController {
 		}
 
 		map.put("contractSumDolText",
+				nff.format(client.getTotalSum().setScale(0, BigDecimal.ROUND_FLOOR)).trim() + " "
+						+ client.getAppartment().getConstruction().getCompany().getCurrency() + " " + ttotalsum + " "
+						+ client.getAppartment().getConstruction().getCompany().getSubCurrency());
+		map.put("contractSumSomText",
 				nff.format(client.getTotalSum().setScale(0, BigDecimal.ROUND_FLOOR)).trim() + " "
 						+ client.getAppartment().getConstruction().getCompany().getCurrency() + " " + ttotalsum + " "
 						+ client.getAppartment().getConstruction().getCompany().getSubCurrency());
@@ -275,15 +348,73 @@ public class ClientJasperController extends BaseReportController {
 						+ client.getAppartment().getConstruction().getCompany().getSubCurrency());
 
 		map.put("contractSumDolNum", client.getTotalSum() + "");
+		map.put("contractSumSomNum", client.getTotalSum() + "");
+		exs=new ArrayList<FilterExample>();
+		exs.add(new FilterExample("client", client, InequalityConstants.EQUAL));
+		exs.add(new FilterExample("paymentType", PaymentType.DISCOUNT, InequalityConstants.EQUAL));
+		BigDecimal discount = BigDecimal.ZERO;
+		for (Payment p : pService.findByExample(0, 100, exs)) {
+			discount = discount.add(p.getPaymentAmount());
+		}
+		
+		if (client.getAppartment().getDocTotalArea() != null) {
+			map.put("contractSumFact", client.getAppartment().getDocTotalArea().multiply(client.getPriceForSquare())
+					.setScale(2, BigDecimal.ROUND_FLOOR) + "");
+			map.put("contractSumSignDoc", client.getAppartment().getDocTotalArea().multiply(client.getPriceForSquare())
+					.setScale(2, BigDecimal.ROUND_FLOOR).subtract(discount) + "");
+		} else {
+			map.put("contractSumFact", client.getTotalSum() + "");
+			map.put("contractSumSignDoc", client.getTotalSum().subtract(discount) + "");
+		}
+		
 		map.put("contractPerSquareNum", client.getPriceForSquare() + "");
 		map.put("firstPaymentSumSomNum", client.getFirstPayment() + "");
 		map.put("constructionIdentificationNumber", client.getAppartment().getConstruction().getCode());
 		map.put("clientInn", client.getPin());
-
+		map.put("toLawyer", client.getAppartment().getConstruction().getCompany().getToLawyer() == null ? ""
+				: client.getAppartment().getConstruction().getCompany().getToLawyer());
 		map.put("clientDetails", client.getFio() + "\n Test /n Test \r sadasd /t sadsadas ");
 		return map;
 	}
+	public static long getDaysDifference(Date startDate, Date endDate) {
+        long diffInMillis = endDate.getTime() - startDate.getTime();
+        return TimeUnit.MILLISECONDS.toDays(diffInMillis);
+    }
 
+	public DefaultStreamedContent generateClientContractPassport(Client client) {
+		Map<String, String> map = prepareClientDetailsForContract(client);
+
+		InputStream inputStream = null;
+		inputStream = getDocumentTemplate(DocumentTemplateType.PASSPORT_DEAL, inputStream);
+
+		List<FilterExample> examples = new ArrayList<FilterExample>();
+		examples.add(new FilterExample("client", client, InequalityConstants.EQUAL));		
+		if (inputStream == null) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"На данный тип документа : \"" + Messages.getEnumMessage(DocumentTemplateType.PASSPORT_DEAL.toString()) 
+									+ "\" - нет Шаблона документа! ",
+							null));
+			return null;
+		}
+		
+
+		InputStream stream = null;
+		try {
+			XSSFWorkbook doc = docController.replaceTextXlsx(inputStream, map);
+			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+			doc.write(byteArrayOutputStream);
+			doc.close();
+			stream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+			byteArrayOutputStream.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+		return new DefaultStreamedContent(stream, externalContext.getMimeType("excel.xlsx"),
+				Translit.translit(client.getContractNumber()) + ".xlsx");
+	}
 	public DefaultStreamedContent generateClientContractNew(Client client) {
 		Map<String, String> map = prepareClientDetailsForContract(client);
 
@@ -372,6 +503,15 @@ public class ClientJasperController extends BaseReportController {
 		return inputStream;
 	}
 
+	private InputStream getDocumentTemplate(DocumentTemplateType type, InputStream inputStream) {
+		List<FilterExample> examples = new ArrayList<FilterExample>();
+		examples.add(new FilterExample("type", type, InequalityConstants.EQUAL));
+		for (DocumentTemplate dt : dtService.findByExample(0, 100, examples)) {
+			inputStream = new ByteArrayInputStream(dt.getAttachment().getData());
+		}
+		return inputStream;
+	}
+	
 	public DefaultStreamedContent generateClientContractDirectNew(Client client) {
 		Map<String, String> map = prepareClientDetailsForContract(client);
 
@@ -612,43 +752,66 @@ public class ClientJasperController extends BaseReportController {
 		map = new HashMap<>();
 		map.put("client_id", client.getId());
 		JasperPrint jasperPrint = null;
-		try {
-			Boolean debtor = false;
+		DocumentTemplateType docType= DocumentTemplateType.KEYS_DOCUMENT;
+		Boolean debtor = false;
 
-			System.out.println("client.getNotPayedYet()=" + client.getNotPayedYet());
-			if (client.getNotPayedYet().compareTo(BigDecimal.ZERO) == 1) {
-				if (client.getAppartment().getDocTotalArea() != null) {
-					if (client.getAppartment().getDocTotalArea().multiply(client.getPriceForSquare())
-							.compareTo(client.getAlreadyPayed()) > 0)
-						debtor = true;
-				} else
+		System.out.println("client.getNotPayedYet()=" + client.getNotPayedYet());
+		if (client.getNotPayedYet().compareTo(BigDecimal.ZERO) == 1) {
+			if (client.getAppartment().getDocTotalArea() != null) {
+				if (client.getAppartment().getDocTotalArea().multiply(client.getPriceForSquare())
+						.compareTo(client.getAlreadyPayed()) > 0)
 					debtor = true;
+			} else
+				debtor = true;
 
-			}
-			if (debtor == false) {
-				if (client.getAppartment().getDocTotalArea() != null) {
-					if (client.getAppartment().getDocTotalArea().multiply(client.getPriceForSquare())
-							.compareTo(client.getAlreadyPayed()) > 0)
-						debtor = true;
-				}
-			}
-
-			if (debtor)
-				jasperPrint = generateJasperPrint(map, ds.getConnection(), "keys_report2.jasper");
-			else
-				jasperPrint = generateJasperPrint(map, ds.getConnection(), "keys_report.jasper");
-
-		} catch (SQLException e) {
-			e.printStackTrace();
 		}
+		if (debtor == false) {
+			if (client.getAppartment().getDocTotalArea() != null) {
+				if (client.getAppartment().getDocTotalArea().multiply(client.getPriceForSquare())
+						.compareTo(client.getAlreadyPayed()) > 0)
+					debtor = true;
+			}
+		}
+
+		if (debtor)
+			docType = DocumentTemplateType.KEYS_DOCUMENT_DEBT;				
+		else
+			docType = DocumentTemplateType.KEYS_DOCUMENT;
 
 		Client c = service.findById(client.getId(), false);
 		c.setKeys(true);
 		service.merge(c);
 
+		InputStream inputStream = null;
+		inputStream = getDocumentTemplate(docType, inputStream);
+		
+		if (inputStream == null) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"На данный тип документа : \"" + Messages.getEnumMessage(docType.toString()) 
+									+ "\" - нет Шаблона документа! ",
+							null));
+			return null;
+		}
+		
+		Map<String, String> map2 = prepareClientDetailsForContract(client);
+		InputStream stream = null;
+		try {
+			XWPFDocument doc = docController.replaceTextDocx(inputStream, map2, new HashMap<String, List<Schedule>>(),new HashMap<String, Set<String>>());
+			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+			doc.write(byteArrayOutputStream);
+			doc.close();
+			stream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+			byteArrayOutputStream.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-		return new DefaultStreamedContent(getPDFStream(jasperPrint), externalContext.getMimeType("word.pdf"),
-				Translit.translit("keys_" + client.getFio()) + ".pdf");
+		return new DefaultStreamedContent(stream, externalContext.getMimeType("bank.docx"),
+				Translit.translit(client.getContractNumber()) + ".docx");
+		
+		
 
 	}
 
@@ -700,9 +863,37 @@ public class ClientJasperController extends BaseReportController {
 		Client c = service.findById(client.getId(), false);
 		c.setSigned(true);
 		service.merge(c);
+		
+		InputStream inputStream = null;
+		inputStream = getDocumentTemplate(DocumentTemplateType.SIGN_DOCUMENT, inputStream);
+		
+		if (inputStream == null) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"На данный тип документа : \"" + Messages.getEnumMessage(DocumentTemplateType.SIGN_DOCUMENT.toString()) 
+									+ "\" - нет Шаблона документа! ",
+							null));
+			return null;
+		}
+		
+		Map<String, String> map2 = prepareClientDetailsForContract(client);
+		InputStream stream = null;
+		try {
+			XWPFDocument doc = docController.replaceTextDocx(inputStream, map2, new HashMap<String, List<Schedule>>(),new HashMap<String, Set<String>>());
+			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+			doc.write(byteArrayOutputStream);
+			doc.close();
+			stream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+			byteArrayOutputStream.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-		return new DefaultStreamedContent(getPDFStream(jasperPrint), externalContext.getMimeType("word.pdf"),
-				Translit.translit("signed_" + client.getFio()) + ".pdf");
+		return new DefaultStreamedContent(stream, externalContext.getMimeType("bank.docx"),
+				Translit.translit("signed_" + client.getFio()) + ".docx");
+		
+		
 	}
 
 	public DefaultStreamedContent generateClientContractDirectWord(Client client) {
@@ -767,7 +958,7 @@ public class ClientJasperController extends BaseReportController {
 				Translit.translit(client.getContractNumber()) + ".docx");
 	}
 
-	public DefaultStreamedContent generateClientContractPassport(Client client) {
+	public DefaultStreamedContent generateClientContractPassportOld(Client client) {
 		System.out.println("generateContract");
 		Map<String, Object> map = new HashMap<>();
 		map = new HashMap<>();

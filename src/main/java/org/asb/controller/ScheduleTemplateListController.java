@@ -17,6 +17,7 @@ import org.asb.annotation.RolesAllowed;
 import org.asb.beans.FilterExample;
 import org.asb.beans.InequalityConstants;
 import org.asb.beans.SortEnum;
+import org.asb.controller.admin.ClassifierController;
 import org.asb.data.ScheduleTemplateModel;
 import org.asb.enums.ClientStatus;
 import org.asb.enums.Role;
@@ -36,177 +37,103 @@ import org.primefaces.event.data.PageEvent;
 
 @ManagedBean
 @ViewScoped
-@RolesAllowed(roles=0)
-public class ScheduleTemplateListController implements Serializable {
-	
+@RolesAllowed(roles = 0)
+public class ScheduleTemplateListController extends ClassifierController implements Serializable {
+
 	private static final long serialVersionUID = 8475958315897562353L;
-	private ScheduleTemplateModel model; 
+	private ScheduleTemplateModel model;
 	private ScheduleTemplate ScheduleTemplate;
-	private String searchString;
-	private Integer first;
-	private List<User> filterCuratorOrks;
-	private List<ClientStatus> filterStatuses;
-	
+
 	@Inject
 	private LoginUtil loginUtil;
-	
+
 	@EJB
 	private ScheduleTemplateService service;
 	@EJB
 	private UserService userService;
-	
-	
 
-	public ScheduleTemplateListController() {}
-	
+	public ScheduleTemplateListController() {
+	}
+
 	@PostConstruct
-	private void init(){
+	private void init() {
 		restoreState();
 		filterData();
 	}
-	
-	public void filter(){
-		filterData();	
-		saveState();
+
+	public void filter() {
+		first = 0;
+		filterData();
+
 	}
-	
-	public void clearFilter(){
-		searchString=null;
-		filterCuratorOrks=null;
-		filterStatuses=null;
-		filterData();		
-		saveState();
-	}
-	public void filterData(){
-		
+
+	public void filterData() {
 		List<FilterExample> filters = new ArrayList<>();
-		if(searchString!=null && searchString.length()>0){
-			filters.add(new FilterExample(true,"client.appartment.title","%"+getSearchString()+"%",InequalityConstants.LIKE,true));
-			filters.add(new FilterExample(true,"client.appartment.construction.title","%"+getSearchString()+"%",InequalityConstants.LIKE,true));
-			filters.add(new FilterExample(true,"note","%"+getSearchString()+"%",InequalityConstants.LIKE,true));
-			filters.add(new FilterExample(true,"client.contractNumber","%"+searchString+"%",InequalityConstants.LIKE,true));
-			filters.add(new FilterExample(true,"client.fio","%"+searchString+"%",InequalityConstants.LIKE,true));
-			filters.add(new FilterExample(true,"client.uptFio","%"+searchString+"%",InequalityConstants.LIKE,true));
-			filters.add(new FilterExample(true,"client.contacts","%"+searchString+"%",InequalityConstants.LIKE,true));
-			filters.add(new FilterExample(true,"client.note","%"+searchString+"%",InequalityConstants.LIKE,true));
-			filters.add(new FilterExample(true,"client.whatsappNumber","%"+searchString+"%",InequalityConstants.LIKE,true));
+		if (filterCompanies != null && !filterCompanies.isEmpty()) {
+			filters.add(new FilterExample("client.appartment.construction.company", filterCompanies,
+					InequalityConstants.IN));
 		}
-		filters.add(new FilterExample("id",null,InequalityConstants.IS_NOT_NULL_SINGLE));
-		if(loginUtil.getCurrentUser().getConstructions()!=null && !loginUtil.getCurrentUser().getConstructions().isEmpty()) {
-			filters.add(new FilterExample("client.appartment.construction",loginUtil.getCurrentUser().getConstructions(),InequalityConstants.IN));
+
+		if (filterConstructions != null && !filterConstructions.isEmpty()) {
+			filters.add(
+					new FilterExample("client.appartment.construction", filterConstructions, InequalityConstants.IN));
 		}
-		
-		if(filterStatuses!=null && !filterStatuses.isEmpty()) {
-			filters.add(new FilterExample("status",filterStatuses,InequalityConstants.IN));
+		if (filterBlocks != null && !filterBlocks.isEmpty()) {
+			filters.add(new FilterExample("client.appartment.blockNumber", filterBlocks, InequalityConstants.IN));
 		}
-		if(filterCuratorOrks!=null && !filterCuratorOrks.isEmpty()) {
-			filters.add(new FilterExample("client.curatorOrk",filterCuratorOrks,InequalityConstants.IN));
+
+		if (filterTitle != null && filterTitle.length() > 0) {
+			filters.add(new FilterExample("client.appartment.title", "%" + filterTitle + "%", InequalityConstants.LIKE,
+					true));
 		}
 		
-		
+		if (searchString != null && searchString.length() > 0) {
+			filters.add(new FilterExample(true, "note", "%" + getSearchString() + "%", InequalityConstants.LIKE, true));
+			filters.add(new FilterExample(true, "client.contractNumber", "%" + searchString + "%",InequalityConstants.LIKE, true));
+			filters.add(new FilterExample(true, "client.fio", "%" + searchString + "%", InequalityConstants.LIKE, true));
+			filters.add(new FilterExample(true, "client.uptFio", "%" + searchString + "%", InequalityConstants.LIKE, true));
+			filters.add(new FilterExample(true, "client.contacts", "%" + searchString + "%", InequalityConstants.LIKE,true));
+			filters.add(new FilterExample(true, "client.note", "%" + searchString + "%", InequalityConstants.LIKE, true));
+			filters.add(new FilterExample(true, "client.whatsappNumber", "%" + searchString + "%",
+					InequalityConstants.LIKE, true));
+		}
+		filters.add(new FilterExample("id", null, InequalityConstants.IS_NOT_NULL_SINGLE));
+		if (loginUtil.getCurrentUser().getConstructions() != null
+				&& !loginUtil.getCurrentUser().getConstructions().isEmpty()) {
+			filters.add(new FilterExample("client.appartment.construction",
+					loginUtil.getCurrentUser().getConstructions(), InequalityConstants.IN));
+		}
+
+		if (filterStatus != null && !filterStatus.isEmpty()) {
+			filters.add(new FilterExample("status", filterStatus, InequalityConstants.IN));
+		}
+		if (filterCuratorOrks != null && !filterCuratorOrks.isEmpty()) {
+			filters.add(new FilterExample("client.curatorOrk", filterCuratorOrks, InequalityConstants.IN));
+		}
+
 		model = new ScheduleTemplateModel(filters, service);
-		
+		saveState();
 	}
+
+	public void clearFilter() {
+        super.clearFilter();
+        filter();
+    }
 	
-	public void saveState() {
-		HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-		HttpSession session = request.getSession();
-		session.setAttribute("first", getFirst());
-		session.setAttribute("searchStringD", searchString);
-		session.setAttribute("filterCuratorOrks", filterCuratorOrks);
-		session.setAttribute("filterStatuses", filterStatuses);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public void restoreState() {
-    	HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-		HttpSession session = request.getSession();
-		setFirst((Integer) session.getAttribute("first"));
-		setSearchString((String) session.getAttribute("searchStringD"));
-		setFilterCuratorOrks((List<User>) session.getAttribute("filterCuratorOrks"));
-		setFilterStatuses((List<ClientStatus>) session.getAttribute("filterStatuses"));
-	}
-	
-	public void removeState() {
-    	HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-		HttpSession session = request.getSession();
-		session.setAttribute("first", null);
-		session.setAttribute("searchStringD", null);
-		session.setAttribute("filterCuratorOrks", null);
-		session.setAttribute("filterStatuses", null);
-		setFirst(null);
-	}
-	
-	public void onPageChange(PageEvent event) {  
-    	HttpServletRequest request = (HttpServletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-		HttpSession session = request.getSession();
-		setFirst(((DataTable) event.getSource()).getRows() * event.getPage());
-		session.setAttribute("first", getFirst());
-	}
-	
-	private List<User> curatorOrks;
-	public List<User> getCuratorOrks() {
-		if(curatorOrks==null) {
-			List<FilterExample> examples=new ArrayList<>();
-			examples.add(new FilterExample("id",null,InequalityConstants.IS_NOT_NULL_SINGLE));
-			examples.add(new FilterExample("role",Role.ORK, InequalityConstants.EQUAL));
-			curatorOrks=userService.findByExample(0, 1000, SortEnum.ASCENDING, examples, "fio");
-		}
-		return curatorOrks;
-	}
-	
-	
-	public ClientStatus[] getClientStatuses() {
-		return ClientStatus.values();
-	}
 	public ScheduleTemplateModel getModel() {
 		return model;
 	}
-	
+
 	public void setModel(ScheduleTemplateModel model) {
 		this.model = model;
 	}
-	
+
 	public ScheduleTemplate getScheduleTemplate() {
 		return ScheduleTemplate;
 	}
-	
+
 	public void setScheduleTemplate(ScheduleTemplate ScheduleTemplate) {
 		this.ScheduleTemplate = ScheduleTemplate;
 	}
 
-	public String getSearchString() {
-		return searchString;
-	}
-
-	public void setSearchString(String searchString) {
-		this.searchString = searchString;
-	}
-
-	public Integer getFirst() {
-		return first;
-	}
-
-	public void setFirst(Integer first) {
-		this.first = first;
-	}
-
-	public List<User> getFilterCuratorOrks() {
-		return filterCuratorOrks;
-	}
-
-	public void setFilterCuratorOrks(List<User> filterCuratorOrks) {
-		this.filterCuratorOrks = filterCuratorOrks;
-	}
-
-	public List<ClientStatus> getFilterStatuses() {
-		return filterStatuses;
-	}
-
-	public void setFilterStatuses(List<ClientStatus> filterStatuses) {
-		this.filterStatuses = filterStatuses;
-	}
-
-	
-	
 }

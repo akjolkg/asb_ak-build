@@ -6,7 +6,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	template="/WEB-INF/templates/layouts/private.xhtml">
 	<ui:define name="content">
-		<h2>#{msgs.contractTemplateList}</h2>
+		<h2>#{msgs.documentTemplateList}</h2>
 		<h:form>
 			<p:commandButton value="Ключевые слова для шаблонов"
 				styleClass="button blue f-left"
@@ -176,52 +176,46 @@
 					государственной регистрации.</li>
 			</ul>
 		</p:dialog>
+
 		<br />
 		<div class="clear"></div>
 		<h:form rendered="#{roleController.isAllowed('ADMIN')}">
-			<h:commandLink value="#{msgs.addContractTemplate}"
-				action="#{contractTemplateCreator.add()}"
+			<h:commandLink value="#{msgs.addDocumentTemplate}"
+				action="#{documentTemplateCreator.add()}"
 				styleClass="button green f-right" />
 		</h:form>
 		<br />
 		<div class="clear"></div>
 		<h:form id="filter-form">
 			<p:growl escape="false" />
-			<h:panelGrid columns="3" styleClass="f-left">
-
-				<h:outputText value="#{msgs.construction}"
-					styleClass="form-table-label disp-blc" />
-				<h:outputText value="#{msgs.contractType}"
+			<h:panelGrid columns="2" styleClass="f-left">
+				<h:outputText value="#{msgs.documentType}"
 					styleClass="form-table-label disp-blc" />
 				<h:outputText value="#{msgs.searchString}"
 					styleClass="form-table-label disp-blc" />
+
 				<p:selectCheckboxMenu
-					value="#{contractTemplateListController.filterConstructions}"
-					multiple="true" id="construction" style="width:250px;"
-					styleClass="m-right" filter="true" filterMatchMode="contains"
-					converter="constructionConverter">
-					<f:selectItems
-						value="#{contractTemplateListController.constructions}"
-						var="entity" itemLabel="#{entity.title}" itemValue="#{entity}" />
-				</p:selectCheckboxMenu>
-				<p:selectCheckboxMenu
-					value="#{contractTemplateListController.filterContractTemplates}"
+					value="#{documentTemplateListController.filterDocumentTemplates}"
 					multiple="true" id="type" style="width:250px;" styleClass="m-right"
 					filter="true" filterMatchMode="contains" converter="enumConverter">
 					<f:selectItems
-						value="#{contractTemplateListController.allContractTemplateTypes}"
+						value="#{documentTemplateListController.allDocumentTemplateTypes}"
 						var="entity" itemLabel="#{enums[entity]}" itemValue="#{entity}" />
 				</p:selectCheckboxMenu>
-				<h:inputText
-					value="#{contractTemplateListController.searchString}"
+				<h:inputText value="#{documentTemplateListController.searchString}"
 					id="searchString" styleClass="m-right" />
 			</h:panelGrid>
-			<h:panelGrid columns="2"  styleClass="f-left">
-			   <h:outputText value="" styleClass="label" />
+			<h:panelGrid columns="2" styleClass="f-left">
 				<h:outputText value="" styleClass="label" />
-				
-				<p:commandButton ajax="true" update="form" value="#{msgs.search}" actionListener="#{contractTemplateListController.filterData()}" styleClass="button green f-right m-left" />
-			    <p:commandButton ajax="true" update="form filter-form" value="#{msgs.clearFilter}" actionListener="#{contractTemplateListController.clearFilter()}" styleClass="button blue f-right" />
+				<h:outputText value="" styleClass="label" />
+
+				<p:commandButton ajax="true" update="form" value="#{msgs.search}"
+					actionListener="#{documentTemplateListController.filterData()}"
+					styleClass="button green f-right m-left" />
+				<p:commandButton ajax="true" update="form filter-form"
+					value="#{msgs.clearFilter}"
+					actionListener="#{documentTemplateListController.clearFilter()}"
+					styleClass="button blue f-right" />
 			</h:panelGrid>
 		</h:form>
 
@@ -229,27 +223,24 @@
 		<div class="clear"></div>
 		<h:form id="form">
 			<p:dataTable var="entity"
-				value="#{contractTemplateListController.model}" paginator="true"
+				value="#{documentTemplateListController.model}" paginator="true"
 				rows="50" lazy="true" rowKey="#{entity.id}" rowIndexVar="index"
 				tableStyleClass="display-table" id="table" selectionMode="single"
 				emptyMessage="#{msgs.noRecordsFound}"
 				rowsPerPageTemplate="10,20,30,40,50" paginatorPosition="bottom"
 				pageLinks="10"
-				currentPageReportTemplate="Всего : #{contractTemplateListController.model.rowCount} из #{contractTemplateListController.model.totalCount}  &#160;&#160;| #{msgs.amountPerPage}"
+				currentPageReportTemplate="Всего : #{documentTemplateListController.model.rowCount} из #{documentTemplateListController.model.totalCount}  &#160;&#160;| #{msgs.amountPerPage}"
 				paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {CurrentPageReport} {RowsPerPageDropdown}"
-				selection="#{contractTemplateListController.contractTemplate}"
-				first="#{contractTemplateListController.first}">
+				selection="#{documentTemplateListController.documentTemplate}"
+				first="#{documentTemplateListController.first}">
 				<p:ajax event="page"
-					listener="#{contractTemplateListController.onPageChange}" />
+					listener="#{documentTemplateListController.onPageChange}" />
 
 				<p:column headerText="№">
 					<h:outputText value="#{index+1}" />
 				</p:column>
 
-				<p:column headerText="#{msgs.construction}">
-					<h:outputText value="#{entity.construction.title}" />
-				</p:column>
-				<p:column headerText="#{msgs.contractType}">
+				<p:column headerText="#{msgs.documentType}">
 					<h:outputText value="#{enums[entity.type]}" />
 				</p:column>
 
@@ -273,9 +264,14 @@
 
 				<p:column headerText="#{msgs.operation}"
 					rendered="#{roleController.isAllowed('ADMIN')}">
-					<h:commandButton action="#{contractTemplateCreator.edit(entity)}"
+					<h:commandButton action="#{documentTemplateCreator.edit(entity)}"
 						value="#{msgs.edit}" styleClass="btn-icon edit"
 						title="#{msgs.edit}" />
+					<h:commandButton
+						action="#{documentTemplateCreator.doDelete(entity)}"
+						value="#{msgs.delete}" styleClass="btn-icon delete"
+						title="#{msgs.delete}"
+						onclick="return confirm('#{msgs.areYouSureToDeleteDenounce}');" />
 
 				</p:column>
 			</p:dataTable>

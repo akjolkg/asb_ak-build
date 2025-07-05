@@ -10,6 +10,12 @@ import java.util.Set;
 
 import org.apache.poi.hwpf.HWPFDocument;
 import org.apache.poi.hwpf.usermodel.Range;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.FormulaEvaluator;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFFooter;
@@ -58,7 +64,54 @@ public class ContractDocController {
 			return null;
 		}
 	}
-	
+	public XSSFWorkbook replaceTextXlsx(InputStream inputStream, Map<String, String> keyMap) throws IOException {
+		try {
+
+			// Load the workbook from the input stream
+			XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
+			FormulaEvaluator formulaEvaluator = workbook.getCreationHelper().createFormulaEvaluator();
+			// Iterate through all sheets in the workbook
+			for (Sheet sheet : workbook) {
+				// Iterate through all rows in the sheet
+				for (Row row : sheet) {
+					// Iterate through all cells in the row
+					for (Cell cell : row) {
+						// Check if the cell contains text
+						try {
+							if (cell.getCellTypeEnum().equals(CellType.STRING)) {
+								String cellValue = cell.getStringCellValue();
+								// Replace text based on the keyMap
+								for (Map.Entry<String, String> entry : keyMap.entrySet()) {
+									if (cellValue.contains(entry.getKey())) {
+										cellValue = cellValue.replace(entry.getKey(), entry.getValue());
+									}
+								}
+								if (cellValue.matches("^-?\\d+(\\.\\d+)?$")) {
+									cell.setCellValue(Double.parseDouble(cellValue));
+								} else {
+									// Update the cell value as a string
+									cell.setCellValue(cellValue);
+								}
+							} else if (cell.getCellTypeEnum().equals(CellType.FORMULA)) {
+								// Recalculate formulas
+								formulaEvaluator.evaluateFormulaCell(cell);
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+
+			// Return the modified workbook
+			return workbook;
+//	        System.out.println("Done");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
 	private HWPFDocument replaceText(HWPFDocument doc, String originalText, String updatedText) {
 	    Range range = doc.getRange();
 	    range.replaceText(originalText, updatedText);

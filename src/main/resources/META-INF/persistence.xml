@@ -28,7 +28,8 @@
       <class>org.asb.model.ScheduleTemplate</class>
       <class>org.asb.model.SubSchedule</class>
       <class>org.asb.model.CommentLog</class>      
-      <class>org.asb.model.ContractTemplate</class>      
+      <class>org.asb.model.ContractTemplate</class>   
+      <class>org.asb.model.DocumentTemplate</class>         
       
       <exclude-unlisted-classes>true</exclude-unlisted-classes>
       <shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>

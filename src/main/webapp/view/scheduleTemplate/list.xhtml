@@ -11,22 +11,44 @@
 		
 		
 		<div class="clear"></div>
-		<h:form id ="filter-form" rendered="#{!roleController.isAllowed('JUNIOR')}">		
+		<h:form id ="filter-form" rendered="#{!roleController.isAllowed('JUNIOR')}">
+		<h:panelGrid columns="4" styleClass="f-left">
+				<h:outputText value="#{msgs.company}" styleClass="label" />
+				<h:outputText value="#{msgs.construction}" styleClass="label" />
+				<h:outputText value="#{msgs.blockNumber}" styleClass="label" />
+				<h:outputText value="#{msgs.appartmentNumber}" styleClass="label m-right" />
+				
+				<p:selectCheckboxMenu  value="#{scheduleTemplateListController.filterCompanies}" id="company" style="width:250px;" styleClass="m-right"  
+					multiple="true" converter="companyConverter" filter="true" filterMatchMode="contains">
+					<f:selectItems value="#{scheduleTemplateListController.companies}" var="entity" itemLabel="#{entity.title}" itemValue="#{entity}"/>
+					<p:ajax event="change" update="construction"  listener="#{scheduleTemplateListController.onCompanyChange}" />
+		    	</p:selectCheckboxMenu>
+				<p:selectCheckboxMenu  value="#{scheduleTemplateListController.filterConstructions}"  
+						multiple="true" id="construction" style="width:250px;"  styleClass="m-right"
+						filter="true" filterMatchMode="contains" converter="constructionConverter">
+					<f:selectItems value="#{scheduleTemplateListController.constructions}" var="entity" itemLabel="#{entity.title}" itemValue="#{entity}"/>
+		    	</p:selectCheckboxMenu>
+		    	<p:selectCheckboxMenu  value="#{scheduleTemplateListController.filterBlocks}" multiple="true"   styleClass="m-right">
+		            <f:selectItems value="#{scheduleTemplateListController.blockList}"/>
+		        </p:selectCheckboxMenu>	
+		        <p:inputText value="#{scheduleTemplateListController.filterTitle}"  styleClass="m-right m-left"/>
+		    </h:panelGrid>		
+		    <div class="clear"></div>
 			<h:panelGrid columns="5" styleClass="f-left">
-				<h:outputText value="#{msgs.searchString}" styleClass="label" />
-				<h:outputText value="#{msgs.curatorOrk}" styleClass="label" />
-				<h:outputText value="#{msgs.status}" styleClass="label" />	
+				<h:outputText value="#{msgs.clientFio}/#{msgs.note}" styleClass="label" />
+				<h:outputText value="#{msgs.curatorOrk}" styleClass="label m-left" />
+				<h:outputText value="#{msgs.status}" styleClass="label m-left" />	
 				<h:outputText value="" styleClass="label" />
 				<h:outputText value="" styleClass="label" /> 
 				
-				<h:inputText value="#{scheduleTemplateListController.searchString}" style="width:400px;" />
+				<h:inputText value="#{scheduleTemplateListController.searchString}"  />
 				
-				<p:selectCheckboxMenu  value="#{scheduleTemplateListController.filterCuratorOrks}" id="curatorOrk" style="width:250px;" styleClass="m-right"  
+				<p:selectCheckboxMenu  value="#{scheduleTemplateListController.filterCuratorOrks}" id="curatorOrk" style="width:250px;" styleClass="m-left"  
 					multiple="true" converter="userConverter" filter="true" filterMatchMode="contains">
 					<f:selectItems value="#{scheduleTemplateListController.curatorOrks}" var="entity" itemLabel="#{entity.fio}" itemValue="#{entity}"/>					
 		    	</p:selectCheckboxMenu>
 		    	
-		    	<p:selectCheckboxMenu  value="#{scheduleTemplateListController.filterStatuses}" id="filterStatus" style="width:250px;" styleClass="m-right m-left"  
+		    	<p:selectCheckboxMenu  value="#{scheduleTemplateListController.filterStatus}" id="filterStatus" style="width:250px;" styleClass="m-right m-left"  
 					multiple="true" converter="enumConverter" filter="true" filterMatchMode="contains">
 					<f:selectItems value="#{scheduleTemplateListController.clientStatuses}" var="entity" itemLabel="#{enums[entity]}" itemValue="#{entity}"/>			
 		    	</p:selectCheckboxMenu>	
@@ -58,7 +80,11 @@
 			    <p:column headerText="№">
 			        <h:outputText value="#{index+1}" />
 			    </p:column>
-			    
+			     <p:column headerText="#{msgs.object}" sortBy="#{entity.appartment.title}">
+			        <h:outputText value="#{entity.client.appartment.construction.title} : #{entity.client.appartment.title}" />
+			         <h:outputText rendered="#{entity.client.appartment.specNote.length()>0}" value="(#{entity.client.appartment.specNote})" style="color:red;" />
+			    	 
+			    </p:column>
 			    <p:column headerText="#{msgs.fio}">
 			        <h:outputText value="#{entity.client.fio}" />
 			    </p:column>
