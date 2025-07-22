@@ -52,12 +52,14 @@ import org.asb.model.DocumentTemplate;
 import org.asb.model.Payment;
 import org.asb.model.Schedule;
 import org.asb.model.ScheduleTemplate;
+import org.asb.model.SubSchedule;
 import org.asb.service.ClientService;
 import org.asb.service.ContractTemplateService;
 import org.asb.service.DocumentTemplateService;
 import org.asb.service.PaymentService;
 import org.asb.service.ScheduleService;
 import org.asb.service.ScheduleTemplateService;
+import org.asb.service.SubScheduleService;
 import org.asb.util.Translit;
 import org.asb.util.web.Messages;
 import org.primefaces.model.DefaultStreamedContent;
@@ -88,6 +90,8 @@ public class ClientJasperController extends BaseReportController {
 	private ClientService service;
 	@EJB
 	private ScheduleService sService;
+	@EJB
+	private SubScheduleService ssService;
 	@EJB
 	private ScheduleTemplateService stService;
 	@EJB
@@ -189,7 +193,7 @@ public class ClientJasperController extends BaseReportController {
 			map.put("cldate", "");
 		} else {
 			map.put("clientMarriageText1", "Я, " + client.getSpouseFio() + ", супруг/а " + client.getFio()
-					+ " настоящим даю свое безусловное согласие супруге/у на заключение настоящего Договора.");
+					+ " настоящим даю свое безусловное согласие супруге/у на заключение настоящего Договора/Соглашения.");
 			map.put("clientMarriageText2", "Я, " + client.getFio() + ", супруг/а " + client.getSpouseFio()
 					+ " обязуюсь обеспечить явку к вам свою/го супругу/а не позднее «___»________ 202____ г. для подписания вышеуказанного Заявления.");
 			map.put("cllineLong", "______________________________________________________________");
@@ -989,57 +993,124 @@ public class ClientJasperController extends BaseReportController {
 	}
 
 	public DefaultStreamedContent generateDenounceApplication(Denounce denounce) {
-		System.out.println("generateContract");
-		Map<String, Object> map = new HashMap<>();
-		map = new HashMap<>();
-		map.put("client_id", denounce.getAppartment().getClient().getId());
-
-		JasperPrint jasperPrint = null;
+		InputStream inputStream = null;
+		inputStream = getDocumentTemplate(DocumentTemplateType.DENOUNCE_APPLICATION, inputStream);
+		
+		if (inputStream == null) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"На данный тип документа : \"" + Messages.getEnumMessage(DocumentTemplateType.DENOUNCE_APPLICATION.toString()) 
+									+ "\" - нет Шаблона документа! ",
+							null));
+			return null;
+		}
+		
+		Map<String, String> map2 = prepareClientDetailsForContract(denounce.getAppartment().getClient());
+		String pattern = "dd.MM.yyyy";
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+		map2.put("denounceDateAgreement", simpleDateFormat.format(denounce.getDateDenounce()));
+		map2.put("denounceDateCreated", simpleDateFormat.format(denounce.getDateCreated()));
+		
+		
+		InputStream stream = null;
 		try {
-			jasperPrint = generateJasperPrint(map, ds.getConnection(), "denounce_application.jasper");
-		} catch (SQLException e) {
+			XWPFDocument doc = docController.replaceTextDocx(inputStream, map2, new HashMap<String, List<Schedule>>(),new HashMap<String, Set<String>>());
+			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+			doc.write(byteArrayOutputStream);
+			doc.close();
+			stream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+			byteArrayOutputStream.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-		return new DefaultStreamedContent(getPDFStream(jasperPrint), externalContext.getMimeType("word.pdf"),
-				Translit.translit("Zayavlenie " + denounce.getFio()) + ".pdf");
+		return new DefaultStreamedContent(stream, externalContext.getMimeType("bank.docx"),
+				Translit.translit("DAP_" + denounce.getAppartment().getClient().getFio()) + ".docx");
 	}
 
 	public DefaultStreamedContent generateDenounceAgreement(Denounce denounce) {
-		System.out.println("generateContract");
-		Map<String, Object> map = new HashMap<>();
-		map = new HashMap<>();
-		map.put("client_id", denounce.getAppartment().getClient().getId());
-
-		JasperPrint jasperPrint = null;
+		InputStream inputStream = null;
+		inputStream = getDocumentTemplate(DocumentTemplateType.DENOUNCE_AGREEMENT, inputStream);
+		
+		if (inputStream == null) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"На данный тип документа : \"" + Messages.getEnumMessage(DocumentTemplateType.DENOUNCE_AGREEMENT.toString()) 
+									+ "\" - нет Шаблона документа! ",
+							null));
+			return null;
+		}
+		
+		Map<String, String> map2 = prepareClientDetailsForContract(denounce.getAppartment().getClient());
+		String pattern = "dd.MM.yyyy";
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+		map2.put("denounceDateAgreement", simpleDateFormat.format(denounce.getDateDenounce()));
+		map2.put("denounceDateCreated", simpleDateFormat.format(denounce.getDateCreated()));
+		
+		
+		InputStream stream = null;
 		try {
-			jasperPrint = generateJasperPrint(map, ds.getConnection(), "denounce_agreement.jasper");
-		} catch (SQLException e) {
+			XWPFDocument doc = docController.replaceTextDocx(inputStream, map2, new HashMap<String, List<Schedule>>(),new HashMap<String, Set<String>>());
+			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+			doc.write(byteArrayOutputStream);
+			doc.close();
+			stream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+			byteArrayOutputStream.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-		return new DefaultStreamedContent(getPDFStream(jasperPrint), externalContext.getMimeType("word.pdf"),
-				Translit.translit("Soglashenie " + denounce.getFio()) + ".pdf");
+		return new DefaultStreamedContent(stream, externalContext.getMimeType("bank.docx"),
+				Translit.translit("DAG_" + denounce.getAppartment().getClient().getFio()) + ".docx");
 	}
 
 	public DefaultStreamedContent generateScheduleModifyAgreement(ScheduleTemplate sch) {
 		System.out.println("generateContract");
-		Map<String, Object> map = new HashMap<>();
-		map = new HashMap<>();
-		map.put("modify_id", sch.getId());
-
-		JasperPrint jasperPrint = null;
+		DocumentTemplateType docType = DocumentTemplateType.SCHEDULE_TEMPLATE;
+		InputStream inputStream = null;
+		inputStream = getDocumentTemplate(docType, inputStream);
+		
+		if (inputStream == null) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"На данный тип документа : \"" + Messages.getEnumMessage(docType.toString()) 
+									+ "\" - нет Шаблона документа! ",
+							null));
+			return null;
+		}
+		
+		List<FilterExample> examples = new ArrayList<FilterExample>();
+		examples.add(new FilterExample("scheduleTemplate", sch, InequalityConstants.EQUAL));
+		List<SubSchedule> schedules = ssService.findByExample(0, 100, SortEnum.ASCENDING, examples, "datePayment");
+		Map<String, List<SubSchedule>> mp = new HashMap<String, List<SubSchedule>>();
+		mp.put("paymentSchedule", schedules);
+		
+		
+		
+		Map<String, String> map2 = prepareClientDetailsForContract(sch.getClient());
+		
+		List<FilterExample> examples2 = new ArrayList<FilterExample>();
+		examples2.add(new FilterExample("id", sch.getId(), InequalityConstants.LESSER_OR_EQUAL));
+		examples2.add(new FilterExample("client", sch.getClient(), InequalityConstants.EQUAL));
+		map2.put("dopNumber", stService.countByExample(examples2) + "");
+		
+		InputStream stream = null;
 		try {
-			jasperPrint = generateJasperPrint(map, ds.getConnection(), "contract_schedule_modify.jasper");
-		} catch (SQLException e) {
+			XWPFDocument doc = docController.replaceTextDocxS(inputStream, map2, mp,new HashMap<String, Set<String>>());
+			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+			doc.write(byteArrayOutputStream);
+			doc.close();
+			stream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+			byteArrayOutputStream.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-		return new DefaultStreamedContent(getPDFStream(jasperPrint), externalContext.getMimeType("word.pdf"),
-				Translit.translit("Soglashenie " + sch.getClient().getFio()) + ".pdf");
+		return new DefaultStreamedContent(stream, externalContext.getMimeType("bank.docx"),
+				Translit.translit("dop_"+sch.getClient().getContractNumber()) + ".docx");		
 	}
 
 	private InputStream getPDFStream(JasperPrint jasperPrint) {

@@ -26,6 +26,7 @@ import org.apache.poi.xwpf.usermodel.XWPFTable;
 import org.apache.poi.xwpf.usermodel.XWPFTableCell;
 import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.asb.model.Schedule;
+import org.asb.model.SubSchedule;
 
 import com.ibm.icu.text.SimpleDateFormat;
 
@@ -59,6 +60,38 @@ public class ContractDocController {
 
 //	        System.out.println("Done");
 	    } catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
+	public XWPFDocument replaceTextDocxS(InputStream inputStream, Map<String, String> keyMap,
+			Map<String, List<SubSchedule>> scheduleMap, Map<String, Set<String>> equipmentMap) throws IOException {
+		try {
+
+			XWPFDocument doc = new XWPFDocument(inputStream);
+			for (String key : keyMap.keySet()) {
+
+				doc = replaceText(doc, key, keyMap.get(key));
+			}
+
+			for (String key : scheduleMap.keySet()) {
+				doc = addTableSubSchedule(doc, key, scheduleMap.get(key));
+			}
+
+			for (String key : equipmentMap.keySet()) {
+				doc = addParagraph(doc, key, equipmentMap.get(key));
+			}
+
+			// OutputStream out=new FileOutputStream(outFile);
+			// PdfOptions options=null;
+			// PdfConverter.getInstance().convert(doc,out,options);
+
+			return doc;
+			// doc.close();
+
+//	        System.out.println("Done");
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
@@ -207,6 +240,94 @@ public class ContractDocController {
 		
 		
 	    return doc;
+	}
+	private XWPFDocument addTableSubSchedule(XWPFDocument doc, String originalText, List<SubSchedule> schedules) throws IOException {
+
+		XWPFTable stable = null;
+
+		for (XWPFTable tbl : doc.getTables()) {
+			for (XWPFTableRow row : tbl.getRows()) {
+				for (XWPFTableCell cell : row.getTableCells()) {
+					if (cell.getText().contains(originalText)) {
+						System.out.println("original run======" + originalText + "====" + cell.getText());
+						XWPFParagraph paragraph = cell.getParagraphs().get(0);
+						replaceTextInParagraph(paragraph, originalText, "");
+						System.out.println("original run======" + originalText + "====" + cell.getText());
+						stable = tbl;
+						break;
+					}
+				}
+			}
+		}
+		if (stable != null) {
+			Integer i = 0;
+			String pattern = "dd-MM-yyyy";
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+			// create second row
+			BigDecimal total = BigDecimal.ZERO;
+			for (SubSchedule s : schedules) {
+				XWPFTableRow tableRowTwo = stable.createRow();
+				tableRowTwo.setHeight(25);
+				tableRowTwo.getCell(0).removeParagraph(0);
+				tableRowTwo.getCell(0).addParagraph();
+				XWPFParagraph paragraph = tableRowTwo.getCell(0).getParagraphs().get(0);
+				paragraph.setAlignment(ParagraphAlignment.CENTER);
+				paragraph.setSpacingAfter(0);
+				XWPFRun newRun = paragraph.insertNewRun(0);
+				newRun.setText(i == 0 ? "Первоначальный взнос" : i + "");
+				newRun.setFontFamily("Times New Roman");
+				newRun.setFontSize(12);
+				tableRowTwo.getCell(1).removeParagraph(0);
+				tableRowTwo.getCell(1).addParagraph();
+				XWPFParagraph paragraph1 = tableRowTwo.getCell(1).getParagraphs().get(0);
+				paragraph1.setAlignment(ParagraphAlignment.CENTER);
+				paragraph1.setSpacingAfter(0);
+				XWPFRun newRun1 = paragraph1.insertNewRun(0);
+				newRun1.setText(simpleDateFormat.format(s.getDatePayment()));
+				newRun1.setFontFamily("Times New Roman");
+				newRun1.setFontSize(12);
+				tableRowTwo.getCell(2).removeParagraph(0);
+				tableRowTwo.getCell(2).addParagraph();
+				XWPFParagraph paragraph2 = tableRowTwo.getCell(2).getParagraphs().get(0);
+				paragraph2.setAlignment(ParagraphAlignment.CENTER);
+				paragraph2.setSpacingAfter(0);
+				XWPFRun newRun2 = paragraph2.insertNewRun(0);
+				newRun2.setText(s.getAmountToPay() + "");
+				newRun2.setFontFamily("Times New Roman");
+				newRun2.setFontSize(12);
+				i++;
+				total = total.add(s.getAmountToPay());
+			}
+			XWPFTableRow tableRowTwo = stable.createRow();
+			tableRowTwo.setHeight(25);
+			tableRowTwo.getCell(0).removeParagraph(0);
+			tableRowTwo.getCell(0).addParagraph();
+			XWPFParagraph paragraph = tableRowTwo.getCell(0).getParagraphs().get(0);
+			paragraph.setAlignment(ParagraphAlignment.CENTER);
+			XWPFRun newRun = paragraph.insertNewRun(0);
+			newRun.setText("");
+			tableRowTwo.getCell(1).removeParagraph(0);
+			tableRowTwo.getCell(1).addParagraph();
+			XWPFParagraph paragraph1 = tableRowTwo.getCell(1).getParagraphs().get(0);
+			paragraph1.setAlignment(ParagraphAlignment.CENTER);
+			XWPFRun newRun1 = paragraph1.insertNewRun(0);
+			newRun1.setText("Итого:");
+			newRun1.setFontFamily("Times New Roman");
+			newRun1.setBold(true);
+			newRun1.setFontSize(12);
+			tableRowTwo.getCell(2).removeParagraph(0);
+			tableRowTwo.getCell(2).addParagraph();
+			XWPFParagraph paragraph2 = tableRowTwo.getCell(2).getParagraphs().get(0);
+			paragraph2.setAlignment(ParagraphAlignment.CENTER);
+			XWPFRun newRun2 = paragraph2.insertNewRun(0);
+			newRun2.setText(total + "");
+			newRun2.setBold(true);
+			newRun2.setFontFamily("Times New Roman");
+			newRun2.setFontSize(12);
+
+		}
+
+		return doc;
 	}
 	private XWPFDocument addParagraph(XWPFDocument doc, String originalText, Set<String> equipments) throws IOException {
 		System.out.println("adding paragraph=="+originalText);

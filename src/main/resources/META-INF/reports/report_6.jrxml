@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="contract_template" pageWidth="4500" pageHeight="612" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="4480" leftMargin="0" rightMargin="20" topMargin="0" bottomMargin="20" isIgnorePagination="true" uuid="53900af5-bd24-4eb4-b561-f8a8187c0831">
-	<property name="ireport.zoom" value="1.2100000000000029"/>
-	<property name="ireport.x" value="0"/>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="contract_template" pageWidth="5250" pageHeight="612" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="5230" leftMargin="0" rightMargin="20" topMargin="0" bottomMargin="20" isIgnorePagination="true" uuid="53900af5-bd24-4eb4-b561-f8a8187c0831">
+	<property name="ireport.zoom" value="1.1000000000000032"/>
+	<property name="ireport.x" value="4628"/>
 	<property name="ireport.y" value="0"/>
 	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
 	<style name="table">
@@ -59,18 +59,22 @@ con.installment_date,
 DATE_PART('day', now() - con.sales_start_date),
 sum(ap.total_area) as total_build_area,
 sum(case when ap.type=0 then ap.total_area else 0 end) as ap_build_area,
+sum(case when ap.type=3 then ap.total_area else 0 end) as cot_build_area,
 sum(case when ap.type=1 then ap.total_area else 0 end) as of_build_area,
 sum(case when ap.type=2 then ap.total_area else 0 end) as pa_build_area,
 sum(case when ap.type=0 then 1 else 0 end) as ap_count,
+sum(case when ap.type=3 then 1 else 0 end) as cot_count,
 sum(case when ap.type=1 then 1 else 0 end) as of_count,
 sum(case when ap.type=2 then 1 else 0 end) as pa_count,
 sum(case when c.type in(1,2,6,7,8) then ap.total_area else 0 end) as total_sold_area,
 sum(case when c.type in(1,2,6,7,8) and ap.type=0 then ap.total_area else 0 end) as ap_sold_area,
+sum(case when c.type in(1,2,6,7,8) and ap.type=3 then ap.total_area else 0 end) as cot_sold_area,
 sum(case when c.type in(1,2,6,7,8) and ap.type=1 then ap.total_area else 0 end) as of_sold_area,
 sum(case when c.type in(1,2,6,7,8) and ap.type=2 then ap.total_area else 0 end) as pa_sold_area,
 sum(case when c.type in(1,2,6,7,8) and ap.type=2 then 1 else 0 end) as pa_sold_count,
 sum(case when c.type is null or c.type in(0,3,4,5,9) then ap.total_area else 0 end) as total_not_sold_area,
 sum(case when (c.type is null or c.type in(0,3,4,5,9)) and ap.type=0 then ap.total_area else 0 end) as ap_not_sold_area,
+sum(case when (c.type is null or c.type in(0,3,4,5,9)) and ap.type=3 then ap.total_area else 0 end) as cot_not_sold_area,
 sum(case when (c.type is null or c.type in(0,3,4,5,9)) and ap.type=1 then ap.total_area else 0 end) as of_not_sold_area,
 sum(case when (c.type is null or c.type in(0,3,4,5,9)) and ap.type=2 then ap.total_area else 0 end) as pa_not_sold_area,
 sum(case when (c.type is null or c.type in(0,3,4,5,9)) and ap.type=2 then 1 else 0 end) as pa_not_sold_count,
@@ -79,10 +83,12 @@ coalesce(con.technical_area,0) as technical_area,
 coalesce(con.parking_not_sale_area,0) as parking_not_sale_area,
 sum(case when c.type in(1,2,6,7,8) then c.total_sum else 0 end) as total_sold_sum,
 sum(case when c.type in(1,2,6,7,8) and ap.type=0 then c.total_sum else 0 end) as ap_sold_sum,
+sum(case when c.type in(1,2,6,7,8) and ap.type=3 then c.total_sum else 0 end) as cot_sold_sum,
 sum(case when c.type in(1,2,6,7,8) and ap.type=1 then c.total_sum else 0 end) as of_sold_sum,
 sum(case when c.type in(1,2,6,7,8) and ap.type=2 then c.total_sum else 0 end) as pa_sold_sum,
 sum(case when c.type in(1,2,6,7,8) then c.already_payed else 0 end) as total_payed_sum,
 sum(case when c.type in(1,2,6,7,8) and ap.type=0 then c.already_payed else 0 end) as ap_payed_sum,
+sum(case when c.type in(1,2,6,7,8) and ap.type=3 then c.already_payed else 0 end) as cot_payed_sum,
 sum(case when c.type in(1,2,6,7,8) and ap.type=1 then c.already_payed else 0 end) as of_payed_sum,
 sum(case when c.type in(1,2,6,7,8) and ap.type=2 then c.already_payed else 0 end) as pa_payed_sum
 from company com
@@ -113,18 +119,22 @@ con.sales_start_date]]>
 	<field name="date_part" class="java.lang.Double"/>
 	<field name="total_build_area" class="java.math.BigDecimal"/>
 	<field name="ap_build_area" class="java.math.BigDecimal"/>
+	<field name="cot_build_area" class="java.math.BigDecimal"/>
 	<field name="of_build_area" class="java.math.BigDecimal"/>
 	<field name="pa_build_area" class="java.math.BigDecimal"/>
 	<field name="ap_count" class="java.lang.Long"/>
+	<field name="cot_count" class="java.lang.Long"/>
 	<field name="of_count" class="java.lang.Long"/>
 	<field name="pa_count" class="java.lang.Long"/>
 	<field name="total_sold_area" class="java.math.BigDecimal"/>
 	<field name="ap_sold_area" class="java.math.BigDecimal"/>
+	<field name="cot_sold_area" class="java.math.BigDecimal"/>
 	<field name="of_sold_area" class="java.math.BigDecimal"/>
 	<field name="pa_sold_area" class="java.math.BigDecimal"/>
 	<field name="pa_sold_count" class="java.lang.Long"/>
 	<field name="total_not_sold_area" class="java.math.BigDecimal"/>
 	<field name="ap_not_sold_area" class="java.math.BigDecimal"/>
+	<field name="cot_not_sold_area" class="java.math.BigDecimal"/>
 	<field name="of_not_sold_area" class="java.math.BigDecimal"/>
 	<field name="pa_not_sold_area" class="java.math.BigDecimal"/>
 	<field name="pa_not_sold_count" class="java.lang.Long"/>
@@ -133,10 +143,12 @@ con.sales_start_date]]>
 	<field name="parking_not_sale_area" class="java.math.BigDecimal"/>
 	<field name="total_sold_sum" class="java.math.BigDecimal"/>
 	<field name="ap_sold_sum" class="java.math.BigDecimal"/>
+	<field name="cot_sold_sum" class="java.math.BigDecimal"/>
 	<field name="of_sold_sum" class="java.math.BigDecimal"/>
 	<field name="pa_sold_sum" class="java.math.BigDecimal"/>
 	<field name="total_payed_sum" class="java.math.BigDecimal"/>
 	<field name="ap_payed_sum" class="java.math.BigDecimal"/>
+	<field name="cot_payed_sum" class="java.math.BigDecimal"/>
 	<field name="of_payed_sum" class="java.math.BigDecimal"/>
 	<field name="pa_payed_sum" class="java.math.BigDecimal"/>
 	<variable name="count" class="java.lang.Integer" calculation="Count">
@@ -239,6 +251,27 @@ con.sales_start_date]]>
 	<variable name="pa_not_sold_area" class="java.math.BigDecimal" resetType="Group" resetGroup="total_group" calculation="Sum">
 		<variableExpression><![CDATA[$F{pa_not_sold_area}]]></variableExpression>
 	</variable>
+	<variable name="sum_cot_sold_area" class="java.math.BigDecimal" resetType="Group" resetGroup="total_group" calculation="Sum">
+		<variableExpression><![CDATA[$F{cot_build_area}]]></variableExpression>
+	</variable>
+	<variable name="cot_sold_area" class="java.math.BigDecimal" resetType="Group" resetGroup="total_group" calculation="Sum">
+		<variableExpression><![CDATA[$F{cot_sold_area}]]></variableExpression>
+	</variable>
+	<variable name="cot_not_sold_area" class="java.math.BigDecimal" resetType="Group" resetGroup="total_group" calculation="Sum">
+		<variableExpression><![CDATA[$F{cot_not_sold_area}]]></variableExpression>
+	</variable>
+	<variable name="cot_payed_sum" class="java.math.BigDecimal" resetType="Group" resetGroup="total_group" calculation="Sum">
+		<variableExpression><![CDATA[$F{cot_payed_sum}]]></variableExpression>
+	</variable>
+	<variable name="cot_sold_sum" class="java.math.BigDecimal" resetType="Group" resetGroup="total_group" calculation="Sum">
+		<variableExpression><![CDATA[$F{cot_sold_sum}]]></variableExpression>
+	</variable>
+	<variable name="cot_build_area" class="java.math.BigDecimal" resetType="Group" resetGroup="total_group" calculation="Sum">
+		<variableExpression><![CDATA[$F{cot_build_area}]]></variableExpression>
+	</variable>
+	<variable name="sum_cot_count" class="java.lang.Long" resetType="Group" resetGroup="total_group" calculation="Sum">
+		<variableExpression><![CDATA[$F{cot_count}]]></variableExpression>
+	</variable>
 	<group name="total_group">
 		<groupExpression><![CDATA[$F{com_title}]]></groupExpression>
 		<groupHeader>
@@ -303,7 +336,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$V{ap_build_area}]]></textFieldExpression>
 				</textField>
 				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="46b48ea7-2bbd-4993-850a-ee5bee9a359b" stretchType="RelativeToBandHeight" mode="Opaque" x="1155" y="0" width="118" height="25" backcolor="#97D7EB"/>
+					<reportElement uuid="46b48ea7-2bbd-4993-850a-ee5bee9a359b" stretchType="RelativeToBandHeight" mode="Opaque" x="1270" y="0" width="118" height="25" backcolor="#97D7EB"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -331,7 +364,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$V{sum_of_not_sale_total_area}]]></textFieldExpression>
 				</textField>
 				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement uuid="1a61b8f1-7c6f-4919-b145-2efc5d339e6e" stretchType="RelativeToBandHeight" mode="Opaque" x="1509" y="0" width="118" height="25" backcolor="#97D7EB"/>
+					<reportElement uuid="1a61b8f1-7c6f-4919-b145-2efc5d339e6e" stretchType="RelativeToBandHeight" mode="Opaque" x="1624" y="0" width="118" height="25" backcolor="#97D7EB"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -345,7 +378,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$V{sum_ap_count}]]></textFieldExpression>
 				</textField>
 				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="311aede2-3258-4148-85d2-16b92a181536" stretchType="RelativeToBandHeight" mode="Opaque" x="1863" y="0" width="118" height="25" backcolor="#97D7EB"/>
+					<reportElement uuid="311aede2-3258-4148-85d2-16b92a181536" stretchType="RelativeToBandHeight" mode="Opaque" x="2079" y="0" width="118" height="25" backcolor="#97D7EB"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -359,7 +392,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$V{total_sold_area}]]></textFieldExpression>
 				</textField>
 				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="8e22185f-108a-4b3f-9ee1-417e7a4f8f1a" stretchType="RelativeToBandHeight" mode="Opaque" x="1981" y="0" width="118" height="25" backcolor="#97D7EB"/>
+					<reportElement uuid="8e22185f-108a-4b3f-9ee1-417e7a4f8f1a" stretchType="RelativeToBandHeight" mode="Opaque" x="2197" y="0" width="118" height="25" backcolor="#97D7EB"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -373,7 +406,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$V{ap_sold_area}]]></textFieldExpression>
 				</textField>
 				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="6e46b43d-2d06-469c-92ec-ecd1cef43614" stretchType="RelativeToBandHeight" mode="Opaque" x="2099" y="0" width="118" height="25" backcolor="#97D7EB"/>
+					<reportElement uuid="6e46b43d-2d06-469c-92ec-ecd1cef43614" stretchType="RelativeToBandHeight" mode="Opaque" x="2433" y="0" width="118" height="25" backcolor="#97D7EB"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -387,7 +420,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$V{of_sold_area}]]></textFieldExpression>
 				</textField>
 				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement uuid="cb231d8b-34cb-4641-9ff9-a87027b321fe" stretchType="RelativeToBandHeight" mode="Opaque" x="2335" y="0" width="118" height="25" backcolor="#97D7EB"/>
+					<reportElement uuid="cb231d8b-34cb-4641-9ff9-a87027b321fe" stretchType="RelativeToBandHeight" mode="Opaque" x="2669" y="0" width="118" height="25" backcolor="#97D7EB"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -401,7 +434,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$V{pa_sold_count}]]></textFieldExpression>
 				</textField>
 				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="f3fab373-cb3c-4860-809e-e19d39c440cd" stretchType="RelativeToBandHeight" mode="Opaque" x="2453" y="0" width="118" height="25" backcolor="#97D7EB"/>
+					<reportElement uuid="f3fab373-cb3c-4860-809e-e19d39c440cd" stretchType="RelativeToBandHeight" mode="Opaque" x="2787" y="0" width="118" height="25" backcolor="#97D7EB"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -415,7 +448,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$V{total_not_sold_area}]]></textFieldExpression>
 				</textField>
 				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="cc16bd71-256c-48bc-b6c6-0e5d9f030667" stretchType="RelativeToBandHeight" mode="Opaque" x="2571" y="0" width="118" height="25" backcolor="#97D7EB"/>
+					<reportElement uuid="cc16bd71-256c-48bc-b6c6-0e5d9f030667" stretchType="RelativeToBandHeight" mode="Opaque" x="2905" y="0" width="118" height="25" backcolor="#97D7EB"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -429,7 +462,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$V{ap_not_sold_area}]]></textFieldExpression>
 				</textField>
 				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="91b8fba7-9763-40fa-bd16-c57471a8ddaf" stretchType="RelativeToBandHeight" mode="Opaque" x="2689" y="0" width="118" height="25" backcolor="#97D7EB"/>
+					<reportElement uuid="91b8fba7-9763-40fa-bd16-c57471a8ddaf" stretchType="RelativeToBandHeight" mode="Opaque" x="3121" y="0" width="118" height="25" backcolor="#97D7EB"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -443,7 +476,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$V{of_not_sold_area}]]></textFieldExpression>
 				</textField>
 				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement uuid="a4236eee-95c0-4b04-b3e4-f985a05e58e6" stretchType="RelativeToBandHeight" mode="Opaque" x="2925" y="0" width="118" height="25" backcolor="#97D7EB"/>
+					<reportElement uuid="a4236eee-95c0-4b04-b3e4-f985a05e58e6" stretchType="RelativeToBandHeight" mode="Opaque" x="3357" y="0" width="118" height="25" backcolor="#97D7EB"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -457,7 +490,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$V{pa_not_sold_count}]]></textFieldExpression>
 				</textField>
 				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="4e771fb8-710e-4ef4-b01a-73aa9dcafb33" stretchType="RelativeToBandHeight" mode="Opaque" x="3043" y="0" width="118" height="25" backcolor="#97D7EB"/>
+					<reportElement uuid="4e771fb8-710e-4ef4-b01a-73aa9dcafb33" stretchType="RelativeToBandHeight" mode="Opaque" x="3475" y="0" width="118" height="25" backcolor="#97D7EB"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -471,7 +504,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$V{total_sold_sum}]]></textFieldExpression>
 				</textField>
 				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="434963ad-d98a-4e01-934d-94c836676a6a" stretchType="RelativeToBandHeight" mode="Opaque" x="3161" y="0" width="118" height="25" backcolor="#97D7EB"/>
+					<reportElement uuid="434963ad-d98a-4e01-934d-94c836676a6a" stretchType="RelativeToBandHeight" mode="Opaque" x="3593" y="0" width="118" height="25" backcolor="#97D7EB"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -485,7 +518,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$V{ap_sold_sum}]]></textFieldExpression>
 				</textField>
 				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="b8178b4b-5526-4602-bbbc-fecdfb8ce767" stretchType="RelativeToBandHeight" mode="Opaque" x="3279" y="0" width="118" height="25" backcolor="#97D7EB"/>
+					<reportElement uuid="b8178b4b-5526-4602-bbbc-fecdfb8ce767" stretchType="RelativeToBandHeight" mode="Opaque" x="3815" y="0" width="118" height="25" backcolor="#97D7EB"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -499,7 +532,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$V{of_sold_sum}]]></textFieldExpression>
 				</textField>
 				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="7e8e1ada-6f16-4750-b8d9-76b3bd114fae" stretchType="RelativeToBandHeight" mode="Opaque" x="3397" y="0" width="118" height="25" backcolor="#97D7EB"/>
+					<reportElement uuid="7e8e1ada-6f16-4750-b8d9-76b3bd114fae" stretchType="RelativeToBandHeight" mode="Opaque" x="3933" y="0" width="118" height="25" backcolor="#97D7EB"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -513,7 +546,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$V{pa_sold_sum}]]></textFieldExpression>
 				</textField>
 				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="009c22e7-a7af-4028-b5af-64a8286804b5" stretchType="RelativeToBandHeight" mode="Opaque" x="3515" y="0" width="118" height="25" backcolor="#97D7EB"/>
+					<reportElement uuid="009c22e7-a7af-4028-b5af-64a8286804b5" stretchType="RelativeToBandHeight" mode="Opaque" x="4051" y="0" width="118" height="25" backcolor="#97D7EB"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -527,7 +560,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$V{total_payed_sum}]]></textFieldExpression>
 				</textField>
 				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="ba9b6149-34af-4952-a114-da06f73a88ce" stretchType="RelativeToBandHeight" mode="Opaque" x="3633" y="0" width="118" height="25" backcolor="#97D7EB"/>
+					<reportElement uuid="ba9b6149-34af-4952-a114-da06f73a88ce" stretchType="RelativeToBandHeight" mode="Opaque" x="4169" y="0" width="118" height="25" backcolor="#97D7EB"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -541,7 +574,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$V{ap_payed_sum}]]></textFieldExpression>
 				</textField>
 				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="a386844d-5340-44af-93df-8281a53f5211" stretchType="RelativeToBandHeight" mode="Opaque" x="3751" y="0" width="118" height="25" backcolor="#97D7EB"/>
+					<reportElement uuid="a386844d-5340-44af-93df-8281a53f5211" stretchType="RelativeToBandHeight" mode="Opaque" x="4390" y="0" width="118" height="25" backcolor="#97D7EB"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -555,7 +588,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$V{of_payed_sum}]]></textFieldExpression>
 				</textField>
 				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="7fa5505b-f956-480e-a252-26288c018452" stretchType="RelativeToBandHeight" mode="Opaque" x="3869" y="0" width="118" height="25" backcolor="#97D7EB"/>
+					<reportElement uuid="7fa5505b-f956-480e-a252-26288c018452" stretchType="RelativeToBandHeight" mode="Opaque" x="4508" y="0" width="118" height="25" backcolor="#97D7EB"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -569,7 +602,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$V{pa_payed_sum}]]></textFieldExpression>
 				</textField>
 				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="1afd7d3e-8dbb-4446-8fe2-2f09d363549d" stretchType="RelativeToBandHeight" mode="Opaque" x="3987" y="0" width="118" height="25" backcolor="#97D7EB"/>
+					<reportElement uuid="1afd7d3e-8dbb-4446-8fe2-2f09d363549d" stretchType="RelativeToBandHeight" mode="Opaque" x="4626" y="0" width="118" height="25" backcolor="#97D7EB"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -583,7 +616,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$V{total_sold_sum}.subtract($V{total_payed_sum})]]></textFieldExpression>
 				</textField>
 				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="38e9e6e4-74ad-45d6-8fe2-a06e8f6ab003" stretchType="RelativeToBandHeight" mode="Opaque" x="4105" y="0" width="118" height="25" backcolor="#97D7EB"/>
+					<reportElement uuid="38e9e6e4-74ad-45d6-8fe2-a06e8f6ab003" stretchType="RelativeToBandHeight" mode="Opaque" x="4744" y="0" width="118" height="25" backcolor="#97D7EB"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -597,7 +630,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$V{ap_sold_sum}.subtract($V{ap_payed_sum})]]></textFieldExpression>
 				</textField>
 				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="decb8a86-efde-4f21-8594-cae09b631ca6" stretchType="RelativeToBandHeight" mode="Opaque" x="4223" y="0" width="118" height="25" backcolor="#97D7EB"/>
+					<reportElement uuid="decb8a86-efde-4f21-8594-cae09b631ca6" stretchType="RelativeToBandHeight" mode="Opaque" x="4967" y="0" width="118" height="25" backcolor="#97D7EB"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -611,7 +644,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$V{of_sold_sum}.subtract($V{of_payed_sum})]]></textFieldExpression>
 				</textField>
 				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="480c0688-932d-41f6-a569-1ac36453e31c" stretchType="RelativeToBandHeight" mode="Opaque" x="4341" y="0" width="118" height="25" backcolor="#97D7EB"/>
+					<reportElement uuid="480c0688-932d-41f6-a569-1ac36453e31c" stretchType="RelativeToBandHeight" mode="Opaque" x="5085" y="0" width="118" height="25" backcolor="#97D7EB"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -625,7 +658,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$V{pa_sold_sum}.subtract($V{pa_payed_sum})]]></textFieldExpression>
 				</textField>
 				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement uuid="7ae1f969-9ad4-4c78-8f4a-bbfd2ab95ade" stretchType="RelativeToBandHeight" mode="Opaque" x="1273" y="0" width="118" height="25" backcolor="#97D7EB"/>
+					<reportElement uuid="7ae1f969-9ad4-4c78-8f4a-bbfd2ab95ade" stretchType="RelativeToBandHeight" mode="Opaque" x="1388" y="0" width="118" height="25" backcolor="#97D7EB"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -639,7 +672,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$V{pa_build_area}]]></textFieldExpression>
 				</textField>
 				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement uuid="8da9440c-c7de-494f-8a46-156f207876e5" stretchType="RelativeToBandHeight" mode="Opaque" x="1627" y="0" width="118" height="25" backcolor="#97D7EB"/>
+					<reportElement uuid="8da9440c-c7de-494f-8a46-156f207876e5" stretchType="RelativeToBandHeight" mode="Opaque" x="1843" y="0" width="118" height="25" backcolor="#97D7EB"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -653,7 +686,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$V{sum_of_count}]]></textFieldExpression>
 				</textField>
 				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement uuid="be027d1a-8836-487c-afab-e110bf2c18af" stretchType="RelativeToBandHeight" mode="Opaque" x="1745" y="0" width="118" height="25" backcolor="#97D7EB"/>
+					<reportElement uuid="be027d1a-8836-487c-afab-e110bf2c18af" stretchType="RelativeToBandHeight" mode="Opaque" x="1961" y="0" width="118" height="25" backcolor="#97D7EB"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -667,7 +700,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$V{sum_pa_count}]]></textFieldExpression>
 				</textField>
 				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement uuid="7451d784-7b72-4358-b22d-d287f1ff6100" stretchType="RelativeToBandHeight" mode="Opaque" x="1391" y="0" width="118" height="25" backcolor="#97D7EB"/>
+					<reportElement uuid="7451d784-7b72-4358-b22d-d287f1ff6100" stretchType="RelativeToBandHeight" mode="Opaque" x="1506" y="0" width="118" height="25" backcolor="#97D7EB"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -678,10 +711,10 @@ con.sales_start_date]]>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="9" isBold="true" isItalic="false"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$V{sum_ap_count}+$V{sum_of_count}+$V{sum_pa_count}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$V{sum_ap_count}+$V{sum_of_count}+$V{sum_pa_count}+$V{sum_cot_count}]]></textFieldExpression>
 				</textField>
 				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="9d0fea3c-cb68-4d96-bde3-697c9356572b" stretchType="RelativeToBandHeight" mode="Opaque" x="2217" y="0" width="118" height="25" backcolor="#97D7EB"/>
+					<reportElement uuid="9d0fea3c-cb68-4d96-bde3-697c9356572b" stretchType="RelativeToBandHeight" mode="Opaque" x="2551" y="0" width="118" height="25" backcolor="#97D7EB"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -695,7 +728,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$V{pa_sold_area}]]></textFieldExpression>
 				</textField>
 				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="1f65b201-b40c-48ef-b8ff-24ed8c7329d1" stretchType="RelativeToBandHeight" mode="Opaque" x="2807" y="0" width="118" height="25" backcolor="#97D7EB"/>
+					<reportElement uuid="1f65b201-b40c-48ef-b8ff-24ed8c7329d1" stretchType="RelativeToBandHeight" mode="Opaque" x="3239" y="0" width="118" height="25" backcolor="#97D7EB"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -707,6 +740,104 @@ con.sales_start_date]]>
 						<font fontName="DejaVu Sans" size="9" isBold="true" isItalic="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$V{pa_not_sold_area}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement uuid="cefed606-8a8e-45e7-bf56-22c7db675a38" stretchType="RelativeToBandHeight" mode="Opaque" x="1155" y="0" width="115" height="25" backcolor="#97D7EB"/>
+					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="9" isBold="true" isItalic="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{cot_build_area}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0" isBlankWhenNull="true">
+					<reportElement uuid="c057ec87-9c5e-4b05-9bdd-536e03b2ef0b" stretchType="RelativeToBandHeight" mode="Opaque" x="1742" y="0" width="101" height="25" backcolor="#97D7EB"/>
+					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="9" isBold="true" isItalic="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{sum_cot_count}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement uuid="8a54cf10-f870-430a-bc60-a932f64c8b89" stretchType="RelativeToBandHeight" mode="Opaque" x="2315" y="0" width="118" height="25" backcolor="#97D7EB"/>
+					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="9" isBold="true" isItalic="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{cot_sold_area}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement uuid="d5f70960-7fda-4f44-8517-568711f02b9b" stretchType="RelativeToBandHeight" mode="Opaque" x="3023" y="0" width="98" height="25" backcolor="#97D7EB"/>
+					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="9" isBold="true" isItalic="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{cot_not_sold_area}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement uuid="a6de0a55-4734-44fd-b773-d133e1571174" stretchType="RelativeToBandHeight" mode="Opaque" x="3711" y="0" width="104" height="25" backcolor="#97D7EB"/>
+					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="9" isBold="true" isItalic="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{cot_sold_sum}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement uuid="d0e6ea5b-2d06-49be-87ab-42c3ede3b3b2" stretchType="RelativeToBandHeight" mode="Opaque" x="4287" y="0" width="103" height="25" backcolor="#97D7EB"/>
+					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="9" isBold="true" isItalic="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{cot_payed_sum}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement uuid="c307c16c-d96c-4e74-a012-a75b2adad5e1" stretchType="RelativeToBandHeight" mode="Opaque" x="4862" y="0" width="105" height="25" backcolor="#97D7EB"/>
+					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="9" isBold="true" isItalic="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{cot_sold_sum}.subtract($V{cot_payed_sum})]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupFooter>
@@ -802,7 +933,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$F{ap_build_area}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="df7c1ec6-43ac-4ee2-85f8-495f1365c57d" stretchType="RelativeToBandHeight" mode="Opaque" x="1155" y="0" width="118" height="25" backcolor="#FDDBCA"/>
+					<reportElement uuid="df7c1ec6-43ac-4ee2-85f8-495f1365c57d" stretchType="RelativeToBandHeight" mode="Opaque" x="1270" y="0" width="118" height="25" backcolor="#FDDBCA"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -874,7 +1005,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$F{not_sale_area}.add($F{technical_area}).add($F{parking_not_sale_area})]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement uuid="c146272f-9219-4aa1-85bb-c42973f67866" stretchType="RelativeToBandHeight" mode="Opaque" x="1509" y="0" width="118" height="25" backcolor="#FDDBCA"/>
+					<reportElement uuid="c146272f-9219-4aa1-85bb-c42973f67866" stretchType="RelativeToBandHeight" mode="Opaque" x="1624" y="0" width="118" height="25" backcolor="#FDDBCA"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -888,7 +1019,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$F{ap_count}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="a3264f2b-603a-4541-af98-78e1a28447cd" stretchType="RelativeToBandHeight" mode="Opaque" x="1863" y="0" width="118" height="25" backcolor="#FDDBCA"/>
+					<reportElement uuid="a3264f2b-603a-4541-af98-78e1a28447cd" stretchType="RelativeToBandHeight" mode="Opaque" x="2079" y="0" width="118" height="25" backcolor="#FDDBCA"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -902,7 +1033,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$F{total_sold_area}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="9c971a20-d8d9-48e4-9939-37d95118fca4" stretchType="RelativeToBandHeight" mode="Opaque" x="1981" y="0" width="118" height="25" backcolor="#FDDBCA"/>
+					<reportElement uuid="9c971a20-d8d9-48e4-9939-37d95118fca4" stretchType="RelativeToBandHeight" mode="Opaque" x="2197" y="0" width="118" height="25" backcolor="#FDDBCA"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -916,7 +1047,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$F{ap_sold_area}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="1ced1031-8bd2-49e8-a14a-92e3f8809ed8" stretchType="RelativeToBandHeight" mode="Opaque" x="2099" y="0" width="118" height="25" backcolor="#FDDBCA"/>
+					<reportElement uuid="1ced1031-8bd2-49e8-a14a-92e3f8809ed8" stretchType="RelativeToBandHeight" mode="Opaque" x="2433" y="0" width="118" height="25" backcolor="#FDDBCA"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -930,7 +1061,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$F{of_sold_area}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement uuid="32ef8755-b43e-4e8d-a7fc-e590f4378799" stretchType="RelativeToBandHeight" mode="Opaque" x="2335" y="0" width="118" height="25" backcolor="#FDDBCA"/>
+					<reportElement uuid="32ef8755-b43e-4e8d-a7fc-e590f4378799" stretchType="RelativeToBandHeight" mode="Opaque" x="2669" y="0" width="118" height="25" backcolor="#FDDBCA"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -944,7 +1075,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$F{pa_sold_count}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="6a7768d9-ff78-424f-b2df-46a9dc7ef539" stretchType="RelativeToBandHeight" mode="Opaque" x="2453" y="0" width="118" height="25" backcolor="#FDDBCA"/>
+					<reportElement uuid="6a7768d9-ff78-424f-b2df-46a9dc7ef539" stretchType="RelativeToBandHeight" mode="Opaque" x="2787" y="0" width="118" height="25" backcolor="#FDDBCA"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -958,7 +1089,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$F{total_not_sold_area}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="3f935125-484e-4cf9-9afb-7b455a1adcaa" stretchType="RelativeToBandHeight" mode="Opaque" x="2571" y="0" width="118" height="25" backcolor="#FDDBCA"/>
+					<reportElement uuid="3f935125-484e-4cf9-9afb-7b455a1adcaa" stretchType="RelativeToBandHeight" mode="Opaque" x="2905" y="0" width="118" height="25" backcolor="#FDDBCA"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -972,7 +1103,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$F{ap_not_sold_area}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="20643174-9176-43b1-af4a-c333a54fe754" stretchType="RelativeToBandHeight" mode="Opaque" x="2689" y="0" width="118" height="25" backcolor="#FDDBCA"/>
+					<reportElement uuid="20643174-9176-43b1-af4a-c333a54fe754" stretchType="RelativeToBandHeight" mode="Opaque" x="3121" y="0" width="118" height="25" backcolor="#FDDBCA"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -986,7 +1117,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$F{of_not_sold_area}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement uuid="37546c57-d893-4cef-9ca6-0b433919bca3" stretchType="RelativeToBandHeight" mode="Opaque" x="2925" y="0" width="118" height="25" backcolor="#FDDBCA"/>
+					<reportElement uuid="37546c57-d893-4cef-9ca6-0b433919bca3" stretchType="RelativeToBandHeight" mode="Opaque" x="3357" y="0" width="118" height="25" backcolor="#FDDBCA"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -1000,7 +1131,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$F{pa_not_sold_count}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="432ae238-5cae-49ab-aaa0-dbc526eada25" stretchType="RelativeToBandHeight" mode="Opaque" x="3043" y="0" width="118" height="25" backcolor="#FDDBCA"/>
+					<reportElement uuid="432ae238-5cae-49ab-aaa0-dbc526eada25" stretchType="RelativeToBandHeight" mode="Opaque" x="3475" y="0" width="118" height="25" backcolor="#FDDBCA"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -1014,7 +1145,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$F{total_sold_sum}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="818986bc-7643-403b-b70f-02366b2207a1" stretchType="RelativeToBandHeight" mode="Opaque" x="3161" y="0" width="118" height="25" backcolor="#FDDBCA"/>
+					<reportElement uuid="818986bc-7643-403b-b70f-02366b2207a1" stretchType="RelativeToBandHeight" mode="Opaque" x="3593" y="0" width="118" height="25" backcolor="#FDDBCA"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -1028,7 +1159,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$F{ap_sold_sum}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="9b68aa54-d83e-445f-ba8b-ef074d1450b5" stretchType="RelativeToBandHeight" mode="Opaque" x="3279" y="0" width="118" height="25" backcolor="#FDDBCA"/>
+					<reportElement uuid="9b68aa54-d83e-445f-ba8b-ef074d1450b5" stretchType="RelativeToBandHeight" mode="Opaque" x="3815" y="0" width="118" height="25" backcolor="#FDDBCA"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -1042,7 +1173,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$F{of_sold_sum}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="aa720a4e-ade6-4489-9bfb-fa5a32c7bd89" stretchType="RelativeToBandHeight" mode="Opaque" x="3397" y="0" width="118" height="25" backcolor="#FDDBCA"/>
+					<reportElement uuid="aa720a4e-ade6-4489-9bfb-fa5a32c7bd89" stretchType="RelativeToBandHeight" mode="Opaque" x="3933" y="0" width="118" height="25" backcolor="#FDDBCA"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -1056,7 +1187,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$F{pa_sold_sum}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="d37e32b4-c606-4d38-94a7-c90b7ad56bdb" stretchType="RelativeToBandHeight" mode="Opaque" x="3515" y="0" width="118" height="25" backcolor="#FDDBCA"/>
+					<reportElement uuid="d37e32b4-c606-4d38-94a7-c90b7ad56bdb" stretchType="RelativeToBandHeight" mode="Opaque" x="4051" y="0" width="118" height="25" backcolor="#FDDBCA"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -1070,7 +1201,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$F{total_payed_sum}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="5aba144d-5a8f-4361-a955-180596e8d2f0" stretchType="RelativeToBandHeight" mode="Opaque" x="3633" y="0" width="118" height="25" backcolor="#FDDBCA"/>
+					<reportElement uuid="5aba144d-5a8f-4361-a955-180596e8d2f0" stretchType="RelativeToBandHeight" mode="Opaque" x="4169" y="0" width="118" height="25" backcolor="#FDDBCA"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -1084,7 +1215,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$F{ap_payed_sum}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="fb2ee870-1f06-4994-869f-b65376ed2e84" stretchType="RelativeToBandHeight" mode="Opaque" x="3751" y="0" width="118" height="25" backcolor="#FDDBCA"/>
+					<reportElement uuid="fb2ee870-1f06-4994-869f-b65376ed2e84" stretchType="RelativeToBandHeight" mode="Opaque" x="4390" y="0" width="118" height="25" backcolor="#FDDBCA"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -1098,7 +1229,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$F{of_payed_sum}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="59489622-950b-429f-95a7-cee42b45ee96" stretchType="RelativeToBandHeight" mode="Opaque" x="3869" y="0" width="118" height="25" backcolor="#FDDBCA"/>
+					<reportElement uuid="59489622-950b-429f-95a7-cee42b45ee96" stretchType="RelativeToBandHeight" mode="Opaque" x="4508" y="0" width="118" height="25" backcolor="#FDDBCA"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -1112,7 +1243,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$F{pa_payed_sum}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="1654fb9c-4661-4aa9-92d4-120791c33182" stretchType="RelativeToBandHeight" mode="Opaque" x="3987" y="0" width="118" height="25" backcolor="#FDDBCA"/>
+					<reportElement uuid="1654fb9c-4661-4aa9-92d4-120791c33182" stretchType="RelativeToBandHeight" mode="Opaque" x="4626" y="0" width="118" height="25" backcolor="#FDDBCA"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -1126,7 +1257,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$F{total_sold_sum}.subtract($F{total_payed_sum})]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="2500f8da-f594-4cd4-9600-f94055365e98" stretchType="RelativeToBandHeight" mode="Opaque" x="4105" y="0" width="118" height="25" backcolor="#FDDBCA"/>
+					<reportElement uuid="2500f8da-f594-4cd4-9600-f94055365e98" stretchType="RelativeToBandHeight" mode="Opaque" x="4744" y="0" width="118" height="25" backcolor="#FDDBCA"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -1140,7 +1271,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$F{ap_sold_sum}.subtract($F{ap_payed_sum})]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="b6c9ee07-3149-4c51-90b1-a945a3d098b8" stretchType="RelativeToBandHeight" mode="Opaque" x="4223" y="0" width="118" height="25" backcolor="#FDDBCA"/>
+					<reportElement uuid="b6c9ee07-3149-4c51-90b1-a945a3d098b8" stretchType="RelativeToBandHeight" mode="Opaque" x="4967" y="0" width="118" height="25" backcolor="#FDDBCA"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -1154,7 +1285,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$F{of_sold_sum}.subtract($F{of_payed_sum})]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="07af2fed-0c9c-4849-b84e-18d22b72dff8" stretchType="RelativeToBandHeight" mode="Opaque" x="4341" y="0" width="118" height="25" backcolor="#FDDBCA"/>
+					<reportElement uuid="07af2fed-0c9c-4849-b84e-18d22b72dff8" stretchType="RelativeToBandHeight" mode="Opaque" x="5085" y="0" width="118" height="25" backcolor="#FDDBCA"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -1182,7 +1313,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$F{installment_date}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement uuid="b8a03a60-38a3-4b0c-a2f9-0b86d90239f0" stretchType="RelativeToBandHeight" mode="Opaque" x="1273" y="0" width="118" height="25" backcolor="#FDDBCA"/>
+					<reportElement uuid="b8a03a60-38a3-4b0c-a2f9-0b86d90239f0" stretchType="RelativeToBandHeight" mode="Opaque" x="1388" y="0" width="118" height="25" backcolor="#FDDBCA"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -1196,7 +1327,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$F{pa_build_area}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement uuid="44d50ea7-4a32-47ca-bd4d-d96d4e8db9a6" stretchType="RelativeToBandHeight" mode="Opaque" x="1627" y="0" width="118" height="25" backcolor="#FDDBCA"/>
+					<reportElement uuid="44d50ea7-4a32-47ca-bd4d-d96d4e8db9a6" stretchType="RelativeToBandHeight" mode="Opaque" x="1843" y="0" width="118" height="25" backcolor="#FDDBCA"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -1210,7 +1341,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$F{of_count}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement uuid="63ad1ebe-f460-4318-81f7-3e6b179eb2dd" stretchType="RelativeToBandHeight" mode="Opaque" x="1745" y="0" width="118" height="25" backcolor="#FDDBCA"/>
+					<reportElement uuid="63ad1ebe-f460-4318-81f7-3e6b179eb2dd" stretchType="RelativeToBandHeight" mode="Opaque" x="1961" y="0" width="118" height="25" backcolor="#FDDBCA"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -1224,7 +1355,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$F{pa_count}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0" isBlankWhenNull="true">
-					<reportElement uuid="3454d097-c9ea-4f5e-a4de-f5911b8028c9" stretchType="RelativeToBandHeight" mode="Opaque" x="1391" y="0" width="118" height="25" backcolor="#FDDBCA"/>
+					<reportElement uuid="3454d097-c9ea-4f5e-a4de-f5911b8028c9" stretchType="RelativeToBandHeight" mode="Opaque" x="1506" y="0" width="118" height="25" backcolor="#FDDBCA"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -1235,10 +1366,10 @@ con.sales_start_date]]>
 					<textElement textAlignment="Right" verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="9" isBold="false" isItalic="false"/>
 					</textElement>
-					<textFieldExpression><![CDATA[$F{ap_count}+$F{of_count}+$F{pa_count}]]></textFieldExpression>
+					<textFieldExpression><![CDATA[$F{ap_count}+$F{of_count}+$F{pa_count}+$F{cot_count}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="3c5a3697-3549-49df-810e-5d3bddb7a6a2" stretchType="RelativeToBandHeight" mode="Opaque" x="2217" y="0" width="118" height="25" backcolor="#FDDBCA"/>
+					<reportElement uuid="3c5a3697-3549-49df-810e-5d3bddb7a6a2" stretchType="RelativeToBandHeight" mode="Opaque" x="2551" y="0" width="118" height="25" backcolor="#FDDBCA"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -1252,7 +1383,7 @@ con.sales_start_date]]>
 					<textFieldExpression><![CDATA[$F{pa_sold_area}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0.00" isBlankWhenNull="true">
-					<reportElement uuid="c03fc44d-d4ba-4f72-aa28-995bd2f90821" stretchType="RelativeToBandHeight" mode="Opaque" x="2807" y="0" width="118" height="25" backcolor="#FDDBCA"/>
+					<reportElement uuid="c03fc44d-d4ba-4f72-aa28-995bd2f90821" stretchType="RelativeToBandHeight" mode="Opaque" x="3239" y="0" width="118" height="25" backcolor="#FDDBCA"/>
 					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 						<pen lineWidth="0.25"/>
 						<topPen lineWidth="0.25"/>
@@ -1264,6 +1395,104 @@ con.sales_start_date]]>
 						<font fontName="DejaVu Sans" size="9" isBold="false" isItalic="false"/>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{pa_not_sold_area}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement uuid="8b1d2f67-67dd-48ac-9915-624e08b26466" stretchType="RelativeToBandHeight" mode="Opaque" x="1155" y="0" width="115" height="25" backcolor="#FDDBCA"/>
+					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="9" isBold="false" isItalic="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{cot_build_area}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0" isBlankWhenNull="true">
+					<reportElement uuid="b5239a80-182d-4b80-9b02-07f7ae5c085f" stretchType="RelativeToBandHeight" mode="Opaque" x="1742" y="0" width="101" height="25" backcolor="#FDDBCA"/>
+					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="9" isBold="false" isItalic="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{cot_count}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement uuid="bc60047a-3a57-49dd-825d-2e791951da00" stretchType="RelativeToBandHeight" mode="Opaque" x="2315" y="0" width="118" height="25" backcolor="#FDDBCA"/>
+					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="9" isBold="false" isItalic="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{cot_sold_area}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement uuid="eac25727-7ec8-446c-ba18-78347d85cf38" stretchType="RelativeToBandHeight" mode="Opaque" x="3023" y="0" width="98" height="25" backcolor="#FDDBCA"/>
+					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="9" isBold="false" isItalic="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{cot_not_sold_area}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement uuid="6b56fce2-ec1c-44d0-a4cd-4c46d0d1119f" stretchType="RelativeToBandHeight" mode="Opaque" x="3711" y="0" width="104" height="25" backcolor="#FDDBCA"/>
+					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="9" isBold="false" isItalic="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{cot_sold_sum}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement uuid="960193ca-6f55-4730-8040-7dd060e58b94" stretchType="RelativeToBandHeight" mode="Opaque" x="4287" y="0" width="103" height="25" backcolor="#FDDBCA"/>
+					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="9" isBold="false" isItalic="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{cot_payed_sum}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement uuid="b94bc685-1f07-46f7-b7e8-973fd1cc1a61" stretchType="RelativeToBandHeight" mode="Opaque" x="4862" y="0" width="105" height="25" backcolor="#FDDBCA"/>
+					<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
+						<pen lineWidth="0.25"/>
+						<topPen lineWidth="0.25"/>
+						<leftPen lineWidth="0.25"/>
+						<bottomPen lineWidth="0.25"/>
+						<rightPen lineWidth="0.25"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="DejaVu Sans" size="9" isBold="false" isItalic="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{cot_sold_sum}.subtract($F{cot_payed_sum})]]></textFieldExpression>
 				</textField>
 			</band>
 		</groupHeader>
@@ -1308,7 +1537,7 @@ con.sales_start_date]]>
 				<text><![CDATA[Юридическая часть]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="29efa756-a589-457b-8640-0b53565709b5" stretchType="RelativeToTallestObject" mode="Opaque" x="1863" y="30" width="1180" height="43" backcolor="#FFCCCC"/>
+				<reportElement uuid="29efa756-a589-457b-8640-0b53565709b5" stretchType="RelativeToTallestObject" mode="Opaque" x="2079" y="30" width="1396" height="43" backcolor="#FFCCCC"/>
 				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 					<pen lineWidth="0.25"/>
 					<topPen lineWidth="0.25"/>
@@ -1322,7 +1551,7 @@ con.sales_start_date]]>
 				<text><![CDATA[Коммерческая часть]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="82d2f9af-eab5-4ebf-b305-236221da3324" stretchType="RelativeToTallestObject" mode="Opaque" x="3043" y="30" width="1416" height="43" backcolor="#CCCCFF">
+				<reportElement uuid="82d2f9af-eab5-4ebf-b305-236221da3324" stretchType="RelativeToTallestObject" mode="Opaque" x="3475" y="30" width="1728" height="43" backcolor="#CCCCFF">
 					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
 				</reportElement>
 				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
@@ -1338,7 +1567,7 @@ con.sales_start_date]]>
 				<text><![CDATA[Финансовая часть]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="75c5d0fa-99d7-4638-b4c9-a1d079ab332e" stretchType="RelativeToTallestObject" mode="Opaque" x="674" y="30" width="1189" height="43" backcolor="#CCFFCC"/>
+				<reportElement uuid="75c5d0fa-99d7-4638-b4c9-a1d079ab332e" stretchType="RelativeToTallestObject" mode="Opaque" x="674" y="30" width="1405" height="43" backcolor="#CCFFCC"/>
 				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
 					<pen lineWidth="0.25"/>
 					<topPen lineWidth="0.25"/>
@@ -1484,7 +1713,7 @@ con.sales_start_date]]>
 				<text><![CDATA[Квартиры м2]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="c3424367-1283-4da8-954c-b462e3836c6b" stretchType="RelativeToTallestObject" mode="Opaque" x="1155" y="0" width="118" height="40" backcolor="#CCFFFF">
+				<reportElement uuid="c3424367-1283-4da8-954c-b462e3836c6b" stretchType="RelativeToTallestObject" mode="Opaque" x="1270" y="0" width="118" height="40" backcolor="#CCFFFF">
 					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
 				</reportElement>
 				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
@@ -1516,7 +1745,7 @@ con.sales_start_date]]>
 				<text><![CDATA[Непродаваемая площадь, м2]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="c35c154d-b92e-49eb-8f3a-6abf1587ef52" stretchType="RelativeToTallestObject" mode="Opaque" x="1509" y="0" width="118" height="40" backcolor="#FFFFCC">
+				<reportElement uuid="c35c154d-b92e-49eb-8f3a-6abf1587ef52" stretchType="RelativeToTallestObject" mode="Opaque" x="1624" y="0" width="118" height="40" backcolor="#FFFFCC">
 					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
 				</reportElement>
 				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
@@ -1532,7 +1761,7 @@ con.sales_start_date]]>
 				<text><![CDATA[Кол-во квартир, ед]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="f523889d-52f2-4ca7-9b87-99a3e51f406b" stretchType="RelativeToTallestObject" mode="Opaque" x="1863" y="0" width="118" height="40" backcolor="#FF99FF">
+				<reportElement uuid="f523889d-52f2-4ca7-9b87-99a3e51f406b" stretchType="RelativeToTallestObject" mode="Opaque" x="2079" y="0" width="118" height="40" backcolor="#FF99FF">
 					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
 				</reportElement>
 				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
@@ -1548,7 +1777,7 @@ con.sales_start_date]]>
 				<text><![CDATA[Отчуждено на дату отчета, м2]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="e427f715-2efa-488a-9ece-76e3bcdfe530" stretchType="RelativeToTallestObject" mode="Opaque" x="1981" y="0" width="118" height="40" backcolor="#FF99FF">
+				<reportElement uuid="e427f715-2efa-488a-9ece-76e3bcdfe530" stretchType="RelativeToTallestObject" mode="Opaque" x="2197" y="0" width="118" height="40" backcolor="#FF99FF">
 					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
 				</reportElement>
 				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
@@ -1564,7 +1793,7 @@ con.sales_start_date]]>
 				<text><![CDATA[Квартиры, м2]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="fba1921c-9616-4359-9818-2a0d206f6c90" stretchType="RelativeToTallestObject" mode="Opaque" x="2099" y="0" width="118" height="40" backcolor="#FF99FF">
+				<reportElement uuid="fba1921c-9616-4359-9818-2a0d206f6c90" stretchType="RelativeToTallestObject" mode="Opaque" x="2433" y="0" width="118" height="40" backcolor="#FF99FF">
 					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
 				</reportElement>
 				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
@@ -1580,7 +1809,7 @@ con.sales_start_date]]>
 				<text><![CDATA[Помещения, м2]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="40a17117-0d49-47db-a729-3c39c8a5915c" stretchType="RelativeToTallestObject" mode="Opaque" x="2335" y="0" width="118" height="40" backcolor="#FF99FF">
+				<reportElement uuid="40a17117-0d49-47db-a729-3c39c8a5915c" stretchType="RelativeToTallestObject" mode="Opaque" x="2669" y="0" width="118" height="40" backcolor="#FF99FF">
 					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
 				</reportElement>
 				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
@@ -1596,7 +1825,7 @@ con.sales_start_date]]>
 				<text><![CDATA[Кол-во машиномест, ед]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="5a88eb4b-1ea8-4b11-97d7-e882358b925e" stretchType="RelativeToTallestObject" mode="Opaque" x="2453" y="0" width="118" height="40" backcolor="#9999FF">
+				<reportElement uuid="5a88eb4b-1ea8-4b11-97d7-e882358b925e" stretchType="RelativeToTallestObject" mode="Opaque" x="2787" y="0" width="118" height="40" backcolor="#9999FF">
 					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
 				</reportElement>
 				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
@@ -1612,7 +1841,7 @@ con.sales_start_date]]>
 				<text><![CDATA[Неотчуждено на дату отчета, м2]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="c12cbcd7-482b-47fd-9648-54af4e29d7c3" stretchType="RelativeToTallestObject" mode="Opaque" x="2925" y="0" width="118" height="40" backcolor="#9999FF">
+				<reportElement uuid="c12cbcd7-482b-47fd-9648-54af4e29d7c3" stretchType="RelativeToTallestObject" mode="Opaque" x="3357" y="0" width="118" height="40" backcolor="#9999FF">
 					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
 				</reportElement>
 				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
@@ -1628,7 +1857,7 @@ con.sales_start_date]]>
 				<text><![CDATA[Кол-во машиномест, ед]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="a7873a40-3bb5-45a9-be6d-78a424250eff" stretchType="RelativeToTallestObject" mode="Opaque" x="2571" y="0" width="118" height="40" backcolor="#9999FF">
+				<reportElement uuid="a7873a40-3bb5-45a9-be6d-78a424250eff" stretchType="RelativeToTallestObject" mode="Opaque" x="2905" y="0" width="118" height="40" backcolor="#9999FF">
 					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
 				</reportElement>
 				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
@@ -1644,7 +1873,7 @@ con.sales_start_date]]>
 				<text><![CDATA[Квартиры, м2]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="c37f6f48-d2c0-4514-944d-2ab5ddcd8457" stretchType="RelativeToTallestObject" mode="Opaque" x="2689" y="0" width="118" height="40" backcolor="#9999FF">
+				<reportElement uuid="c37f6f48-d2c0-4514-944d-2ab5ddcd8457" stretchType="RelativeToTallestObject" mode="Opaque" x="3121" y="0" width="118" height="40" backcolor="#9999FF">
 					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
 				</reportElement>
 				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
@@ -1660,7 +1889,7 @@ con.sales_start_date]]>
 				<text><![CDATA[Помещения, м2]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="70ead1db-2a38-4c22-96ea-67e66424cecf" stretchType="RelativeToTallestObject" mode="Opaque" x="3633" y="0" width="118" height="40" backcolor="#FF9999">
+				<reportElement uuid="70ead1db-2a38-4c22-96ea-67e66424cecf" stretchType="RelativeToTallestObject" mode="Opaque" x="4169" y="0" width="118" height="40" backcolor="#FF9999">
 					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
 				</reportElement>
 				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
@@ -1676,7 +1905,7 @@ con.sales_start_date]]>
 				<text><![CDATA[Квартиры, оплачено]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="872fd44d-1598-4e20-8905-c9779bc3fa13" stretchType="RelativeToTallestObject" mode="Opaque" x="3751" y="0" width="118" height="40" backcolor="#FF9999">
+				<reportElement uuid="872fd44d-1598-4e20-8905-c9779bc3fa13" stretchType="RelativeToTallestObject" mode="Opaque" x="4390" y="0" width="118" height="40" backcolor="#FF9999">
 					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
 				</reportElement>
 				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
@@ -1692,7 +1921,7 @@ con.sales_start_date]]>
 				<text><![CDATA[Помещения, оплачено]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="7dacffda-1ee4-4f13-928a-4cb23945500e" stretchType="RelativeToTallestObject" mode="Opaque" x="3397" y="0" width="118" height="40" backcolor="#CCFFCC">
+				<reportElement uuid="7dacffda-1ee4-4f13-928a-4cb23945500e" stretchType="RelativeToTallestObject" mode="Opaque" x="3933" y="0" width="118" height="40" backcolor="#CCFFCC">
 					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
 				</reportElement>
 				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
@@ -1708,7 +1937,7 @@ con.sales_start_date]]>
 				<text><![CDATA[Машиноместа, сумма договора]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="24a7360f-6a4f-4aaf-a5d1-12e64af9118d" stretchType="RelativeToTallestObject" mode="Opaque" x="3043" y="0" width="118" height="40" backcolor="#CCFFCC">
+				<reportElement uuid="24a7360f-6a4f-4aaf-a5d1-12e64af9118d" stretchType="RelativeToTallestObject" mode="Opaque" x="3475" y="0" width="118" height="40" backcolor="#CCFFCC">
 					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
 				</reportElement>
 				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
@@ -1724,7 +1953,7 @@ con.sales_start_date]]>
 				<text><![CDATA[Отчуждено на дату отчета, сом]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="51a7ab85-0ef3-4cea-b776-eae88f23980b" stretchType="RelativeToTallestObject" mode="Opaque" x="3515" y="0" width="118" height="40" backcolor="#FF9999">
+				<reportElement uuid="51a7ab85-0ef3-4cea-b776-eae88f23980b" stretchType="RelativeToTallestObject" mode="Opaque" x="4051" y="0" width="118" height="40" backcolor="#FF9999">
 					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
 				</reportElement>
 				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
@@ -1737,10 +1966,10 @@ con.sales_start_date]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="9" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Оплачено по отчужденным договорам , $]]></text>
+				<text><![CDATA[Оплачено по отчужденным договорам , сом]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="4c17e8bc-833f-4a80-a2b1-833d3445f8c8" stretchType="RelativeToTallestObject" mode="Opaque" x="3161" y="0" width="118" height="40" backcolor="#CCFFCC">
+				<reportElement uuid="4c17e8bc-833f-4a80-a2b1-833d3445f8c8" stretchType="RelativeToTallestObject" mode="Opaque" x="3593" y="0" width="118" height="40" backcolor="#CCFFCC">
 					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
 				</reportElement>
 				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
@@ -1756,7 +1985,7 @@ con.sales_start_date]]>
 				<text><![CDATA[Квартиры, сумма договора]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="a5cf5c23-4afc-4aa8-85c1-503b91dceb37" stretchType="RelativeToTallestObject" mode="Opaque" x="3279" y="0" width="118" height="40" backcolor="#CCFFCC">
+				<reportElement uuid="a5cf5c23-4afc-4aa8-85c1-503b91dceb37" stretchType="RelativeToTallestObject" mode="Opaque" x="3815" y="0" width="118" height="40" backcolor="#CCFFCC">
 					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
 				</reportElement>
 				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
@@ -1772,7 +2001,7 @@ con.sales_start_date]]>
 				<text><![CDATA[Помещения, сумма договора]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="725f05c2-2c52-4f4d-9850-9a05e1f06be3" stretchType="RelativeToTallestObject" mode="Opaque" x="3869" y="0" width="118" height="40" backcolor="#FF9999">
+				<reportElement uuid="725f05c2-2c52-4f4d-9850-9a05e1f06be3" stretchType="RelativeToTallestObject" mode="Opaque" x="4508" y="0" width="118" height="40" backcolor="#FF9999">
 					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
 				</reportElement>
 				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
@@ -1788,7 +2017,7 @@ con.sales_start_date]]>
 				<text><![CDATA[Машиноместа, оплачено]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="0fecab1f-759c-4c4a-bd23-f281bc25acca" stretchType="RelativeToTallestObject" mode="Opaque" x="3987" y="0" width="118" height="40" backcolor="#FFCC99">
+				<reportElement uuid="0fecab1f-759c-4c4a-bd23-f281bc25acca" stretchType="RelativeToTallestObject" mode="Opaque" x="4626" y="0" width="118" height="40" backcolor="#FFCC99">
 					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
 				</reportElement>
 				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
@@ -1801,10 +2030,10 @@ con.sales_start_date]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="DejaVu Sans" size="9" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Остаток  по договорам (счета к получению), $]]></text>
+				<text><![CDATA[Остаток  по договорам (счета к получению), сом]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="4ebd699a-9781-4e71-9dd3-440f58cf4e2d" stretchType="RelativeToTallestObject" mode="Opaque" x="4105" y="0" width="118" height="40" backcolor="#FFCC99">
+				<reportElement uuid="4ebd699a-9781-4e71-9dd3-440f58cf4e2d" stretchType="RelativeToTallestObject" mode="Opaque" x="4744" y="0" width="118" height="40" backcolor="#FFCC99">
 					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
 				</reportElement>
 				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
@@ -1820,7 +2049,7 @@ con.sales_start_date]]>
 				<text><![CDATA[Квартиры, остаток]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="6c34a0e4-fa66-41f7-8f9b-e29389d85314" stretchType="RelativeToTallestObject" mode="Opaque" x="4223" y="0" width="118" height="40" backcolor="#FFCC99">
+				<reportElement uuid="6c34a0e4-fa66-41f7-8f9b-e29389d85314" stretchType="RelativeToTallestObject" mode="Opaque" x="4967" y="0" width="118" height="40" backcolor="#FFCC99">
 					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
 				</reportElement>
 				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
@@ -1836,7 +2065,7 @@ con.sales_start_date]]>
 				<text><![CDATA[Помещения, остаток]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="04d78394-6363-4eed-b5a2-9aea1ea9790c" stretchType="RelativeToTallestObject" mode="Opaque" x="4341" y="0" width="118" height="40" backcolor="#FFCC99">
+				<reportElement uuid="04d78394-6363-4eed-b5a2-9aea1ea9790c" stretchType="RelativeToTallestObject" mode="Opaque" x="5085" y="0" width="118" height="40" backcolor="#FFCC99">
 					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
 				</reportElement>
 				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
@@ -1868,7 +2097,7 @@ con.sales_start_date]]>
 				<text><![CDATA[Срок рассрочки до]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="b85cabf3-1b6e-4176-9c98-019dd7dfd5e4" stretchType="RelativeToTallestObject" mode="Opaque" x="1273" y="0" width="118" height="40" backcolor="#CCFFFF">
+				<reportElement uuid="b85cabf3-1b6e-4176-9c98-019dd7dfd5e4" stretchType="RelativeToTallestObject" mode="Opaque" x="1388" y="0" width="118" height="40" backcolor="#CCFFFF">
 					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
 				</reportElement>
 				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
@@ -1884,7 +2113,7 @@ con.sales_start_date]]>
 				<text><![CDATA[Машиномест м2]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="1a3e789e-477f-40f4-bec5-dcea5bdab287" stretchType="RelativeToTallestObject" mode="Opaque" x="1627" y="0" width="118" height="40" backcolor="#FFFFCC">
+				<reportElement uuid="1a3e789e-477f-40f4-bec5-dcea5bdab287" stretchType="RelativeToTallestObject" mode="Opaque" x="1843" y="0" width="118" height="40" backcolor="#FFFFCC">
 					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
 				</reportElement>
 				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
@@ -1900,7 +2129,7 @@ con.sales_start_date]]>
 				<text><![CDATA[Кол-во помещений, ед]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="c002af57-b33c-40af-8b2b-b2de61781202" stretchType="RelativeToTallestObject" mode="Opaque" x="1745" y="0" width="118" height="40" backcolor="#FFFFCC">
+				<reportElement uuid="c002af57-b33c-40af-8b2b-b2de61781202" stretchType="RelativeToTallestObject" mode="Opaque" x="1961" y="0" width="118" height="40" backcolor="#FFFFCC">
 					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
 				</reportElement>
 				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
@@ -1916,7 +2145,7 @@ con.sales_start_date]]>
 				<text><![CDATA[Кол-во машиномест, ед]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="9f702690-6589-4929-a27c-b1b98b6de7ce" stretchType="RelativeToTallestObject" mode="Opaque" x="1391" y="0" width="118" height="40" backcolor="#FFFFCC">
+				<reportElement uuid="9f702690-6589-4929-a27c-b1b98b6de7ce" stretchType="RelativeToTallestObject" mode="Opaque" x="1506" y="0" width="118" height="40" backcolor="#FFFFCC">
 					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
 				</reportElement>
 				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
@@ -1932,7 +2161,7 @@ con.sales_start_date]]>
 				<text><![CDATA[Общее число ед. продаваемой недвижимости, ед]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="f65bd9ad-e83f-4eae-8bef-bc95a0a93448" stretchType="RelativeToTallestObject" mode="Opaque" x="2217" y="0" width="118" height="40" backcolor="#FF99FF">
+				<reportElement uuid="f65bd9ad-e83f-4eae-8bef-bc95a0a93448" stretchType="RelativeToTallestObject" mode="Opaque" x="2551" y="0" width="118" height="40" backcolor="#FF99FF">
 					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
 				</reportElement>
 				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
@@ -1948,7 +2177,7 @@ con.sales_start_date]]>
 				<text><![CDATA[Машиномест, м2]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="f44ac235-af56-445b-afd0-b415d650891e" stretchType="RelativeToTallestObject" mode="Opaque" x="2807" y="0" width="118" height="40" backcolor="#9999FF">
+				<reportElement uuid="f44ac235-af56-445b-afd0-b415d650891e" stretchType="RelativeToTallestObject" mode="Opaque" x="3239" y="0" width="118" height="40" backcolor="#9999FF">
 					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
 				</reportElement>
 				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
@@ -1962,6 +2191,118 @@ con.sales_start_date]]>
 					<font fontName="DejaVu Sans" size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Машиномест, м2]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="fe1acf68-132e-495e-9e47-fd934ffb0edd" stretchType="RelativeToTallestObject" mode="Opaque" x="1155" y="0" width="115" height="40" backcolor="#CCFFFF">
+					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
+				</reportElement>
+				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Коттеджи м2]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6222a3e4-6538-48e0-af43-879c347d5fd5" stretchType="RelativeToTallestObject" mode="Opaque" x="1742" y="0" width="101" height="40" backcolor="#FFFFCC">
+					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
+				</reportElement>
+				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Кол-во коттеджей, ед]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="06c4b66a-4779-4e83-b17a-556329b8f78a" stretchType="RelativeToTallestObject" mode="Opaque" x="2315" y="0" width="118" height="40" backcolor="#FF99FF">
+					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
+				</reportElement>
+				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Коттеджи, м2]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="eeefe87b-77b5-4ee7-b097-24674f6eb6a8" stretchType="RelativeToTallestObject" mode="Opaque" x="3023" y="0" width="98" height="40" backcolor="#9999FF">
+					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
+				</reportElement>
+				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Коттеджи, м2]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="0eba5578-8db8-43bb-aace-38b0c5671aa7" stretchType="RelativeToTallestObject" mode="Opaque" x="3711" y="0" width="104" height="40" backcolor="#CCFFCC">
+					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
+				</reportElement>
+				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Коттеджи, сумма договора]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d320db4e-e61b-43ef-a13d-06bf33bacf93" stretchType="RelativeToTallestObject" mode="Opaque" x="4287" y="0" width="103" height="40" backcolor="#FF9999">
+					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
+				</reportElement>
+				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Коттеджи, оплачено]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="583f0adc-9b94-45de-84eb-35b86d0d41e0" stretchType="RelativeToTallestObject" mode="Opaque" x="4862" y="0" width="105" height="40" backcolor="#FFCC99">
+					<property name="net.sf.jasperreports.export.xls.freeze.row.edge" value="Bottom"/>
+				</reportElement>
+				<box topPadding="4" leftPadding="4" bottomPadding="4" rightPadding="4">
+					<pen lineWidth="0.25"/>
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Коттеджи, остаток]]></text>
 			</staticText>
 		</band>
 	</columnHeader>

@@ -114,7 +114,7 @@ left join (
 	extract(year from c.date_contract) as year,
 	extract(month from c.date_contract) as month,
 	avg(c.price_for_square)::numeric(18,2) as average
-
+	 
 from client c
 inner join appartment ap on c.appartment_id=ap.id
 inner join construction cc on cc.id=ap.construction
@@ -208,7 +208,7 @@ order by year,main.month,type,title,ordered_type]]>
 					</textElement>
 					<textFieldExpression><![CDATA[$F{month}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="gruppa" pattern="#,##0.00 $" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="gruppa" pattern="#,##0.00 сом" isBlankWhenNull="true">
 					<reportElement uuid="aed86c9a-ef72-4446-a910-ddef04aa1087" stretchType="RelativeToBandHeight" mode="Opaque" x="400" y="0" width="137" height="14" backcolor="#9DE3E8"/>
 					<box leftPadding="5">
 						<pen lineWidth="0.25"/>
@@ -357,7 +357,7 @@ order by year,main.month,type,title,ordered_type]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{month}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" evaluationTime="Auto" pattern="#,##0.00 $" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" evaluationTime="Auto" pattern="#,##0.00 сом" isBlankWhenNull="true">
 				<reportElement uuid="6002cb81-72c8-4664-ab33-62bc90ed20de" stretchType="RelativeToBandHeight" x="400" y="0" width="137" height="14"/>
 				<box leftPadding="5">
 					<pen lineWidth="0.25"/>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="contract_template" pageWidth="1200" pageHeight="612" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="1180" leftMargin="0" rightMargin="20" topMargin="0" bottomMargin="20" isIgnorePagination="true" uuid="53900af5-bd24-4eb4-b561-f8a8187c0831">
-	<property name="ireport.zoom" value="1.3310000000000022"/>
-	<property name="ireport.x" value="526"/>
+	<property name="ireport.zoom" value="1.771561000000003"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
 	<style name="table">
@@ -113,7 +113,7 @@ case when c.type=0 and  ( c.prepay is null or c.prepay=false) then 0 else
  end
  as ordered_type,
 
- case when a.type=1 and a.office_type is not null then a.type+(a.office_type*2) else a.type end as ap_type
+ case when a.type=1 and a.office_type is not null then a.type+(a.office_type*3) else a.type end as ap_type
 
 
  from appartment a
@@ -209,7 +209,7 @@ case when c.type=0 and  ( c.prepay is null or c.prepay=false) then 0 else
 					<textElement verticalAlignment="Middle">
 						<font fontName="DejaVu Sans" size="9" isBold="true" isItalic="true"/>
 					</textElement>
-					<textFieldExpression><![CDATA[($F{ap_type}==0?"Квартир":$F{ap_type}==1?"Помещений":$F{ap_type}==2?"Подземных машиномест":$F{ap_type}==3?"Подвал":$F{ap_type}==5?"Чердак":"")+" - Всего: "]]></textFieldExpression>
+					<textFieldExpression><![CDATA[($F{ap_type}==3?"Коттеджей":$F{ap_type}==0?"Квартир":$F{ap_type}==1?"Помещений":$F{ap_type}==2?"Подземных машиномест":$F{ap_type}==4?"Подвал":$F{ap_type}==7?"Чердак":"")+" - Всего: "]]></textFieldExpression>
 				</textField>
 				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0" isBlankWhenNull="true">
 					<reportElement uuid="07b99219-7925-4d64-9f55-9a62b8d7ab11" stretchType="RelativeToBandHeight" mode="Opaque" x="237" y="0" width="79" height="14" backcolor="#97D7EB"/>
@@ -267,7 +267,7 @@ case when c.type=0 and  ( c.prepay is null or c.prepay=false) then 0 else
 					</textElement>
 					<textFieldExpression><![CDATA[($F{ap_type}==2)?"":$V{doc_area_variabl_total}]]></textFieldExpression>
 				</textField>
-				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0.00 $" isBlankWhenNull="true">
+				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0.00 сом" isBlankWhenNull="true">
 					<reportElement uuid="b2536321-75d3-4144-8656-cbac5c526b2e" stretchType="RelativeToBandHeight" mode="Opaque" x="569" y="0" width="130" height="14" backcolor="#97D7EB"/>
 					<box>
 						<pen lineWidth="0.25"/>
@@ -281,7 +281,7 @@ case when c.type=0 and  ( c.prepay is null or c.prepay=false) then 0 else
 					</textElement>
 					<textFieldExpression><![CDATA[$V{contract_total}]]></textFieldExpression>
 				</textField>
-				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0.00 $" isBlankWhenNull="true">
+				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0.00 сом" isBlankWhenNull="true">
 					<reportElement uuid="96b389f8-d338-4972-91c4-afa283615b7b" stretchType="RelativeToBandHeight" mode="Opaque" x="699" y="0" width="126" height="14" backcolor="#97D7EB"/>
 					<box>
 						<pen lineWidth="0.25"/>
@@ -295,7 +295,7 @@ case when c.type=0 and  ( c.prepay is null or c.prepay=false) then 0 else
 					</textElement>
 					<textFieldExpression><![CDATA[$V{contract_total_doc}]]></textFieldExpression>
 				</textField>
-				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0.00 $" isBlankWhenNull="true">
+				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0.00 сом" isBlankWhenNull="true">
 					<reportElement uuid="7c165f17-ff97-4ec9-83f3-4de30d9071c2" stretchType="RelativeToBandHeight" mode="Opaque" x="825" y="0" width="126" height="14" backcolor="#97D7EB"/>
 					<box>
 						<pen lineWidth="0.25"/>
@@ -309,7 +309,7 @@ case when c.type=0 and  ( c.prepay is null or c.prepay=false) then 0 else
 					</textElement>
 					<textFieldExpression><![CDATA[$V{payed_total}]]></textFieldExpression>
 				</textField>
-				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0.00 $" isBlankWhenNull="true">
+				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0.00 сом" isBlankWhenNull="true">
 					<reportElement uuid="d8920233-f097-45b1-be7c-12738148becd" stretchType="RelativeToBandHeight" mode="Opaque" x="951" y="0" width="111" height="14" backcolor="#97D7EB"/>
 					<box>
 						<pen lineWidth="0.25"/>
@@ -323,7 +323,7 @@ case when c.type=0 and  ( c.prepay is null or c.prepay=false) then 0 else
 					</textElement>
 					<textFieldExpression><![CDATA[$V{left_total}]]></textFieldExpression>
 				</textField>
-				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0.00 $" isBlankWhenNull="true">
+				<textField evaluationTime="Group" evaluationGroup="total_group" pattern="#,##0.00 сом" isBlankWhenNull="true">
 					<reportElement uuid="c082908f-636e-4a6b-915f-25ab00680e1c" stretchType="RelativeToBandHeight" mode="Opaque" x="1062" y="0" width="118" height="14" backcolor="#97D7EB"/>
 					<box>
 						<pen lineWidth="0.25"/>
@@ -359,7 +359,7 @@ case when c.type=0 and  ( c.prepay is null or c.prepay=false) then 0 else
 						<font fontName="DejaVu Sans" size="9"/>
 					</textElement>
 					<textFieldExpression><![CDATA[($F{gruppa}==1?"Проданных - ":$F{gruppa}==2?"Свободных - ":"В процессе - ")
-+($F{ap_type}==0?"Квартир":$F{ap_type}==1?"Помещений":$F{ap_type}==2?"Подземных машиномест":$F{ap_type}==3?"Подвал":$F{ap_type}==5?"Чердак":"")+" : "]]></textFieldExpression>
++($F{ap_type}==3?"Коттеджей":$F{ap_type}==0?"Квартир":$F{ap_type}==1?"Помещений":$F{ap_type}==2?"Подземных машиномест":$F{ap_type}==4?"Подвал":$F{ap_type}==7?"Чердак":"")+" : "]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0" isBlankWhenNull="true">
 					<reportElement uuid="bb979be5-d4b4-4d4b-bd03-e69eed48ea1b" stretchType="RelativeToBandHeight" mode="Opaque" x="237" y="0" width="79" height="14" backcolor="#FDDBCA"/>
@@ -417,7 +417,7 @@ case when c.type=0 and  ( c.prepay is null or c.prepay=false) then 0 else
 					</textElement>
 					<textFieldExpression><![CDATA[($F{ap_type}==2)?"":$V{doc_area_variable}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0.00 $" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0.00 сом" isBlankWhenNull="true">
 					<reportElement uuid="52a322d6-b18e-458c-800c-518107d6a24b" stretchType="RelativeToBandHeight" mode="Opaque" x="569" y="0" width="130" height="14" backcolor="#FDDBCA"/>
 					<box>
 						<pen lineWidth="0.25"/>
@@ -431,7 +431,7 @@ case when c.type=0 and  ( c.prepay is null or c.prepay=false) then 0 else
 					</textElement>
 					<textFieldExpression><![CDATA[$V{contract}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0.00 $" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0.00 сом" isBlankWhenNull="true">
 					<reportElement uuid="b0261f2a-e007-4a7f-9fa0-012dd60f369a" stretchType="RelativeToBandHeight" mode="Opaque" x="699" y="0" width="126" height="14" backcolor="#FDDBCA"/>
 					<box>
 						<pen lineWidth="0.25"/>
@@ -445,7 +445,7 @@ case when c.type=0 and  ( c.prepay is null or c.prepay=false) then 0 else
 					</textElement>
 					<textFieldExpression><![CDATA[$V{contract_doc}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0.00 $" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0.00 сом" isBlankWhenNull="true">
 					<reportElement uuid="d99bfddf-e8cc-4ce8-bc24-933f8553b94b" stretchType="RelativeToBandHeight" mode="Opaque" x="825" y="0" width="126" height="14" backcolor="#FDDBCA"/>
 					<box>
 						<pen lineWidth="0.25"/>
@@ -459,7 +459,7 @@ case when c.type=0 and  ( c.prepay is null or c.prepay=false) then 0 else
 					</textElement>
 					<textFieldExpression><![CDATA[$V{payed}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0.00 $" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0.00 сом" isBlankWhenNull="true">
 					<reportElement uuid="c2e482d1-fda0-4188-8325-c7b754ad2706" stretchType="RelativeToBandHeight" mode="Opaque" x="951" y="0" width="111" height="14" backcolor="#FDDBCA"/>
 					<box>
 						<pen lineWidth="0.25"/>
@@ -473,7 +473,7 @@ case when c.type=0 and  ( c.prepay is null or c.prepay=false) then 0 else
 					</textElement>
 					<textFieldExpression><![CDATA[$V{left}]]></textFieldExpression>
 				</textField>
-				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0.00 $" isBlankWhenNull="true">
+				<textField isStretchWithOverflow="true" evaluationTime="Group" evaluationGroup="sold_appartment" pattern="#,##0.00 сом" isBlankWhenNull="true">
 					<reportElement uuid="df7c1ec6-43ac-4ee2-85f8-495f1365c57d" stretchType="RelativeToBandHeight" mode="Opaque" x="1062" y="0" width="118" height="14" backcolor="#FDDBCA"/>
 					<box>
 						<pen lineWidth="0.25"/>
@@ -755,7 +755,7 @@ case when c.type=0 and  ( c.prepay is null or c.prepay=false) then 0 else
 				</textElement>
 				<textFieldExpression><![CDATA[($F{ap_type}==2)?"":$F{doc_area}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" pattern="#,##0.00 $" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" pattern="#,##0.00 сом" isBlankWhenNull="true">
 				<reportElement uuid="165a254a-7431-4f43-bcaa-d620edd278da" stretchType="RelativeToBandHeight" x="569" y="0" width="130" height="14"/>
 				<box>
 					<pen lineWidth="0.25"/>
@@ -769,7 +769,7 @@ case when c.type=0 and  ( c.prepay is null or c.prepay=false) then 0 else
 				</textElement>
 				<textFieldExpression><![CDATA[$F{total_sum}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" pattern="#,##0.00 $" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" pattern="#,##0.00 сом" isBlankWhenNull="true">
 				<reportElement uuid="63b52686-a485-4526-9894-b8223f0ed50b" stretchType="RelativeToBandHeight" x="699" y="0" width="126" height="14"/>
 				<box>
 					<pen lineWidth="0.25"/>
@@ -783,7 +783,7 @@ case when c.type=0 and  ( c.prepay is null or c.prepay=false) then 0 else
 				</textElement>
 				<textFieldExpression><![CDATA[$F{doc_total_sum}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" pattern="#,##0.00 $" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" pattern="#,##0.00 сом" isBlankWhenNull="true">
 				<reportElement uuid="5e938f3a-4bea-4445-aa3a-b51310e6b8a9" stretchType="RelativeToBandHeight" x="825" y="0" width="126" height="14"/>
 				<box>
 					<pen lineWidth="0.25"/>
@@ -797,7 +797,7 @@ case when c.type=0 and  ( c.prepay is null or c.prepay=false) then 0 else
 				</textElement>
 				<textFieldExpression><![CDATA[$F{already_payed}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" pattern="#,##0.00 $" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" pattern="#,##0.00 сом" isBlankWhenNull="true">
 				<reportElement uuid="e6a6d175-edb1-4b48-9f5d-81ef938d178d" stretchType="RelativeToBandHeight" x="951" y="0" width="111" height="14"/>
 				<box>
 					<pen lineWidth="0.25"/>
@@ -811,7 +811,7 @@ case when c.type=0 and  ( c.prepay is null or c.prepay=false) then 0 else
 				</textElement>
 				<textFieldExpression><![CDATA[$F{not_payed_yet}]]></textFieldExpression>
 			</textField>
-			<textField isStretchWithOverflow="true" pattern="#,##0.00 $" isBlankWhenNull="true">
+			<textField isStretchWithOverflow="true" pattern="#,##0.00 сом" isBlankWhenNull="true">
 				<reportElement uuid="a09773d6-5bad-4e0b-bd1d-e276daa3527d" stretchType="RelativeToBandHeight" x="1062" y="0" width="118" height="14"/>
 				<box>
 					<pen lineWidth="0.25"/>
