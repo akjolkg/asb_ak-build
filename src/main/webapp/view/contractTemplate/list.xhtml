@@ -14,8 +14,8 @@
 		</h:form>
 
 		<p:dialog header="Ключевые слова для шаблонов"
-			widgetVar="instructionsDialog" modal="true" closable="true" height="500"
-			resizable="true" >
+			widgetVar="instructionsDialog" modal="true" closable="true"
+			height="500" resizable="true">
 			<h:outputText value="Инструкции по использованию этой страницы:" />
 			<ul>
 				<li><strong>2TextZayavleniya:</strong> Текст подтверждения
@@ -52,6 +52,12 @@
 					семейное положение клиента.</li>
 				<li><strong>clientMarriageText2:</strong> Дополнительный текст
 					для семейного положения, если применимо.</li>
+				<li><strong>clientOKPO:</strong> Код ОКПО клиента.</li>
+				<li><strong>clientINN:</strong> ИНН клиента.</li>
+				<li><strong>clientRegistrationDate:</strong> Дата регистрации юр. лица
+					клиента.</li>
+				<li><strong>clientDopTextContract:</strong> Дополнительный
+					текст по договору.</li>
 				<li><strong>clientPassport:</strong> Номер паспорта клиента.</li>
 				<li><strong>clientPhone:</strong> Контактные данные клиента.</li>
 				<li><strong>clientPin:</strong> ПИН (персональный
@@ -115,8 +121,8 @@
 					зависимости от типа.</li>
 				<li><strong>contractSumFact:</strong> Общая сумма контракта в
 					числовом формате после инвентеризации.</li>
-				<li><strong>contractSumSignDoc:</strong> Общая сумма контракта в
-					числовом формате после инвентеризации без учета скидок.</li>
+				<li><strong>contractSumSignDoc:</strong> Общая сумма контракта
+					в числовом формате после инвентеризации без учета скидок.</li>
 				<li><strong>contractSumSomNum:</strong> Общая сумма контракта в
 					числовом формате.</li>
 				<li><strong>contractSumSomText:</strong> Форматированная общая
@@ -125,8 +131,8 @@
 				<li><strong>contractYear:</strong> Год даты контракта.</li>
 				<li><strong>crmNumber:</strong> CRM номер клиента, по умолчанию
 					пустая строка, если значение null.</li>
-				<li><strong>curatorOp:</strong> Куратор клиента, по умолчанию '-'
-					если значение null.</li>
+				<li><strong>curatorOp:</strong> Куратор клиента, по умолчанию
+					'-' если значение null.</li>
 				<li><strong>curatorOrk:</strong> Куратор ОРК, по умолчанию '-'
 					если значение null.</li>
 				<li><strong>dateContract:</strong> Дата контракта,
@@ -168,8 +174,8 @@
 					для контрактов государственной регистрации.</li>
 				<li><strong>toForeman:</strong> Детали мастера, по умолчанию
 					пустая строка, если значение null.</li>
-				<li><strong>toLowyer:</strong> Юристу в дательном падеже, по умолчанию
-					пустая строка, если значение null.</li>				
+				<li><strong>toLowyer:</strong> Юристу в дательном падеже, по
+					умолчанию пустая строка, если значение null.</li>
 				<li><strong>today:</strong> Текущая дата, отформатированная как
 					строка.</li>
 				<li><strong>zayavlenie:</strong> Текст заявления для контрактов
@@ -187,11 +193,13 @@
 		<div class="clear"></div>
 		<h:form id="filter-form">
 			<p:growl escape="false" />
-			<h:panelGrid columns="3" styleClass="f-left">
+			<h:panelGrid columns="4" styleClass="f-left">
 
 				<h:outputText value="#{msgs.construction}"
 					styleClass="form-table-label disp-blc" />
 				<h:outputText value="#{msgs.contractType}"
+					styleClass="form-table-label disp-blc" />
+				<h:outputText value="#{msgs.fizYur}"
 					styleClass="form-table-label disp-blc" />
 				<h:outputText value="#{msgs.searchString}"
 					styleClass="form-table-label disp-blc" />
@@ -212,16 +220,28 @@
 						value="#{contractTemplateListController.allContractTemplateTypes}"
 						var="entity" itemLabel="#{enums[entity]}" itemValue="#{entity}" />
 				</p:selectCheckboxMenu>
-				<h:inputText
-					value="#{contractTemplateListController.searchString}"
+				<p:selectCheckboxMenu
+					value="#{contractTemplateListController.filterFizYur}"
+					multiple="true" id="fizYur" style="width:250px;" styleClass="m-right"
+					filter="true" filterMatchMode="contains" converter="enumConverter">
+					<f:selectItems
+						value="#{contractTemplateListController.allFizYur}"
+						var="entity" itemLabel="#{enums[entity]}" itemValue="#{entity}" />
+				</p:selectCheckboxMenu>
+				<h:inputText value="#{contractTemplateListController.searchString}"
 					id="searchString" styleClass="m-right" />
 			</h:panelGrid>
-			<h:panelGrid columns="2"  styleClass="f-left">
-			   <h:outputText value="" styleClass="label" />
+			<h:panelGrid columns="2" styleClass="f-left">
 				<h:outputText value="" styleClass="label" />
-				
-				<p:commandButton ajax="true" update="form" value="#{msgs.search}" actionListener="#{contractTemplateListController.filterData()}" styleClass="button green f-right m-left" />
-			    <p:commandButton ajax="true" update="form filter-form" value="#{msgs.clearFilter}" actionListener="#{contractTemplateListController.clearFilter()}" styleClass="button blue f-right" />
+				<h:outputText value="" styleClass="label" />
+
+				<p:commandButton ajax="true" update="form" value="#{msgs.search}"
+					actionListener="#{contractTemplateListController.filterData()}"
+					styleClass="button green f-right m-left" />
+				<p:commandButton ajax="true" update="form filter-form"
+					value="#{msgs.clearFilter}"
+					actionListener="#{contractTemplateListController.clearFilter()}"
+					styleClass="button blue f-right" />
 			</h:panelGrid>
 		</h:form>
 
@@ -251,6 +271,9 @@
 				</p:column>
 				<p:column headerText="#{msgs.contractType}">
 					<h:outputText value="#{enums[entity.type]}" />
+				</p:column>
+				<p:column headerText="#{msgs.fizYur}">
+					<h:outputText value="#{enums[entity.fizYur]}" />
 				</p:column>
 
 				<p:column headerText="#{msgs.file}">

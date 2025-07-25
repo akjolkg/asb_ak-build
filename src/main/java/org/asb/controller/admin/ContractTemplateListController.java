@@ -18,6 +18,7 @@ import org.asb.beans.FilterExample;
 import org.asb.beans.InequalityConstants;
 import org.asb.beans.SortEnum;
 import org.asb.data.ContractTemplateDataModel;
+import org.asb.enums.ClientFizYur;
 import org.asb.enums.ContractTemplateType;
 import org.asb.enums.Role;
 import org.asb.model.Construction;
@@ -48,6 +49,7 @@ public class ContractTemplateListController implements Serializable {
 	private List<Construction> constructions;
 	private List<Construction> filterConstructions;
 	private List<ContractTemplate> filterContractTemplates;
+	private List<ClientFizYur> filterFizYur;
 	
 	
 	@Inject
@@ -81,6 +83,9 @@ public class ContractTemplateListController implements Serializable {
 		}
 		if (filterContractTemplates != null && !filterContractTemplates.isEmpty()) {
 			filters.add(new FilterExample("type", filterContractTemplates, InequalityConstants.IN));
+		}
+		if (filterFizYur != null && !filterFizYur.isEmpty()) {
+			filters.add(new FilterExample("fizYur", filterFizYur, InequalityConstants.IN));
 		}
 		
 		
@@ -180,6 +185,7 @@ public class ContractTemplateListController implements Serializable {
 		searchString = null;
 		filterConstructions = null;
 		filterContractTemplates = null;
+		filterFizYur = null;
 		filterData();
 	}
 	public void setConstructions(List<Construction> constructions) {
@@ -204,6 +210,17 @@ public class ContractTemplateListController implements Serializable {
 	
 	public ContractTemplateType[] getAllContractTemplateTypes() {
 		return ContractTemplateType.values();
+	}
+	public ClientFizYur[] getAllFizYur() {
+		return ClientFizYur.values();
+	}
+
+	public List<ClientFizYur> getFilterFizYur() {
+		return filterFizYur;
+	}
+
+	public void setFilterFizYur(List<ClientFizYur> filterFizYur) {
+		this.filterFizYur = filterFizYur;
 	}
 
 }

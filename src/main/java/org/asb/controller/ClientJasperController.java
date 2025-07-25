@@ -155,6 +155,12 @@ public class ClientJasperController extends BaseReportController {
 			map.put("clientBirthDate", simpleDateFormat.format(client.getBirthdate()));
 		map.put("clientAddress", client.getPassportAddress());
 		map.put("clientFactAddress", client.getFactAddress());
+		
+		map.put("clientOKPO", client.getFactAddress());
+		map.put("clientINN", client.getPin());
+		if (client.getBirthdate() != null)
+			map.put("clientRegistrationDate", simpleDateFormat.format(client.getBirthdate()));
+		map.put("clientDopTextContract", client.getExtraContractText());
 
 		map.put("clientPin", client.getPin());
 		map.put("clientPhone", client.getContacts());
@@ -439,7 +445,8 @@ public class ClientJasperController extends BaseReportController {
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR,
 							"На данный тип объекта : \"" + client.getAppartment().getConstruction().getTitle() + " : "
-									+ Messages.getEnumMessage(client.getAppartment().getType().toString())
+									+ Messages.getEnumMessage(client.getAppartment().getType().toString())+ " : "
+											+ Messages.getEnumMessage(client.getFizYur().toString())
 									+ "\" - нет Шаблона договора! ",
 							null));
 			return null;
@@ -486,6 +493,8 @@ public class ClientJasperController extends BaseReportController {
 		List<FilterExample> examples = new ArrayList<FilterExample>();
 		examples.add(new FilterExample("construction", client.getAppartment().getConstruction(),
 				InequalityConstants.EQUAL));
+		examples.add(
+				new FilterExample("fizYur", client.getFizYur(), InequalityConstants.EQUAL));
 		if (client.getAppartment().getType().equals(AppartmentType.APPARTMENT)) {
 			examples.add(new FilterExample("type", ContractTemplateType.APPARTMENT, InequalityConstants.EQUAL));
 		}else if (client.getAppartment().getType().equals(AppartmentType.OFFICE)) {
@@ -525,7 +534,8 @@ public class ClientJasperController extends BaseReportController {
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR,
 							"На данный тип объекта : \"" + client.getAppartment().getConstruction().getTitle() + " : "
-									+ Messages.getEnumMessage(client.getAppartment().getType().toString())
+									+ Messages.getEnumMessage(client.getAppartment().getType().toString())+ " : "
+											+ Messages.getEnumMessage(client.getFizYur().toString())
 									+ "\" - нет Шаблона договора! ",
 							null));
 			return null;

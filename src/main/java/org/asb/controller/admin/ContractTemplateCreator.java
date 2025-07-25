@@ -20,6 +20,7 @@ import javax.transaction.SystemException;
 import org.asb.annotation.Logged;
 import org.asb.annotation.RolesAllowed;
 import org.asb.controller.FileUploadController;
+import org.asb.enums.ClientFizYur;
 import org.asb.enums.ContractTemplateType;
 import org.asb.model.Attachment;
 import org.asb.model.ContractTemplate;
@@ -132,6 +133,9 @@ public class ContractTemplateCreator implements Serializable {
 
 	public ContractTemplateType[] getAllContractTemplateTypes() {
 		return ContractTemplateType.values();
+	}
+	public ClientFizYur[] getAllFizYur() {
+		return ClientFizYur.values();
 	}
 
 }

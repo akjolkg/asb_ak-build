@@ -29,6 +29,19 @@
 						itemValue="#{type}" />
 				</h:selectOneMenu>
 				<h:message for="docType" display="icon" style="color:red;" />
+				
+				<h:outputLabel for="fizYur" value="#{msgs.fizYur}"  styleClass="form-table-label disp-blc" />
+				<h:selectOneMenu id="fizYur"
+					value="#{contractTemplateCreator.contractTemplate.fizYur}"
+					effect="fold" required="true"
+					requiredMessage="#{msgs.fizYur} - #{msgs.isReq}"
+					editable="true" converter="enumConverter" style="width:250px">
+					<f:selectItem itemLabel="#{msgs.selectValue}" />
+					<f:selectItems value="#{contractTemplateCreator.allFizYur}"
+						var="type" itemLabel="#{enums[type.toString()]}"
+						itemValue="#{type}" />
+				</h:selectOneMenu>
+				<h:message for="docType" display="icon" style="color:red;" />
 
 				<h:outputText value="#{msgs.construction}"
 					styleClass="form-table-label disp-blc" />

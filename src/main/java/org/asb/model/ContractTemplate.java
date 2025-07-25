@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.asb.enums.ClientFizYur;
 import org.asb.enums.ContractTemplateType;
 import org.asb.enums.DocumentType;
 
@@ -34,6 +35,7 @@ public class ContractTemplate extends AbstractEntity<Integer> {
 	private Attachment attachment;
 	private Date date;
 	private Construction construction;
+	private ClientFizYur fizYur;
 	
 	public ContractTemplate() {}	
 	
@@ -75,6 +77,16 @@ public class ContractTemplate extends AbstractEntity<Integer> {
 
 	public void setConstruction(Construction construction) {
 		this.construction = construction;
+	}
+	@Enumerated(EnumType.ORDINAL)
+	@Column(name="fiz_yur")
+	public ClientFizYur getFizYur() {
+		return fizYur;
+	}
+
+
+	public void setFizYur(ClientFizYur fizYur) {
+		this.fizYur = fizYur;
 	}
 
 }
